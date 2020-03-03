@@ -1,0 +1,62 @@
+<div>
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>
+      {{ 'nav.home' | translate }}
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      <a>{{ 'nav.inbound' | translate }}</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      {{ 'nav.asnCheck.title' | translate }}
+    </nz-breadcrumb-item>
+  </nz-breadcrumb>
+</div>
+<form nz-form [formGroup]="queryForm" class="ant-advanced-search-form">
+  <div nz-row [nzGutter]="24">
+    <div nz-col [nzSpan]="8" *ngFor="let control of controlArray" [hidden]="!control.show">
+      <nz-form-item nzFlex>
+        <nz-form-label [nzFor]="'field' + control.index">{{control.code|translate}}</nz-form-label>
+        <nz-form-control>
+          <input nz-input [placeholder]="control.id" [formControlName]="'query.' + control.id"
+            [attr.id]="'field' + control.index" />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+  <div nz-row>
+    <div nz-col [nzSpan]="24" class="search-area">
+      <button nz-button [nzType]="'primary'" (click)="doSearch()">{{'button.search'|translate}}</button>
+      <button nz-button (click)="resetForm()">{{'button.clear'|translate}}</button>
+      <a class="collapse" (click)="toggleCollapse()">
+        {{'button.collapse'|translate}}
+        <i nz-icon [nzType]="isCollapse ? 'down' : 'up'"></i>
+      </a>
+    </div>
+  </div>
+</form>
+<div class="search-result-list">
+  <nz-table #xTable [nzData]="asnCheckList"  [nzFrontPagination]="false" [nzPageSize]="20" [nzTotal]="total"
+  [(nzPageIndex)]="pageIndex" [(nzPageSize)]="pageSize" (nzCurrentPageDataChange)="currentPageDataChange($event)"
+  (nzPageIndexChange)="changePageIndex($event)" (nzPageSizeChange)="changePageSize($event)">
+    <thead>
+      <tr>
+        <th nzShowCheckbox [(nzChecked)]="isAllDisplayDataChecked" [nzIndeterminate]="isIndeterminate"
+          (nzCheckedChange)="checkAll($event)"></th>
+        <th>{{'data.checkCode'|translate}}</th>
+        <th>{{'data.asnCode'|translate}}</th>
+        <th>{{'data.status'|translate}}</th>
+        <th>{{'data.createdTime'|translate}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of xTable.data">
+        <td nzShowCheckbox [(nzChecked)]="mapOfCheckedId[data.id]" [nzDisabled]="data.disabled"
+          (nzCheckedChange)="refreshStatus()"></td>
+        <td><a routerLink='/in/asnCheckDetails/{{ data.id}}'>{{ data.code }}</a></td>
+        <td><a routerLink='/in/asn/asnDetails/{{data.hId}}'>{{ data.hId }}</a></td>
+        <td>{{ data.status }}</td>
+        <td>{{ data.createdTime| date:'yyyy-MM-dd HH:mm':'GMT+08:00'}}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>

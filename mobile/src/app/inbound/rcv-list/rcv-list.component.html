@@ -1,0 +1,7 @@
+<Navbar [leftContent]="'返回'">
+    入库-收货任务清单
+</Navbar>
+<List [className]="'my-list'">
+    <ListItem [extra]="'extra content'">Title</ListItem>
+    <ListItem *ngFor="let item of list"><a routerLink="/inbound/rcv-scan/{{item.id}}">{{item.code}}</a></ListItem>
+</List>

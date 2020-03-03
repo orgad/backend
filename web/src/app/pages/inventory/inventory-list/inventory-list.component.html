@@ -1,0 +1,53 @@
+<div>
+    <nz-breadcrumb>
+        <nz-breadcrumb-item>
+            Home
+        </nz-breadcrumb-item>
+        <nz-breadcrumb-item>
+            <a>Inventory</a>
+        </nz-breadcrumb-item>
+        <nz-breadcrumb-item>
+            Inventory List
+        </nz-breadcrumb-item>
+    </nz-breadcrumb>
+</div>
+<div class="search-result-list">
+    <nz-table #xTable [nzData]="invtList" [nzPageSize]=20 (nzCurrentPageDataChange)="currentPageDataChange($event)">
+        <thead>
+            <tr>
+                <th nzShowCheckbox [(nzChecked)]="isAllDisplayDataChecked" [nzIndeterminate]="isIndeterminate"
+                    (nzCheckedChange)="checkAll($event)"></th>
+                <th>whId</th>
+                <th>customer Code</th>
+                <th>brand Code</th>
+                <th>carton</th>
+                <th>sku id</th>
+                <th>sku</th>
+                <th>barcode</th>
+                <th>qty</th>
+                <th>weight</th>
+                <th>alotQty</th>
+                <th>lockedQty</th>
+                <th>created Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of xTable.data">
+                <td nzShowCheckbox [(nzChecked)]="mapOfCheckedId[data.id]" [nzDisabled]="data.disabled"
+                    (nzCheckedChange)="refreshStatus()"></td>
+                <td>{{ data.whId }}</td>
+                <td>{{ data.customerCode }}</td>
+                <td>{{ data.brandCode }}</td>
+                <td>{{ data.carton}}</td>
+                <td><a routerLink='/invtDetails/{{data.sku}}'>{{data.skuId}}</a></td>
+                <td>{{data.sku}}</td>
+                <td>{{data.barcode}}</td>
+                <td>{{data.qty}}</td>
+                <td>{{data.weight}}</td>
+                <td>{{data.alotQty}}</td>
+                <td>{{data.lockedQty}}</td>
+                <td>{{ data.createdTime| date:'yyyy-MM-dd HH:mm':'GMT+08:00'}}</td>
+            </tr>
+        </tbody>
+    </nz-table>
+</div>

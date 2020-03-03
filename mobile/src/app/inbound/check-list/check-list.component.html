@@ -1,0 +1,15 @@
+<Navbar [leftContent]="'返回'" (click)="goBack()">
+    入库-验货任务清单
+</Navbar>
+<List [className]="'my-list'">
+    <ListItem [extra]="'extra content'">Title</ListItem>
+    <ListItem *ngFor="let item of list">
+        <a routerLink="/inbound/check-update/{{item.id}}" [queryParams]="{code:item.code}">
+            {{item.code}}
+        </a>
+        {{item.status}}
+        <a routerLink="/inbound/take-photo/{{item.id}}" [queryParams]="{code:item.code}">
+            拍照
+        </a>
+    </ListItem>
+</List>

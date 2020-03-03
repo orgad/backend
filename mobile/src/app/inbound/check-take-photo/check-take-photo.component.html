@@ -1,0 +1,48 @@
+<Navbar [leftContent]="'返回'" (click)="goBack()">
+    入库-验货-拍照
+</Navbar>
+<form [formGroup]="scanForm">
+    <List>
+        <ListItem>验货单号:{{code}}</ListItem>
+        <InputItem [placeholder]="'please input barcode'" [content]="'条码'" formControlName="barcode" [focus]="onFocus">
+        </InputItem>
+        <ListItem>全景照片
+            <input id="btn_photo" type="file" accept="image/*" (change)="onTake('imageA',$event)" />
+        </ListItem>
+        <ListItem>
+            <img id="imageA" width="300" height="200" src={{srcA}} />
+        </ListItem>
+        <ListItem>价签照片
+            <input id="btn_photo" type="file" accept="image/*" (change)="onTake('imageB',$event)" />
+        </ListItem>
+        <ListItem>
+            <img id="imageB" src={{srcB}}/>
+        </ListItem>
+        <ListItem>破损位置一
+            <input id="btn_photo" type="file" accept="image/*" (change)="onTake('image1',$event)" />
+        </ListItem>
+        <ListItem>
+            <img id="image1" width="300" height="200" src={{src1}}/>
+        </ListItem>
+        <ListItem>破损位置二
+            <input id="btn_photo" type="file" accept="image/*" (change)="onTake('image2',$event)" />
+        </ListItem>
+        <ListItem>
+            <img id="image2" width="300" height="200" src={{src2}}/>
+        </ListItem>
+        <ListItem>破损位置三
+            <input id="btn_photo" type="file" accept="image/*" (change)="onTake('image3',$event)" />
+        </ListItem>
+        <ListItem>
+            <img id="image3" width="300" height="200" src={{src3}}/>
+        </ListItem>
+        <ListItem>
+            <a Button [type]="'primary'" [size]="'small'" [inline]="true" (onClick)="onSubmit()">
+              Submit
+            </a>
+            <a Button style="margin-left: 2.5px;" [size]="'small'" [inline]="true" (onClick)="onReset()">
+              Reset
+            </a>
+          </ListItem>
+    </List>
+</form>

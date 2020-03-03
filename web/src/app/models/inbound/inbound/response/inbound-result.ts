@@ -1,0 +1,4 @@
+class InboundResult
+{
+    inbound : Inbound;   
+}

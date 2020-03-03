@@ -1,0 +1,33 @@
+<nz-breadcrumb>
+    <nz-breadcrumb-item>
+      Home
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      <a>Form</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      EditForm
+    </nz-breadcrumb-item>
+  </nz-breadcrumb>
+    <form nz-form [nzLayout]="'inline'" [formGroup]="validateForm" (ngSubmit)="submitForm()">
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Please input your code!">
+            <nz-input-group>
+              <input formControlName="code" nz-input placeholder="code" />
+            </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Please input your name!">
+          <nz-input-group>
+            <input formControlName="name" nz-input placeholder="name" />
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <button nz-button nzType="primary" [disabled]="!validateForm.valid">Save</button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  

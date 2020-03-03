@@ -1,0 +1,54 @@
+﻿{
+  "appName": "WMS",
+  "nav":{
+    "home": "Home",
+    "inbound": "Inbound",
+    "asn": {
+       "title": "Advanced Shipping Notice"
+      },
+    "asnCheck":{
+            "title":"Check List"
+        },
+    "outbound": "outbound",
+    "details": "details"
+  },
+  "menu": {
+    "inbound": {
+      "title": "Inbound",
+      "asn": "Advanced Shipping Notice",
+      "check": "Asn Check List",
+      "rcv": "Inbound List",
+      "rcvopt": "Receiving List",
+      "qc": "Quality Control List",
+      "putaway": "Put Away List"
+    },
+    "outbound": {
+      "dn": "Delivery Notice List",
+      "shp": "Shipping List",
+      "allot": "Allcate List",
+      "wave": "Wave List",
+      "pick": "Picking List",
+      "express": "Express List",
+      "recheck": "Recheck List",
+      "qc": "Quality Control List",
+      "ho": "Hand Over List"
+    },
+    "stock":{
+      "title": "stock",
+            "rep":"Rep List",
+            "move":"Moving List",
+            "hldrls":"Hold & Release",
+            "check":"Stock Check List",
+            "adj":"Adjust List"
+    },
+    "inventory": {
+        "title": "inventory",
+        "invt":"Inventory List",
+        "invtDetail":"Inventory Detail List"
+    }
+  },
+  "button":{
+      "collapse":"Collapse",
+      "rcvAffirm":"Receiving Affirm"
+  }
+}

@@ -1,0 +1,22 @@
+<div>
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>
+      Home
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      <a> </a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      Details
+    </nz-breadcrumb-item>
+  </nz-breadcrumb>
+</div>
+<nz-divider nzText=""></nz-divider>
+<nz-upload nzAction={{uploadUrl}}>
+  <button nz-button><i nz-icon nzType="upload"></i><span>Click to Upload</span></button>
+</nz-upload>
+<nz-divider nzText=""></nz-divider>
+<input id="btn_photo" type="file" accept="image/*" (change)="onTake($event)" />

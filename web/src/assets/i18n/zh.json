@@ -1,0 +1,92 @@
+﻿{
+    "appName": "仓储管理系统",
+    "nav": {
+        "home": "首页",
+        "inbound": "入库",
+        "asn": {
+            "title": "到货通知单"
+        },
+        "asnCheck":{
+            "title":"验货清单"
+        },
+        "outbound": "出库",
+        "details": "详情"
+    },
+    "menu": {
+        "dashboard": {
+            "title": "看板"
+        },
+        "form": {
+            "title": "表单"
+        },
+        "inbound": {
+            "title": "入库",
+            "asn": "到货通知",
+            "check": "验货",
+            "rcv": "入库",
+            "rcvopt": "收货",
+            "qc": "质检",
+            "putaway": "上架"
+        },
+        "outbound": {
+            "title": "出库",
+            "dn": "发货通知",
+            "shp": "出库任务",
+            "allot": "分配",
+            "wave": "波次单",
+            "pick": "拣货单",
+            "express": "物流面单",
+            "recheck": "复核",
+            "qc": "质检",
+            "ho": "交接"
+        },
+        "stock": {
+            "title": "库存管理",
+            "rep":"补货",
+            "move":"移货",
+            "hldrls":"冻结&解冻",
+            "check":"盘点",
+            "adj":"调整"
+        },
+        "inventory": {
+            "title": "库存查询",
+            "invt":"库存",
+            "invtDetail":"库存明细"
+        }
+    },
+    "button": {
+        "search": "查询",
+        "clear": "清空",
+        "collapse": "展开/折叠",
+        "addAsn": "新增",
+        "detailImport": "明细导入",
+        "asnAffirm": "到货确认",
+        "asnCheckAffirm": "验货确认",
+        "rcvAffirm":"收货确认",
+        "qcAffirm":"质检确认",
+        "putAwayAffirm":"上架确认"
+    },
+    "data": {
+        "warehouse": "仓库",
+        "customer": "客户",
+        "brand": "品牌",
+        "code": "单据编号",
+        "batchNo": "批号",
+        "refNo": "参考单号",
+        "srcCode":"数据来源",
+        "bizCode": "业务类型",
+        "status": "状态",
+        "goodsType": "货物类型",
+        "invoiceNo": "发票编号",
+        "isCiq": "是否CIQ",
+        "id": "记录号",
+        "sku": "商品",
+        "barcode": "条码",
+        "qty": "数量",
+        "createdTime": "创建日期",
+        "checkStatus": "验货状态",
+        "totalQty": "总数量",
+        "checkCode":"验货单号",
+        "asnCode":"到货通知单号"
+    }
+}

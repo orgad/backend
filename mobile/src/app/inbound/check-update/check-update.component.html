@@ -1,0 +1,15 @@
+<Navbar [leftContent]="'返回'" (click)="goBack()">
+    入库-验货任务-验货登记
+</Navbar>
+<form [formGroup]="scanForm">
+    <List>
+        <ListItem>验货单号:{{code}}</ListItem>
+        <InputItem [content]="'实际箱数:'" [placeholder]="'cartonQty'" formControlName="cartonQty"></InputItem>
+        <InputItem [content]="'实际件数:'" formControlName="qty"></InputItem>
+        <InputItem [content]="'破损箱数:'" formControlName="damageCartonQty"></InputItem>
+        <InputItem [content]="'破损件数:'" formControlName="damageQty"></InputItem>
+        <ListItem>
+            <a Button [type]="'primary'" [size]="'small'" [inline]="true" (click)="update()">保存</a>
+        </ListItem>
+    </List>
+</form>

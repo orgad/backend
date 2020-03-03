@@ -1,0 +1,38 @@
+<div>
+    <nz-breadcrumb>
+        <nz-breadcrumb-item>
+            Home
+        </nz-breadcrumb-item>
+        <nz-breadcrumb-item>
+            <a>Inbound</a>
+        </nz-breadcrumb-item>
+        <nz-breadcrumb-item>
+            <a>Quality Check</a>
+        </nz-breadcrumb-item>
+        <nz-breadcrumb-item>
+            Quality Check Details
+        </nz-breadcrumb-item>
+    </nz-breadcrumb>
+</div>
+<div class="search-result-list" *ngIf="qc">
+    <nz-table #basicTable [nzData]="qcList" [nzPageSize]=20>
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>sku</th>
+          <th>barcode</th>
+          <th>qty</th>
+          <th>created Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of basicTable.data">
+          <td>{{ data.id }}</td>
+          <td>{{ data.skuNo}}</td>
+          <td>{{ data.barcode }}</td>
+          <td>{{ data.qty }}</td>
+          <td>{{ data.createdTime| date:'yyyy-MM-dd HH:mm':'GMT+08:00'}}</td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>

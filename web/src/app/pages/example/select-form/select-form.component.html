@@ -1,0 +1,15 @@
+
+    <div>
+      <nz-select [(ngModel)]="asn.whId" nzAllowClear nzPlaceHolder="Choose">
+        <nz-option nzValue="20001" nzLabel="Jack"></nz-option>
+        <nz-option nzValue="10001" nzLabel="Lucy"></nz-option>
+        <nz-option nzValue="disabled" nzLabel="Disabled" nzDisabled></nz-option>
+      </nz-select>
+      <nz-select [ngModel]="'lucy'" nzDisabled>
+        <nz-option nzValue="lucy" nzLabel="Lucy"></nz-option>
+      </nz-select>
+      <nz-select [ngModel]="'lucy'" nzLoading>
+        <nz-option nzValue="lucy" nzLabel="Lucy"></nz-option>
+      </nz-select>
+    </div>
+  

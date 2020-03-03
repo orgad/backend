@@ -1,0 +1,17 @@
+<Navbar [leftContent]="'返回'">
+    入库-入库任务清单-收货
+</Navbar>
+<form [formGroup]="scanForm">
+    <List>
+        <ListItem>RCV202002010001</ListItem>
+        <InputItem [placeholder]="'please input carton'" [content]="'箱号'" formControlName="carton" [focus]="onFocus">
+        </InputItem>
+        <InputItem [placeholder]="'please input barcode'" [content]="'条码'" formControlName="barcode" [focus]="onFocus">
+        </InputItem>
+        <ListItem>
+            <a Button [type]="'primary'" [size]="'small'" [inline]="true" (onClick)="onSubmit()">
+            提交
+            </a>
+        </ListItem>
+    </List>
+</form>

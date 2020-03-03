@@ -1,0 +1,72 @@
+<div>
+    <nz-breadcrumb>
+      <nz-breadcrumb-item>
+        Home
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item>
+        <a>Outbound </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item>
+         Picking List
+      </nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </div>
+  <form nz-form [formGroup]="queryForm" class="ant-advanced-search-form">
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzSpan]="8" *ngFor="let control of controlArray" [hidden]="!control.show">
+        <nz-form-item nzFlex>
+          <nz-form-label [nzFor]="'field' + control.index"> {{ control.code }}</nz-form-label>
+          <nz-form-control>
+            <input nz-input [placeholder]="control.id" [formControlName]="'queryAsn.' + control.id"
+              [attr.id]="'field' + control.index" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row>
+      <div nz-col [nzSpan]="24" class="search-area">
+        <button nz-button [nzType]="'primary'" (click)="doSearch()">Search</button>
+        <button nz-button (click)="resetForm()">Clear</button>
+        <a class="collapse" (click)="toggleCollapse()">
+          Collapse
+          <i nz-icon [nzType]="isCollapse ? 'down' : 'up'"></i>
+        </a>
+      </div>
+    </div>
+  </form>
+  <nz-divider nzText=""></nz-divider>
+  <button nz-button [nzType]="'danger'" (click)="doCheck()"><span>Check</span></button>
+  <div class="search-result-list">
+    <nz-table #xTable [nzData]="list" [nzFrontPagination]="false" [nzPageSize]="20" [nzTotal]="total"
+      [(nzPageIndex)]="pageIndex" [(nzPageSize)]="pageSize" (nzCurrentPageDataChange)="currentPageDataChange($event)"
+      (nzPageIndexChange)="changePageIndex($event)" (nzPageSizeChange)="changePageSize($event)">
+      <thead>
+        <tr>
+          <th nzShowCheckbox [(nzChecked)]="isAllDisplayDataChecked" [nzIndeterminate]="isIndeterminate"
+            (nzCheckedChange)="checkAll($event)"></th>
+          <th>notice</th>
+          <th>batch No</th>
+          <th>warehouse id</th>
+          <th>customer id</th>
+          <th>brand id</th>
+          <th>total qty</th>
+          <th>status</th>
+          <th>created Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of xTable.data">
+          <td nzShowCheckbox [(nzChecked)]="mapOfCheckedId[data.id]" [nzDisabled]="data.disabled"
+            (nzCheckedChange)="refreshStatus()"></td>
+          <td><a routerLink='/pickingDetails/{{ data.id }}'>{{ data.code }}</a></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>status</td>
+          <td>{{ data.createdTime| date:'yyyy-MM-dd HH:mm':'GMT+08:00'}}</td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>

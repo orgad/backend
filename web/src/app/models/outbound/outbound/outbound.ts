@@ -1,0 +1,33 @@
+interface Outbound{
+    id: number,
+    whId: number
+    inboundId: number,
+    brandId: number,
+    brandRemark: string,
+    cartonQty: number,
+    code: string,
+    comment: string,
+    createdBy: string,
+    createdTime: Date,
+    custId: number,
+    dnId: number,
+    expectAt: Date,
+    expressNo: string,
+    handoverStatus: string,
+    isCancel: true,
+    isConfirm: true,
+    isPost: true,
+    isPriority: true,
+    lastModifiedBy: string,
+    lastModifiedTime: Date,
+    pickStatus: string,
+    qty: number,
+    refNo: string,
+    scanStatus: string,
+    status: string,
+    store: string,
+    transCode: string,
+    typeCode: string,
+    actualAt: Date
+    detailDTOS:OutboundDetail[];
+}

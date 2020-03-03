@@ -1,0 +1,131 @@
+<div>
+    <nz-breadcrumb>
+      <nz-breadcrumb-item>
+        Home
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item>
+        <a>Outbound </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item>
+         Recheck
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item>
+        Details
+      </nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </div>
+  <nz-divider nzText=""></nz-divider>
+<form nz-form [formGroup]="headerForm" class="ant-advanced-details-form">
+  <div nz-row [nzGutter]="24">
+    <div nz-col [nzSpan]="8">
+      <nz-form-item nzFlex>
+        <nz-form-label>warehouse</nz-form-label>
+        <nz-select nzDisabled nzPlaceHolder="Select a warehouse" formControlName="ctrl_whId">
+          <nz-option *ngFor="let wh of whs" nzValue={{wh.id}} nzLabel={{wh.name}}></nz-option>
+        </nz-select>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="8">
+      <nz-form-item nzFlex>
+        <nz-form-label>customer</nz-form-label>
+        <nz-select nzDisabled nzPlaceHolder="Select a customer" formControlName="ctrl_custId">
+          <nz-option nzLabel="Calzedonia" nzValue="20001"></nz-option>
+        </nz-select>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="8">
+      <nz-form-item nzFlex>
+        <nz-form-label>brand</nz-form-label>
+        <nz-select nzDisabled nzPlaceHolder="Select a brand" formControlName="ctrl_brandId">
+          <nz-option nzLabel="Calzedonia" nzValue="30001"></nz-option>
+          <nz-option nzLabel="Intimissimi" nzValue="30002"></nz-option>
+          <nz-option nzLabel="Tezenis " nzValue="30003"></nz-option>
+          <nz-option nzLabel="Falconeri " nzValue="30004"></nz-option>
+        </nz-select>
+      </nz-form-item>
+    </div>
+  </div>
+  <div nz-row [nzGutter]="24">
+    <div nz-col [nzSpan]="8">
+      <nz-form-item nzFlex>
+        <nz-form-label>code</nz-form-label>
+        <nz-form-control>
+          <input readonly nz-input placeholder=""  />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="8">
+      <nz-form-item nzFlex>
+        <nz-form-label>batchNo</nz-form-label>
+        <nz-form-control>
+          <input readonly nz-input placeholder="" />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="8">
+      <nz-form-item nzFlex>
+        <nz-form-label>refNo</nz-form-label>
+        <nz-form-control>
+          <input nz-input readonly />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+  <div nz-row [nzGutter]="24">
+    <div nz-col [nzSpan]="8">
+      <nz-form-item nzFlex>
+        <nz-form-label>bizCode</nz-form-label>
+        <nz-select nzDisabled nzPlaceHolder="Select a bizCode" formControlName="ctrl_bizCode">
+          <nz-option nzLabel="Retail" nzValue="Retail"></nz-option>
+          <nz-option nzLabel="EComm" nzValue="EComm"></nz-option>
+        </nz-select>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="8">
+      <nz-form-item nzFlex>
+        <nz-form-label>goodsType</nz-form-label>
+        <nz-select nzDisabled nzPlaceHolder="Select a goodsType" formControlName="ctrl_goodsType">
+          <nz-option nzLabel="Matrial" nzValue="Mat"></nz-option>
+          <nz-option nzLabel="Product" nzValue="Prod"></nz-option>
+        </nz-select>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="8">
+      <nz-form-item nzFlex>
+        <nz-form-label>invoiceNo</nz-form-label>
+        <nz-form-control>
+          <input readonly nz-input [formControlName]="'ctrl_invoiceNo'" />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+  <div nz-row [nzGutter]="24">
+    <div nz-col [nzSpan]="8">
+      <nz-form-item nzFlex>
+        <label nz-checkbox [formControlName]="'ctrl_isCiq'" [nzDisabled]=true>isCiq</label>
+      </nz-form-item>
+    </div>
+  </div>
+</form>
+<div class="search-result-list" *ngIf="recheck">
+    <nz-table #basicTable [nzData]=" recheck.detailDTOs" [nzPageSize]=20 [nzFrontPagination]="false" >
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>sku</th>
+          <th>barcode</th>
+          <th>qty</th>
+          <th>created Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of basicTable.data">
+          <td>{{ data.id }}</td>
+          <td>{{ data.skuNo}}</td>
+          <td>{{ data.barcode }}</td>
+          <td>{{ data.qty }}</td>
+          <td>{{ data.createdTime| date:'yyyy-MM-dd HH:mm':'GMT+08:00'}}</td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>

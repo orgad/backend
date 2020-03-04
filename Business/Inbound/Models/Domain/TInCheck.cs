@@ -7,7 +7,7 @@ namespace dotnet_wms_ef.Models
         public long Id { get; set; }
         public long? HId { get; set; }
         public string Code { get; set; }
-        public ulong? IsCiq { get; set; }
+        public bool IsCiq { get; set; }
         public string Status { get; set; }
         public int? CartonQty { get; set; }
         public int? Qty { get; set; }

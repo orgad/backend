@@ -13,9 +13,15 @@ namespace dotnet_wms_ef
 
         public DataTable Import(IFormFile excelfile, string code)
         {
-            var sFileName = basePath + "\\Asn\\" + code + ".xls";
+            var sFileName = basePath + "\\files\\Asn\\" + code + ".xls";
+            var sPath = basePath + "\\files\\Asn";
 
             FileInfo file = new FileInfo(sFileName);
+            if(!Directory.Exists(sPath))
+            { 
+                Directory.CreateDirectory(basePath+"\\files");
+                Directory.CreateDirectory(basePath+"\\files\\Asn");
+            }
 
             if (!file.Exists)
             {

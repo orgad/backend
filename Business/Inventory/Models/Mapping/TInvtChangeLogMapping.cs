@@ -92,6 +92,9 @@ namespace dotnet_wms_ef.Models
             entity.Property(e => e.ZoneId)
                 .HasColumnName("zone_id")
                 .HasComment("货区ID");
+
+            entity.HasOne(d => d.TInvtD).WithOne(p => p.TInvtChangeLog)
+            .HasForeignKey<TInvtChangeLog>(d => d.InvtDId);
         }
     }
 }

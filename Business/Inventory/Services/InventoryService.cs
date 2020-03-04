@@ -12,9 +12,12 @@ namespace dotnet_wms_ef.Services
         //收货
         public void Create(int whId, TInInboundD[] ts)
         {
+            var id = ts.Select(x => x.HId).FirstOrDefault();
             var rs = new List<TInvt>();
             // 首先查询有没有库存记录,有就更新TInvt和TInvtD;
             var detailList = new List<TInvtD>();
+            var logs = new List<TInvtChangeLog>();
+
             // 没有就新增
             foreach (var t in ts)
             {
@@ -31,6 +34,9 @@ namespace dotnet_wms_ef.Services
                 rs.Add(r);
             }
             wmsinventory.TInvts.AddRange(rs);
+
+            wmsinventory.TInvtChangeLogs.AddRange(logs);
+
             wmsinventory.SaveChanges();
         }
 
@@ -60,6 +66,21 @@ namespace dotnet_wms_ef.Services
                 Qty = t.Qty,
                 CreatedTime = DateTime.UtcNow
             };
+            var log = new TInvtChangeLog
+            {
+                OrderId = t.HId,
+                OrderType = Enum.GetName(typeof(EnumOrderType), EnumOrderType.RCV),
+                WhId = whId,
+                InvtDId = d1.Id,
+                SkuId = t.SkuId,
+                Barcode = t.Barcode,
+                BinId = d1.BinId,
+                ZoneId = d1.ZoneId,
+                Qty = t.Qty,
+                CreatedBy = DefaultUser.UserName,
+                CreatedTime = DateTime.UtcNow,
+            };
+            d1.TInvtChangeLog = log;
             h.DetailList.Add(d1);
             return h;
         }
@@ -94,9 +115,25 @@ namespace dotnet_wms_ef.Services
                 Qty = t.Qty,
                 CreatedTime = DateTime.UtcNow
             };
+
+            var log = new TInvtChangeLog
+            {
+                OrderId = t.HId,
+                OrderType = Enum.GetName(typeof(EnumOrderType), EnumOrderType.RCV),
+                WhId = whId,
+                InvtDId = d2.Id,
+                SkuId = t.SkuId,
+                Barcode = t.Barcode,
+                BinId = d2.BinId,
+                ZoneId = d2.ZoneId,
+                Qty = t.Qty,
+                CreatedBy = DefaultUser.UserName,
+                CreatedTime = DateTime.UtcNow,
+            };
+
+            d2.TInvtChangeLog = log;
             h.DetailList.Add(d2);
             h.Qty += d2.Qty;
-
             return h;
         }
 
@@ -114,7 +151,7 @@ namespace dotnet_wms_ef.Services
                 var psBysku = ps.Where(x => x.SkuId == toInvt.Key).ToArray();
                 PutAway(psBysku, invts);
             }
-            return wmsinventory.SaveChanges()>0;
+            return wmsinventory.SaveChanges() > 0;
         }
 
         private void PutAway(TInPutawayD[] putAwayDetailList, List<TInvtD> invts)
@@ -147,7 +184,7 @@ namespace dotnet_wms_ef.Services
                 });
 
                 //需要扣减的库存
-                Reduce(qty,invts);
+                Reduce(qty, invts);
             }
         }
 

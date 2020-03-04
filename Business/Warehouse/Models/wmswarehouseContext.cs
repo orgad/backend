@@ -34,7 +34,7 @@ namespace dotnet_wms_ef.Models
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 */
                 //optionsBuilder.UseMySql("server=rm-uf619rka9ffv70g6rbo.mysql.rds.aliyuncs.com;port=3306;database=wms-warehouse;user=wms;password=R9Ayn6Jv52", x => x.ServerVersion("8.0.16-mysql"));
-                optionsBuilder.UseMySql("server=localhost;port=3306;database=db_warehouse;user=root;password=8888", x => x.ServerVersion("8.0.16-mysql"));
+                optionsBuilder.UseMySql(DbConfig.WarehouseDb, x => x.ServerVersion("8.0.16-mysql"));
             }
         }
 

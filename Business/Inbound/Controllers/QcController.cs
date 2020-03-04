@@ -1,4 +1,5 @@
 using System.Web.Http;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace dotnet_wms_ef.Controllers
@@ -11,6 +12,7 @@ namespace dotnet_wms_ef.Controllers
 
         [Route("list")]
         [HttpGet]
+        [EnableCors("any")]
         public JsonResult List(QueryQc queryQc)
         {
             return new JsonResult(
@@ -25,6 +27,7 @@ namespace dotnet_wms_ef.Controllers
         //质检详情
         [Route("details/{id}")]
         [HttpGet]
+        [EnableCors("any")]
         public JsonResult Details([FromUri]long id)
         {
                var r = qcService.Details(id);
@@ -34,6 +37,7 @@ namespace dotnet_wms_ef.Controllers
         
         //质检确认
         [Route("confirm")]
+        [EnableCors("any")]
         [HttpPut]
         public JsonResult Confirm([FromBody]long[] ids)
         {

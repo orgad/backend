@@ -5,7 +5,7 @@ namespace dotnet_wms_ef.Models
 {
     public partial class TInvtD
     {
-        public TInvt TInvt{get;set;}
+        public TInvt TInvt { get; set; }
         public long Id { get; set; }
         public long HId { get; set; }
         public int WhId { get; set; }
@@ -32,5 +32,7 @@ namespace dotnet_wms_ef.Models
         public DateTime CreatedTime { get; set; }
         public string LastModifiedBy { get; set; }
         public DateTime? LastModifiedTime { get; set; }
+
+        public virtual TInvtChangeLog TInvtChangeLog { get; set; }
     }
 }

@@ -148,7 +148,7 @@ namespace dotnet_wms_ef.Services
         {
             var o = new TInAsn
             {
-                Code = DateTime.Now.ToString("yyyyMMddHHmmss"),
+                Code = Enum.GetName(typeof(EnumOrderType), EnumOrderType.ASN) + DateTime.Now.ToString("yyyyMMddHHmmss"),
                 RefCode = DateTime.Now.ToString("yyyyMMddHHmmss"),
                 WhId = tAsn.WhId,
                 CustId = tAsn.CustId,
@@ -156,7 +156,7 @@ namespace dotnet_wms_ef.Services
                 BatchNo = tAsn.BatchNo ?? DateTime.Now.ToString("yyyyMMdd"),
                 BizCode = tAsn.BizCode,
                 GoodsType = tAsn.GoodsType,
-                TypeCode = "Asn",
+                TypeCode = Enum.GetName(typeof(EnumOrderType), EnumOrderType.ASN),
                 TransCode = "Inbound",
                 SrcCode = "Import",
                 IsCiq = false,
@@ -250,9 +250,10 @@ namespace dotnet_wms_ef.Services
             int i = 0;
             foreach (var asn in asns)
             {
-                if (asn.Status == "None")
+                if (asn.Status == Enum.GetName(typeof(EnumStatus),EnumStatus.None))
                 {
-                    asn.Status = "Affirm";
+                    asn.Status = Enum.GetName(typeof(EnumStatus),EnumStatus.Aduit);
+                    asn.CheckStatus = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Init);
                     var o = new AsnCheckService().Create(asn);
                     wms.Add(o);
                     i++;

@@ -6,9 +6,9 @@ namespace dotnet_wms_ef.Models
     public partial class TInvtChangeLog
     {
         public long Id { get; set; }
-        public int? OrderId { get; set; }
+        public long OrderId { get; set; }
         public string OrderType { get; set; }
-        public int InvtDId { get; set; }
+        public long InvtDId { get; set; }
         public int WhId { get; set; }
         public int CustId { get; set; }
         public long SkuId { get; set; }
@@ -21,5 +21,7 @@ namespace dotnet_wms_ef.Models
         public DateTime CreatedTime { get; set; }
         public string LastModifiedBy { get; set; }
         public DateTime? LastModifiedTime { get; set; }
+
+        public virtual TInvtD TInvtD { get; set; }
     }
 }

@@ -23,15 +23,18 @@ namespace dotnet_wms_ef.Services
             var r = wms.TWhBins.Join(wms.TWhZones.Where(x => x.TypeCode == "RCV")
             , p => p.ZoneId, c => c.Id,
             (p, c) => new
-            {   
+            {
                 WhId = c.WhId,
                 ZoneId = c.Id,
                 ZoneCode = c.Code,
                 BinId = p.Id,
                 BinCode = p.Code
             });
-            var t = r.Where(x=>x.WhId==whId).FirstOrDefault();
-            return new Tuple<int, string, int, string>(t.ZoneId, t.ZoneCode, t.BinId, t.BinCode);
+            var t = r.Where(x => x.WhId == whId).FirstOrDefault();
+            if (t != null)
+                return new Tuple<int, string, int, string>(t.ZoneId, t.ZoneCode, t.BinId, t.BinCode);
+            else
+                return null;
         }
     }
 }

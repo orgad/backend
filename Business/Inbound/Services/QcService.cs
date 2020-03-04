@@ -2,12 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using dotnet_wms_ef.Models;
+using dotnet_wms_ef.Services;
 
 namespace dotnet_wms_ef
 {
     internal class QcService
     {
         wmsinboundContext wmsinbound = new wmsinboundContext();
+
+        PutAwayService putAwayService = new PutAwayService();
+
+        StrategyService strategyService = new StrategyService();
 
         private IQueryable<TInQc> Query(QueryQc queryQc)
         {
@@ -16,6 +21,7 @@ namespace dotnet_wms_ef
 
         public List<TInQc> PageList(QueryQc queryQc)
         {
+            if (queryQc.pageSize == 0) queryQc.pageSize = 20;
             return this.Query(queryQc).
             OrderByDescending(x => x.Id).Skip(queryQc.pageIndex).Take(queryQc.pageSize).ToList();
         }
@@ -34,15 +40,26 @@ namespace dotnet_wms_ef
             return new VQc { Qc = o, QcDs = ds.Any() ? ds.ToArray() : null };
         }
 
+        public TInQc Create(TInInbound inbound)
+        {
+            TInQc qc = new TInQc();
+            qc.Code = inbound.Code.Replace("RCV", "QC");
+            qc.CreatedBy = DefaultUser.UserName;
+            qc.CreatedTime = DateTime.UtcNow;
+            qc.InboundId = inbound.Id;
+            qc.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init);
+            return qc;
+        }
+
         public bool Scan(long id, TInQcD qcD)
         {
             qcD.HId = id;
             qcD.CreatedBy = DefaultUser.UserName;
             qcD.CreatedTime = DateTime.UtcNow;
             wmsinbound.TInQcDs.Add(qcD);
-            
+
             Doing(id);
-            
+
             return true;
         }
 
@@ -50,14 +67,14 @@ namespace dotnet_wms_ef
         {
             var qc = wmsinbound.TInQcs.Where(x => x.Id == id).FirstOrDefault();
             qc.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing);
-            return wmsinbound.SaveChanges()>0;
+            return wmsinbound.SaveChanges() > 0;
         }
 
         public bool Done(long id)
         {
             var qc = wmsinbound.TInQcs.Where(x => x.Id == id).FirstOrDefault();
             qc.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Done);
-            return wmsinbound.SaveChanges()>0;
+            return wmsinbound.SaveChanges() > 0;
         }
 
         public bool Confirm(long[] ids)
@@ -78,6 +95,14 @@ namespace dotnet_wms_ef
 
             var inbound = wmsinbound.TInInbounds.Where(x => x.Id == qc.InboundId).FirstOrDefault();
             inbound.QcStatus = qc.Status;
+
+            //判断是否要上架
+            if (strategyService.NextFlow(inbound.WhId, inbound.CustId, inbound.BrandId,
+                   EnumInOperation.Qc) == EnumInOperation.PutAway)
+            {
+                inbound.PStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init);
+                wmsinbound.TInPutaways.Add(putAwayService.Create(qc));
+            }
 
             wmsinbound.SaveChanges();
 

@@ -32,6 +32,7 @@ namespace dotnet_wms_ef.Controllers
         /*查看详情*/
         [HttpGet]
         [Route("details/{id}")]
+        [EnableCors("any")]
         public VInbound Details(long id)
         {
             var vInbound = inboundService.Details(id);
@@ -39,15 +40,17 @@ namespace dotnet_wms_ef.Controllers
         }
 
         [HttpGet]
-        [Route("opt-list")]
+        [Route("opt/list")]
+        [EnableCors("any")]
         public JsonResult RcvOptList()
         {
             var r= inboundService.OptList();
-            return new JsonResult(r);
+            return new JsonResult(new SingleResponse{ TotalCount = 0,data = r});
         }
         
         [HttpGet]
         [Route("opt/{id}")]
+        [EnableCors("any")]
         public JsonResult RcvOpt([FromUri] long id)
         {
             var r= inboundService.Opt(id);
@@ -56,10 +59,20 @@ namespace dotnet_wms_ef.Controllers
 
         /*收货确认*/
         [HttpPut]
+        [EnableCors("any")]
         [Route("check")]
         public JsonResult Affirm([FromBody]long[] ids)
         { 
             var result = inboundService.RcvAffirm(ids);
+            return new JsonResult(result);
+        }
+
+        [HttpPut]
+        [EnableCors("any")]
+        [Route("qc-check")]
+        public JsonResult QcAffirm([FromBody]long[] ids)
+        { 
+            var result = inboundService.QcAffirm(ids);
             return new JsonResult(result);
         }
     }

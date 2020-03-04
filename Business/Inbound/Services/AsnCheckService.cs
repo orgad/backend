@@ -20,31 +20,32 @@ namespace dotnet_wms_ef.Services
         {
             var o = new TInCheck();
             o.HId = asn.Id;
-            o.Status = "None";
-            o.IsCiq = 0;
-            o.Code = asn.Code.Replace("ASN", "CHK");
-            o.CreatedBy = "rickli";
+            o.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init);
+            o.IsCiq = asn.IsCiq;
+            o.Code = asn.Code.Replace(Enum.GetName(typeof(EnumOrderType), EnumOrderType.ASN),
+                   Enum.GetName(typeof(EnumOrderType), EnumOrderType.CHK));
+            o.CreatedBy = DefaultUser.UserName;
             o.CreatedTime = DateTime.UtcNow;
             return o;
         }
 
         public TInCheck Get(long id)
         {
-            return wms.TInChecks.Where(x=>x.Id == id).FirstOrDefault();
+            return wms.TInChecks.Where(x => x.Id == id).FirstOrDefault();
         }
 
-        public bool Update(long id,TInCheck check)
+        public bool Update(long id, TInCheck check)
         {
-             var o = wms.TInChecks.Where(x=>x.Id == id).FirstOrDefault();
-             if(o!=null)
-             {
-                 o.CartonQty = check.CartonQty;
-                 o.Qty = check.Qty;
-                 o.DamageCartonQty = check.DamageCartonQty;
-                 o.DamageQty = check.DamageQty;
-                 return wms.SaveChanges()>0;
-             }
-             return false;
+            var o = wms.TInChecks.Where(x => x.Id == id).FirstOrDefault();
+            if (o != null)
+            {
+                o.CartonQty = check.CartonQty;
+                o.Qty = check.Qty;
+                o.DamageCartonQty = check.DamageCartonQty;
+                o.DamageQty = check.DamageQty;
+                return wms.SaveChanges() > 0;
+            }
+            return false;
         }
 
         public int TotalCount(QueryAsnCheck queryAsnCheck)
@@ -82,9 +83,9 @@ namespace dotnet_wms_ef.Services
             return new VAsnCheck { AsnCheck = o, AsnCheckDs = ds.Any() ? ds.ToArray() : null };
         }
 
-        public bool CreateDetails(long id,TInCheckD[] details)
+        public bool CreateDetails(long id, TInCheckD[] details)
         {
-            foreach(var detail in details)
+            foreach (var detail in details)
             {
                 detail.HId = id;
                 detail.CreatedBy = "rickli";
@@ -92,7 +93,7 @@ namespace dotnet_wms_ef.Services
             }
             wms.TInCheckDs.AddRange(details);
 
-            return wms.SaveChanges()>0;
+            return wms.SaveChanges() > 0;
         }
     }
 }

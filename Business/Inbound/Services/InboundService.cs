@@ -14,7 +14,13 @@ namespace dotnet_wms_ef
 
         wmsinventoryContext wmsinventory = new wmsinventoryContext();
 
+        QcService qcService = new QcService();
+
+        PutAwayService putAwayService = new PutAwayService();
+
         InventoryService inventoryService = new InventoryService();
+
+        StrategyService strategyService = new StrategyService();
 
         //创建入库单
         public TInInbound Create(TInAsn asn)
@@ -29,14 +35,14 @@ namespace dotnet_wms_ef
             r.BrandId = asn.BrandId;
             r.GoodsType = asn.GoodsType;
             r.SrcCode = asn.SrcCode;
-            r.TransCode= asn.TransCode;
+            r.TransCode = asn.TransCode;
             r.TypeCode = "RCV";
             r.Status = "None";
             r.CreatedBy = "rick.li";
             r.CreatedTime = DateTime.UtcNow;
             return r;
         }
-        
+
         //分页查询
         public List<TInInbound> PageList()
         {
@@ -66,11 +72,16 @@ namespace dotnet_wms_ef
         {
             return wmsinbound.TInOptlogs.ToList();
         }
-        
+
+        public int OptTotal()
+        {
+            return wmsinbound.TInOptlogs.Count();
+        }
+
         /*收货扫描记录*/
         public List<TInOptlog> Opt(long id)
         {
-            return wmsinbound.TInOptlogs.Where(x=>x.OrderId == id).ToList();
+            return wmsinbound.TInOptlogs.Where(x => x.OrderId == id).ToList();
         }
         public List<Tuple<long, bool>> RcvAffirm(long[] ids)
         {
@@ -80,17 +91,67 @@ namespace dotnet_wms_ef
             foreach (var inbound in inbounds)
             {
                 var detailList = inboundDs.Where(x => x.HId == inbound.Id).ToArray();
+
                 //生成库存记录
                 inventoryService.Create(inbound.WhId, detailList);
 
                 //修改单据状态
                 inbound.RStatus = "Finished";
 
+                //调用策略
+                if (strategyService.NextFlow(inbound.WhId, inbound.CustId, inbound.BrandId,
+                    EnumInOperation.Receiving) == EnumInOperation.Qc)
+                {
+                    inbound.QcStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init);
+                    wmsinbound.TInQcs.Add(qcService.Create(inbound));
+                }
+                else if (strategyService.NextFlow(inbound.WhId, inbound.CustId, inbound.BrandId,
+                    EnumInOperation.Receiving) == EnumInOperation.PutAway)
+                {
+                    inbound.PStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init);
+                     wmsinbound.TInPutaways.Add(putAwayService.Create(inbound));
+                }
+                else
+                {
+                    inbound.PStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Finished);
+                    inbound.Status = Enum.GetName(typeof(EnumStatus), EnumStatus.Finished);
+                    inbound.ActualInAt = DateTime.UtcNow;
+                }
+
                 var r1 = wmsinbound.SaveChanges() > 0;
 
                 var r = new Tuple<long, bool>(inbound.Id, r1);
                 list.Add(r);
             }
+            return list;
+        }
+        
+        //质检完成
+        public List<Tuple<long,bool>> QcAffirm(long[] ids)
+        {
+            var list = new List<Tuple<long, bool>>();
+            var inbounds = wmsinbound.TInInbounds.Where(x => ids.Contains(x.Id)).ToList();
+            var qcs = wmsinbound.TInQcs.Where(x=>ids.Contains(x.InboundId)).ToList();
+            foreach (var inbound in inbounds)
+            {
+             //修改单据状态
+                inbound.QcStatus = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Finished);
+                var qc = qcs.Where(x=>x.InboundId == inbound.Id).FirstOrDefault();
+                qc.Status = inbound.QcStatus;
+
+                if (strategyService.NextFlow(inbound.WhId, inbound.CustId, inbound.BrandId,
+                    EnumInOperation.Qc) == EnumInOperation.PutAway)
+                {
+                    inbound.PStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init);
+                     wmsinbound.TInPutaways.Add(putAwayService.Create(inbound));
+                }
+
+                var r1 = wmsinbound.SaveChanges() > 0;
+
+                var r = new Tuple<long, bool>(inbound.Id, r1);
+                list.Add(r);
+            }
+
             return list;
         }
     }

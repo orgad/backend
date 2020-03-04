@@ -11,7 +11,7 @@ namespace dotnet_wms_ef.Services
 
         InventoryService inventoryService = new InventoryService();
 
-        public void Create(TInQc qc)
+        public TInPutaway Create(TInQc qc)
         {
             var pt = new TInPutaway
             {
@@ -20,21 +20,21 @@ namespace dotnet_wms_ef.Services
                 CreatedBy = DefaultUser.UserName,
                 CreatedTime = DateTime.UtcNow,
             };
-            wmsinbound.TInPutaways.Add(pt);
-            wmsinbound.SaveChanges();
+            return pt;
         }
 
-        public void Create(TInInbound inbound)
+        public TInPutaway Create(TInInbound inbound)
         {
             var pt = new TInPutaway
             {
                 Code = inbound.Code.Replace("RCV", "PTA"),
+                WhId = inbound.WhId,
                 InboundId = inbound.Id,
+                Status = inbound.PStatus,
                 CreatedBy = DefaultUser.UserName,
                 CreatedTime = DateTime.UtcNow,
             };
-            wmsinbound.TInPutaways.Add(pt);
-            wmsinbound.SaveChanges();
+            return pt;
         }
 
         private IQueryable<TInPutaway> Query(QueryPutAway queryPutAway)
@@ -49,6 +49,9 @@ namespace dotnet_wms_ef.Services
 
         public List<TInPutaway> PageList(QueryPutAway queryPutAway)
         {
+            if (queryPutAway.pageSize == 0)
+                queryPutAway.pageSize = 20;
+                
             return this.Query(queryPutAway).
             OrderByDescending(x => x.Id).Skip(queryPutAway.pageIndex).Take(queryPutAway.pageSize).ToList();
         }

@@ -25,7 +25,7 @@ namespace dotnet_wms_ef.Models
         public string TransCode { get; set; }
         public string TypeCode { get; set; }
         public string SrcCode { get; set; }
-        public bool? IsCiq { get; set; }
+        public bool IsCiq { get; set; }
         public string InvoiceNo { get; set; }
         public string Status { get; set; }
         public string CheckStatus { get; set; }

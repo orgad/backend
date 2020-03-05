@@ -1,13 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 
-namespace dotnet_wms_ef.Models
+namespace dotnet_wms_ef.Business.Models
 {
-    public partial class TStOpt
+    public partial class TStDelivery
     {
         public int Id { get; set; }
-        public string Code { get; set; }
-        public string Name { get; set; }
-        public string TypeCode { get; set; }
+        public int? HId { get; set; }
+        public ulong? IsNeedExpress { get; set; }
+        public string ExpressNode { get; set; }
+        public string OutboundNode { get; set; }
         public ulong? IsDeleted { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreatedTime { get; set; }

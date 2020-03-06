@@ -1,15 +1,29 @@
 using System.Web.Http;
 using dotnet_wms_ef.Models;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace dotnet_wms_ef.Controllers
 {
-    [Route("/api/in/qc/mobile/")]
+    [Route("/api/mobile/in/qc/")]
+    [EnableCors("any")]
     public class QcMobileController:ApiController
     {
         QcService qcService = new QcService();
         //质检单查询
+        
         //质检任务详情
+        [Route("list")]
+        [HttpGet]
+        public JsonResult List(QueryQc queryQc)
+        {
+            var r = new SingleResponse{
+                TotalCount = qcService.TotalCount(queryQc),
+                data = qcService.PageList(queryQc),
+            };
+            return new JsonResult(r);
+        }
+
         //质检任务查询
         //质检扫描
         [Route("{id}/scan")]

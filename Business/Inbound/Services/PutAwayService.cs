@@ -49,9 +49,6 @@ namespace dotnet_wms_ef.Services
 
         public List<TInPutaway> PageList(QueryPutAway queryPutAway)
         {
-            if (queryPutAway.pageSize == 0)
-                queryPutAway.pageSize = 20;
-                
             return this.Query(queryPutAway).
             OrderByDescending(x => x.Id).Skip(queryPutAway.pageIndex).Take(queryPutAway.pageSize).ToList();
         }
@@ -63,6 +60,9 @@ namespace dotnet_wms_ef.Services
 
         public List<TInPutaway> PageTaskList(QueryPutAway queryPutAway)
         {
+            if (queryPutAway.pageSize == 0)
+                queryPutAway.pageSize = 20;
+                
             return this.Query(queryPutAway).
             Where(
                 x => x.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init) ||

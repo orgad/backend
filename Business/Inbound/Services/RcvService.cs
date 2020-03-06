@@ -72,8 +72,9 @@ namespace dotnet_wms_ef
         private IQueryable<TInInbound> Query()
         {
             return wmsinbound.TInInbounds.Where(
-                x => x.Status == "None" && (
-                 x.RStatus == "None" || x.RStatus == "Doing"));
+                x => x.Status == Enum.GetName(typeof(EnumStatus),EnumStatus.None) && (
+                 x.RStatus == Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Init)
+                   || x.RStatus == Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Doing)));
         }
 
         public int TotalCount()

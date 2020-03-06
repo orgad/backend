@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Linq;
 
 using Microsoft.AspNetCore.Http;
 
 using dotnet_wms_ef.Models;
-using dotnet_wms_ef.Views.ViewModels;
+using dotnet_wms_ef.ViewModels;
 
 
 namespace dotnet_wms_ef.Services
@@ -113,11 +112,10 @@ namespace dotnet_wms_ef.Services
 
         public VAsnCheck Details(long id)
         {
-            var o = wms.TInChecks.Where(x => x.Id == id).FirstOrDefault();
-
+            var d = wms.TInChecks.Where(x => x.Id == id).FirstOrDefault();
+            var o = wms.TInAsns.Where(x => x.Id == d.HId).FirstOrDefault();
             var ds = wms.TInCheckDs.Where(x => x.HId == id).ToList();
-
-            return new VAsnCheck { AsnCheck = o, AsnCheckDs = ds.Any() ? ds.ToArray() : null };
+            return new VAsnCheck { Asn = o, AsnCheck = d, AsnCheckDs = ds.Any() ? ds.ToArray() : null };
         }
 
         public bool UploadsAndCreateDetail(long id, string barcode, IFormFileCollection files)

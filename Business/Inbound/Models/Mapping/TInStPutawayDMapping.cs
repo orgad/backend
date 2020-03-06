@@ -15,7 +15,7 @@ namespace dotnet_wms_ef.Models
             entity.Property(e => e.ZoneId).HasColumnName("zone_id");
             entity.Property(e => e.ZoneCode).HasColumnName("zone_code");
             entity.Property(e => e.BinId).HasColumnName("bin_id");
-            entity.Property(e => e.BinCode).HasColumnName("bin_id");
+            entity.Property(e => e.BinCode).HasColumnName("bin_code");
             entity.Property(e => e.Qty).HasColumnName("qty");
             entity.Property(e => e.IsDeleted).HasColumnName("is_deleted");
             entity.Property(e => e.CreatedBy).HasColumnName("created_by");

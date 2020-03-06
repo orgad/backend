@@ -6,9 +6,10 @@ namespace dotnet_wms_ef.Models
     public partial class TInCheckD
     {
         public long Id { get; set; }
-        public long? HId { get; set; }
+        public long HId { get; set; }
         public string TypeCode { get; set; }
         public string Carton { get; set; }
+        public long SkuId { get; set; }
         public string Sku { get; set; }
         public string Barcode { get; set; }
         public string Comment1 { get; set; }

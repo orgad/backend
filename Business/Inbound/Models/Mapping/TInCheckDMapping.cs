@@ -136,6 +136,8 @@ namespace dotnet_wms_ef.Models
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
+                entity.Property(e=>e.SkuId).HasColumnName("sku_id");
+
                 entity.Property(e => e.Sku)
                     .HasColumnName("sku")
                     .HasColumnType("varchar(30)")

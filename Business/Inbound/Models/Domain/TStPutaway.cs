@@ -13,5 +13,6 @@ namespace dotnet_wms_ef.Models
         public DateTime CreatedTime { get; set; }
         public string LastModifiedBy { get; set; }
         public DateTime? LastModifiedTime { get; set; }
+        public virtual TStPutawayD[] Details { get; set; }
     }
 }

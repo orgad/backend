@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-
 namespace dotnet_wms_ef.Models
 {
     public partial class TSt

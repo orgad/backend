@@ -13,10 +13,10 @@ namespace dotnet_wms_ef.Services
          private List<TStD> List(int whId,int custId,int brandId)
          {
              var list = new List<TStD>();
-             var o = wmsinbound.TSt.Where(x=>x.WhId == whId && x.CustId ==custId && x.BrandId == brandId).FirstOrDefault();
+             var o = wmsinbound.TSts.Where(x=>x.WhId == whId && x.CustId ==custId && x.BrandId == brandId).FirstOrDefault();
              if(o!=null)
              {
-                list = wmsinbound.TStD.Where(x=>x.HId == o.Id).OrderBy(x=>x.Seq) .ToList();
+                list = wmsinbound.TStDs.Where(x=>x.HId == o.Id).OrderBy(x=>x.Seq) .ToList();
              }
              return list;
          }

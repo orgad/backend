@@ -22,6 +22,9 @@ namespace dotnet_wms_ef.Models
             entity.Property(e => e.CreatedTime).HasColumnName("created_time");
             entity.Property(e => e.LastModifiedBy).HasColumnName("last_modified_by");
             entity.Property(e => e.LastModifiedTime).HasColumnName("last_modified_time");
+            entity.HasOne(d => d.TStPutaway)
+                  .WithMany(p => p.Details)
+                  .HasForeignKey(d => d.HId);
         }
     }
 }

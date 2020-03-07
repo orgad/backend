@@ -1,4 +1,0 @@
-class InboundResult
-{
-    inbound : Inbound;   
-}

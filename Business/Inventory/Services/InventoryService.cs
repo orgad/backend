@@ -30,8 +30,8 @@ namespace dotnet_wms_ef.Services
                 else
                 {
                     r = Do2(whId, t);
-                }
-                rs.Add(r);
+                    rs.Add(r);
+                }    
             }
             wmsinventory.TInvts.AddRange(rs);
 

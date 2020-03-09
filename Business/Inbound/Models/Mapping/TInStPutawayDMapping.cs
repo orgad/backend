@@ -12,6 +12,8 @@ namespace dotnet_wms_ef.Models
             entity.Property(e => e.HId).HasColumnName("h_id");
             entity.Property(e => e.ProductId).HasColumnName("product_id");
             entity.Property(e => e.ProductCode).HasColumnName("product_code");
+            entity.Property(e=>e.SkuId).HasColumnName("sku_id");
+            entity.Property(e=>e.Sku).HasColumnName("sku");
             entity.Property(e => e.ZoneId).HasColumnName("zone_id");
             entity.Property(e => e.ZoneCode).HasColumnName("zone_code");
             entity.Property(e => e.BinId).HasColumnName("bin_id");

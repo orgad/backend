@@ -1,6 +1,7 @@
 using System;
 using System.Web.Http;
 using dotnet_wms_ef.Models;
+using dotnet_wms_ef.ViewModels;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,18 +33,23 @@ namespace dotnet_wms_ef.Controllers
 
         [HttpPost]
         [Route("scan/{id}")]
-        public bool Scan([FromUri]long id, [FromBody] TInOptlog opt)
+        public JsonResult Scan([FromUri]long id, [FromBody] TInOptlog opt)
         {
             //新增扫描记录,同时增加收货明细
             opt.OrderId = id;
             try
             {
-                rcvService.Create(opt);
-                return true;
+                var result = rcvService.CreateOpt(opt);
+                return new JsonResult(new ScanResponse
+                {
+                    IsAllFinished = result.Item1,
+                    Message = result.Item2
+                });
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
+                var r = new ErrorResponse { ApiPath = "", Message = ex.Message };
+                return new JsonResult(r);
             }
         }
     }

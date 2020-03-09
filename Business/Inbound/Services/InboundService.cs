@@ -26,7 +26,8 @@ namespace dotnet_wms_ef
         public TInInbound Create(TInAsn asn)
         {
             TInInbound r = new TInInbound();
-            r.Code = asn.Code.Replace("ASN", "RCV");
+            r.Code = asn.Code.Replace(Enum.GetName(typeof(EnumOrderType),EnumOrderType.ASN), 
+                                      Enum.GetName(typeof(EnumOrderType),EnumOrderType.RCV));
             r.AsnId = asn.Id;
             r.BatchNo = asn.BatchNo;
             r.BizCode = asn.BizCode;
@@ -36,9 +37,10 @@ namespace dotnet_wms_ef
             r.GoodsType = asn.GoodsType;
             r.SrcCode = asn.SrcCode;
             r.TransCode = asn.TransCode;
-            r.TypeCode = "RCV";
-            r.Status = "None";
-            r.CreatedBy = "rick.li";
+            r.TypeCode = Enum.GetName(typeof(EnumOrderType),EnumOrderType.RCV);
+            r.Status = Enum.GetName(typeof(EnumStatus),EnumStatus.None);
+            r.RStatus = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Init);
+            r.CreatedBy = DefaultUser.UserName;
             r.CreatedTime = DateTime.UtcNow;
             return r;
         }

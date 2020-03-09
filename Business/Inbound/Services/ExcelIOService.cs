@@ -9,7 +9,7 @@ namespace dotnet_wms_ef
 {
     public class ExcelIOService
     {
-        string basePath = System.Environment.CurrentDirectory;
+        public string basePath="";
 
         public DataTable Import(IFormFile excelfile, string code)
         {

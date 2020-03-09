@@ -4,10 +4,16 @@ namespace dotnet_wms_ef.ViewModels
 {
     public class VAsnCheck
     {
-        public TInAsn Asn{get;set;}
+        public TInAsn Asn { get; set; }
 
-        public TInCheck AsnCheck{get;set;}
+        public TInCheck AsnCheck { get; set; }
 
-        public TInCheckD[] AsnCheckDs{get;set;}
+        public TInCheckD[] AsnCheckDs { get; set; }
+    }
+
+    public class VInCheck : TInCheck
+    {
+        public int asnCartonQty { get; set; }
+        public int asnQty { get; set; }
     }
 }

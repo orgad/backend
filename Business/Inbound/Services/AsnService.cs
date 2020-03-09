@@ -18,6 +18,8 @@ namespace dotnet_wms_ef.Services
 
         ExcelIOService ioService = new ExcelIOService();
 
+        public string Root{get;set;} //上传文件的路径
+
         public List<TInAsn> PageList(QueryAsn queryAsn)
         {
             return this.Query(queryAsn).
@@ -181,6 +183,7 @@ namespace dotnet_wms_ef.Services
 
         public bool Upload(IFormFile file, long id, string code)
         {
+            ioService.basePath = this.Root;
             //保存文件
             DataTable dataTable = ioService.Import(file, code);
 

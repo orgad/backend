@@ -7,6 +7,7 @@ using dotnet_wms_ef.Models;
 using dotnet_wms_ef.Services;
 using dotnet_wms_ef.Views;
 using dotnet_wms_ef.Views.ViewModels;
+using Microsoft.AspNetCore.Hosting;
 
 namespace dotnet_wms_ef.Controllers
 {
@@ -14,6 +15,14 @@ namespace dotnet_wms_ef.Controllers
     public class AsnController : ApiController
     {
         AsnService asnService = new AsnService();
+
+        private readonly IWebHostEnvironment _webHostEnvironment;
+
+        public AsnController(IWebHostEnvironment webHostEnvironment)
+        {
+            _webHostEnvironment = webHostEnvironment;
+            asnService.Root = _webHostEnvironment.WebRootPath;
+        }
 
         [HttpGet]
         [Route("list")]

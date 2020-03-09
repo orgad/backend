@@ -32,8 +32,8 @@ namespace dotnet_wms_ef.Models
         public DateTime? ExpAt { get; set; }
         public string DeliveyTo { get; set; }
         public float? Volume { get; set; }
-        public int? CartonQty { get; set; }
-        public int? PieceQty { get; set; }
+        public int CartonQty { get; set; }
+        public int PieceQty { get; set; }
         public float? Weight { get; set; }
         public bool IsDeleted { get; set; }
         public string CreatedBy { get; set; }

@@ -33,9 +33,20 @@ namespace dotnet_wms_ef.Services
             return o;
         }
 
-        public TInCheck Get(long id)
+        public VInCheck Get(long id)
         {
-            return wms.TInChecks.Where(x => x.Id == id).FirstOrDefault();
+            var asnCheck = wms.TInChecks.Where(x => x.Id == id).FirstOrDefault();
+            var asn = wms.TInAsns.Where(x => x.Id == asnCheck.HId).FirstOrDefault();
+            return new VInCheck
+            {
+                Code = asnCheck.Code,
+                asnCartonQty = asn.CartonQty,
+                asnQty = asn.PieceQty,
+                CartonQty = asnCheck.CartonQty,
+                Qty = asnCheck.Qty,
+                DamageCartonQty = asnCheck.DamageCartonQty,
+                DamageQty = asnCheck.DamageQty,
+            };
         }
 
         public TInCheckD[] Details(long id, string barcode)

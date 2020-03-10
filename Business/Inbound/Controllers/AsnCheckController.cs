@@ -31,7 +31,7 @@ namespace dotnet_wms_ef.Controllers
         }
 
         [HttpGet]
-        [Route("details/{id}")]
+        [Route("{id}/details")]
         public VAsnCheck Details(long id)
         {
             var vAsnCheck = asnCheckService.Details(id);

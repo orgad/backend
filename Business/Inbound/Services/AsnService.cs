@@ -255,7 +255,7 @@ namespace dotnet_wms_ef.Services
             {
                 if (asn.Status == Enum.GetName(typeof(EnumStatus),EnumStatus.None))
                 {
-                    asn.Status = Enum.GetName(typeof(EnumStatus),EnumStatus.Aduit);
+                    asn.Status = Enum.GetName(typeof(EnumStatus),EnumStatus.Audit);
                     asn.CheckStatus = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Init);
                     var o = new AsnCheckService().Create(asn);
                     wms.Add(o);
@@ -276,7 +276,7 @@ namespace dotnet_wms_ef.Services
                 var r = inboundService.Create(asn);
                 wms.TInInbounds.Add(r);
                 //修改到货通知单的单据状态
-                asn.CheckStatus = "Finished";
+                asn.CheckStatus = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Finished);
                 
                 var result = wms.SaveChanges()>0;
                 list.Add(new Tuple<long, bool>(asn.Id,result));

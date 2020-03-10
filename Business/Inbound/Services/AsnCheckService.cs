@@ -15,9 +15,7 @@ namespace dotnet_wms_ef.Services
     {
         wmsinboundContext wms = new wmsinboundContext();
         ImageIOService imageService = new ImageIOService();
-
         ProductService productService = new ProductService();
-
         public string Root { get; set; }
 
         public TInCheck Create(TInAsn asn)
@@ -31,6 +29,20 @@ namespace dotnet_wms_ef.Services
             o.CreatedBy = DefaultUser.UserName;
             o.CreatedTime = DateTime.UtcNow;
             return o;
+        }
+
+        public List<TInCheck> PageList(QueryAsnCheck queryAsnCheck)
+        {
+            return this.Query(queryAsnCheck)
+                       .OrderByDescending(x => x.Id)
+                       .Skip(queryAsnCheck.pageIndex)
+                       .Take(queryAsnCheck.pageSize)
+                       .ToList();
+        }
+
+        public int TotalCount(QueryAsnCheck queryAsnCheck)
+        {
+            return this.Query(queryAsnCheck).Count();
         }
 
         public VInCheck Get(long id)
@@ -49,7 +61,7 @@ namespace dotnet_wms_ef.Services
             };
         }
 
-        public TInCheckD[] Details(long id, string barcode)
+        public TInCheckD[] DetailList(long id, string barcode)
         {
             var r = new List<TInCheckD>();
             if (!string.IsNullOrEmpty(barcode))
@@ -72,25 +84,6 @@ namespace dotnet_wms_ef.Services
                 return wms.SaveChanges() > 0;
             }
             return false;
-        }
-
-        public int TotalCount(QueryAsnCheck queryAsnCheck)
-        {
-            return this.Query(queryAsnCheck).Count();
-        }
-
-        public List<TInCheck> List()
-        {
-            return wms.TInChecks.ToList();
-        }
-
-        public List<TInCheck> PageList(QueryAsnCheck queryAsnCheck)
-        {
-            return this.Query(queryAsnCheck)
-                       .OrderByDescending(x => x.Id)
-                       .Skip(queryAsnCheck.pageIndex)
-                       .Take(queryAsnCheck.pageSize)
-                       .ToList();
         }
 
         public List<TInCheck> TaskPageList(QueryAsnCheck queryAsnCheck)
@@ -124,6 +117,7 @@ namespace dotnet_wms_ef.Services
         public VAsnCheck Details(long id)
         {
             var d = wms.TInChecks.Where(x => x.Id == id).FirstOrDefault();
+            if (d == null) return null;
             var o = wms.TInAsns.Where(x => x.Id == d.HId).FirstOrDefault();
             var ds = wms.TInCheckDs.Where(x => x.HId == id).ToList();
             return new VAsnCheck { Asn = o, AsnCheck = d, AsnCheckDs = ds.Any() ? ds.ToArray() : null };
@@ -168,6 +162,18 @@ namespace dotnet_wms_ef.Services
             }
 
             wms.TInCheckDs.Add(detail);
+            return wms.SaveChanges() > 0;
+        }
+
+        public bool Done(long id)
+        {
+            //更新验货单状态为已完成
+            var o = wms.TInChecks.Where(x => x.Id == id).FirstOrDefault();
+            var asn = wms.TInAsns.Where(x => x.Id == o.HId).FirstOrDefault();
+
+            o.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Done);
+            asn.CheckStatus = o.Status;
+
             return wms.SaveChanges() > 0;
         }
 

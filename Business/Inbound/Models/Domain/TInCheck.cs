@@ -5,7 +5,7 @@ namespace dotnet_wms_ef.Models
     public partial class TInCheck
     {
         public long Id { get; set; }
-        public long? HId { get; set; }
+        public long HId { get; set; }
         public string Code { get; set; }
         public bool IsCiq { get; set; }
         public string Status { get; set; }

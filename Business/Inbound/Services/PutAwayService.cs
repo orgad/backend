@@ -9,6 +9,11 @@ namespace dotnet_wms_ef.Services
     {
         wmsinboundContext wmsinbound = new wmsinboundContext();
 
+        ProductService productService = new ProductService();
+
+        ZoneService zoneService = new ZoneService();
+        BinService binService = new BinService();
+
         InventoryService inventoryService = new InventoryService();
 
         public TInPutaway Create(TInQc qc)
@@ -39,6 +44,9 @@ namespace dotnet_wms_ef.Services
 
         private IQueryable<TInPutaway> Query(QueryPutAway queryPutAway)
         {
+            if (queryPutAway.pageSize == 0)
+                queryPutAway.pageSize = 20;
+
             var query = wmsinbound.TInPutaways as IQueryable<TInPutaway>;
             if (!string.IsNullOrEmpty(queryPutAway.status))
             {
@@ -62,7 +70,7 @@ namespace dotnet_wms_ef.Services
         {
             if (queryPutAway.pageSize == 0)
                 queryPutAway.pageSize = 20;
-                
+
             return this.Query(queryPutAway).
             Where(
                 x => x.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init) ||
@@ -86,20 +94,55 @@ namespace dotnet_wms_ef.Services
             return new VPutAway { PutAway = o, PutAwayDs = detailList };
         }
 
-        public bool Scan(long id, TInPutawayD detail)
+        public Tuple<bool, string> Scan(long id, TInPutawayD detail)
         {
-            var pt = wmsinbound.TInPutaways.Where(x => x.Id == id).FirstOrDefault();
-            pt.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing);
-            if (pt.FirstPutawayAt == null)
-                pt.FirstPutawayAt = DateTime.UtcNow;
-            pt.LastPutawayAt = DateTime.UtcNow;
+            //校验商品
+            var prodSku = productService.GetSkuByBarcode(detail.Barcode);
+            if (prodSku == null)
+                return new Tuple<bool, string>(false, "barcode is not exist.");
 
-            detail.HId = id;
-            detail.CreatedBy = DefaultUser.UserName;
-            detail.CreatedTime = DateTime.UtcNow;
-            detail.Qty = 1;
-            wmsinbound.TInPutawayDs.Add(detail);
-            return wmsinbound.SaveChanges() > 0;
+            var pt = wmsinbound.TInPutaways.Where(x => x.Id == id).FirstOrDefault();
+            //校验货位
+            var bin = binService.GetBinByCode(pt.WhId, detail.BinCode);
+            if (bin == null)
+                return new Tuple<bool, string>(false, "binCode is not exist.");
+
+            var zone = zoneService.GetZoneByCode(pt.WhId, bin.ZoneCode);
+
+            //校验数量
+            var qty = wmsinbound.TInPutawayDs.Where(x => x.HId == pt.Id && x.SkuId == prodSku.Id).Sum(x => x.Qty);
+
+            var inboundQty = wmsinbound.TInInboundDs.Where(x => x.HId == pt.InboundId && x.SkuId == prodSku.Id)
+            .Select(x => x.Qty).FirstOrDefault();
+
+            var inbound = wmsinbound.TInInbounds.Where(x => x.Id == pt.InboundId).FirstOrDefault();
+
+            if (qty + 1 <= inboundQty)
+            {
+                if (pt.FirstPutawayAt == null)
+                    pt.FirstPutawayAt = DateTime.UtcNow;
+                pt.LastPutawayAt = DateTime.UtcNow;
+
+                pt.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing);
+                detail.ZoneId = zone.Id;
+                detail.ZoneCode = zone.Code;
+                detail.BinId = bin.Id;
+                detail.BinCode = bin.Code;
+                detail.HId = id;
+                detail.CreatedBy = DefaultUser.UserName;
+                detail.CreatedTime = DateTime.UtcNow;
+                detail.Qty = 1;
+
+                inbound.PStatus = pt.Status;
+
+                wmsinbound.TInPutawayDs.Add(detail);
+                var r = wmsinbound.SaveChanges() > 0;
+                return new Tuple<bool, string>(false, string.Format("{0}/{1}", qty + 1, inboundQty));
+            }
+            else
+            {
+                return new Tuple<bool, string>(true, string.Format("{0}/{1}", inboundQty, inboundQty));
+            }
         }
 
         public bool Done(long id)
@@ -109,7 +152,7 @@ namespace dotnet_wms_ef.Services
             return wmsinbound.SaveChanges() > 0;
         }
 
-        public bool Confirm(long id)
+        public Tuple<bool,string> Confirm(long id)
         {
             //更新状态
             var pt = wmsinbound.TInPutaways.Where(x => x.Id == id).FirstOrDefault();
@@ -118,13 +161,15 @@ namespace dotnet_wms_ef.Services
             var inbound = wmsinbound.TInInbounds.Where(x => x.Id == pt.InboundId).FirstOrDefault();
             inbound.Status = Enum.GetName(typeof(EnumStatus), EnumStatus.Finished);
             inbound.PStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Finished);
+            inbound.ActualInAt = DateTime.UtcNow;
 
-            var details = wmsinbound.TInPutawayDs.Where(x => x.Id == id).ToList();
+            var details = wmsinbound.TInPutawayDs.Where(x => x.HId == id).ToList();
 
             inventoryService.PutAways(pt.WhId, details.ToArray());
 
             //更新库存
-            return wmsinbound.SaveChanges() > 0;
+            var r= wmsinbound.SaveChanges() > 0;
+            return new Tuple<bool, string>(r,"");
         }
     }
 }

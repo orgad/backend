@@ -24,7 +24,7 @@ namespace dotnet_wms_ef.Controllers
         }
 
         [HttpGet]
-        [Route("details/{id}")]
+        [Route("{id}/details")]
         [EnableCors("any")]
         //上架详情
         public JsonResult Details([FromUri]long id)

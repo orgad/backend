@@ -26,8 +26,8 @@ namespace dotnet_wms_ef
         public TInInbound Create(TInAsn asn)
         {
             TInInbound r = new TInInbound();
-            r.Code = asn.Code.Replace(Enum.GetName(typeof(EnumOrderType),EnumOrderType.ASN), 
-                                      Enum.GetName(typeof(EnumOrderType),EnumOrderType.RCV));
+            r.Code = asn.Code.Replace(Enum.GetName(typeof(EnumOrderType), EnumOrderType.ASN),
+                                      Enum.GetName(typeof(EnumOrderType), EnumOrderType.RCV));
             r.AsnId = asn.Id;
             r.BatchNo = asn.BatchNo;
             r.BizCode = asn.BizCode;
@@ -37,9 +37,9 @@ namespace dotnet_wms_ef
             r.GoodsType = asn.GoodsType;
             r.SrcCode = asn.SrcCode;
             r.TransCode = asn.TransCode;
-            r.TypeCode = Enum.GetName(typeof(EnumOrderType),EnumOrderType.RCV);
-            r.Status = Enum.GetName(typeof(EnumStatus),EnumStatus.None);
-            r.RStatus = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Init);
+            r.TypeCode = Enum.GetName(typeof(EnumOrderType), EnumOrderType.RCV);
+            r.Status = Enum.GetName(typeof(EnumStatus), EnumStatus.None);
+            r.RStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init);
             r.CreatedBy = DefaultUser.UserName;
             r.CreatedTime = DateTime.UtcNow;
             return r;
@@ -111,7 +111,7 @@ namespace dotnet_wms_ef
                     EnumInOperation.Receiving) == EnumInOperation.PutAway)
                 {
                     inbound.PStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init);
-                     wmsinbound.TInPutaways.Add(putAwayService.Create(inbound));
+                    wmsinbound.TInPutaways.Add(putAwayService.Create(inbound));
                 }
                 else
                 {
@@ -127,25 +127,25 @@ namespace dotnet_wms_ef
             }
             return list;
         }
-        
+
         //质检完成
-        public List<Tuple<long,bool>> QcAffirm(long[] ids)
+        public List<Tuple<long, bool>> QcAffirm(long[] ids)
         {
             var list = new List<Tuple<long, bool>>();
             var inbounds = wmsinbound.TInInbounds.Where(x => ids.Contains(x.Id)).ToList();
-            var qcs = wmsinbound.TInQcs.Where(x=>ids.Contains(x.InboundId)).ToList();
+            var qcs = wmsinbound.TInQcs.Where(x => ids.Contains(x.InboundId)).ToList();
             foreach (var inbound in inbounds)
             {
-             //修改单据状态
-                inbound.QcStatus = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Finished);
-                var qc = qcs.Where(x=>x.InboundId == inbound.Id).FirstOrDefault();
+                //修改单据状态
+                inbound.QcStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Finished);
+                var qc = qcs.Where(x => x.InboundId == inbound.Id).FirstOrDefault();
                 qc.Status = inbound.QcStatus;
 
                 if (strategyService.NextFlow(inbound.WhId, inbound.CustId, inbound.BrandId,
                     EnumInOperation.Qc) == EnumInOperation.PutAway)
                 {
                     inbound.PStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init);
-                     wmsinbound.TInPutaways.Add(putAwayService.Create(inbound));
+                    wmsinbound.TInPutaways.Add(putAwayService.Create(inbound));
                 }
 
                 var r1 = wmsinbound.SaveChanges() > 0;
@@ -155,6 +155,25 @@ namespace dotnet_wms_ef
             }
 
             return list;
+        }
+
+        //上架
+        public List<Tuple<long, bool>> PtAffirm(long[] ids)
+        {
+            var list = new List<Tuple<long, bool>>();
+            foreach (var id in ids)
+            {
+                var r = Confirm(id);
+                list.Add(new Tuple<long, bool>(id, r.Item1));
+            }
+            return list;
+        }
+
+        public Tuple<bool, string> Confirm(long id)
+        {
+            var pt = wmsinbound.TInPutaways.Where(x => x.InboundId == id).FirstOrDefault();
+
+            return putAwayService.Confirm(id);
         }
     }
 }

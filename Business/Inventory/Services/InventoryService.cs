@@ -149,12 +149,12 @@ namespace dotnet_wms_ef.Services
 
                 //开始上架: 增加目的货位的库存，减少收货区货位的库存
                 var psBysku = ps.Where(x => x.SkuId == toInvt.Key).ToArray();
-                PutAway(psBysku, invts);
+                PutAway(whId,psBysku, invts);
             }
             return wmsinventory.SaveChanges() > 0;
         }
 
-        private void PutAway(TInPutawayD[] putAwayDetailList, List<TInvtD> invts)
+        private void PutAway(int whId,TInPutawayD[] putAwayDetailList, List<TInvtD> invts)
         {
             //单个SKU上架
             var hid = invts.Select(x => x.HId).FirstOrDefault();
@@ -171,13 +171,17 @@ namespace dotnet_wms_ef.Services
                 var toBin = detailByBin.Key.BinCode;
                 var qty = putAwayDetailList.Where(x => x.BinId == toBinId).Sum(x => x.Qty);
 
-
                 wmsinventory.TInvtDs.Add(new TInvtD
                 {
                     HId = hid,
+                    WhId =  whId,
                     SkuId = Sku.SkuId,
                     Sku = Sku.Sku,
                     Barcode = Sku.Barcode,
+                    ZoneId = toZoneId,
+                    ZoneCode = toZone,
+                    BinId  = toBinId,
+                    BinCode = toBin,
                     Qty = qty,
                     CreatedBy = DefaultUser.UserName,
                     CreatedTime = DateTime.UtcNow

@@ -75,5 +75,14 @@ namespace dotnet_wms_ef.Controllers
             var result = inboundService.QcAffirm(ids);
             return new JsonResult(result);
         }
+
+        [HttpPut]
+        [EnableCors("any")]
+        [Route("putaway-check")]
+        public JsonResult PtAffirm([FromBody]long[] ids)
+        { 
+            var result = inboundService.PtAffirm(ids);
+            return new JsonResult(result);
+        }
     }
 }

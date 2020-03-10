@@ -1,6 +1,7 @@
 using System.Web.Http;
 using dotnet_wms_ef.Models;
 using dotnet_wms_ef.Services;
+using dotnet_wms_ef.ViewModels;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -51,7 +52,10 @@ namespace dotnet_wms_ef.Controllers
         public JsonResult Scan([FromUri]long id,[FromBody] TInPutawayD d)
         {
              var result = putAwayService.Scan(id,d);
-            return new JsonResult(result);
+            return new JsonResult(new ScanResponse{
+                IsAllFinished = result.Item1,
+                Message = result.Item2
+            });
         }
 
         //上架扫描完成

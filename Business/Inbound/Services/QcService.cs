@@ -91,11 +91,11 @@ namespace dotnet_wms_ef
                 
                 wmsinbound.TInQcDs.Add(qcD);
                 var b = wmsinbound.SaveChanges()>0;
-                return new Tuple<bool, string>(b,string.Format("{0}/{1}",qty+1,totalQty));
+                return new Tuple<bool, string>(false,string.Format("{0}/{1}",qty+1,totalQty));
             }
             else
             {
-                return new Tuple<bool, string>(false,string.Format("{0}/{1}",totalQty,totalQty));
+                return new Tuple<bool, string>(true,string.Format("{0}/{1}",totalQty,totalQty));
             }         
         }
 

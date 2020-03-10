@@ -7,9 +7,9 @@ namespace dotnet_wms_ef.Models
     {
         public long Id { get; set; }
         public long HId { get; set; }
-        public long ZoneId { get; set; }
+        public int ZoneId { get; set; }
         public string ZoneCode { get; set; }
-        public long BinId { get; set; }
+        public int BinId { get; set; }
         public string BinCode { get; set; }
         public string Carton { get; set; }
         public long SkuId { get; set; }

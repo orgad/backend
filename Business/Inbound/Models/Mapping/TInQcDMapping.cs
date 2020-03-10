@@ -138,6 +138,8 @@ namespace dotnet_wms_ef.Models
                     .HasColumnName("sku_id")
                     .HasColumnType("bigint(20)")
                     .HasComment("商品ID");
+
+                entity.Property(e => e.Sku).HasColumnName("sku");
         }
     }
 }

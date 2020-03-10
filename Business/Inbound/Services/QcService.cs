@@ -14,6 +14,8 @@ namespace dotnet_wms_ef
 
         StrategyService strategyService = new StrategyService();
 
+        ProductService productService = new ProductService();
+
         private IQueryable<TInQc> Query(QueryQc queryQc)
         {
             return wmsinbound.TInQcs;
@@ -29,6 +31,12 @@ namespace dotnet_wms_ef
         public int TotalCount(QueryQc queryQc)
         {
             return this.Query(queryQc).Count();
+        }
+
+        public TInQc Get(long id)
+        {
+            var o = wmsinbound.TInQcs.Where(x => x.Id == id).FirstOrDefault();
+            return o;
         }
 
         public VQc Details(long id)
@@ -51,23 +59,44 @@ namespace dotnet_wms_ef
             return qc;
         }
 
-        public bool Scan(long id, TInQcD qcD)
+        public Tuple<bool,string> Scan(long id, TInQcD qcD)
         {
-            qcD.HId = id;
-            qcD.CreatedBy = DefaultUser.UserName;
-            qcD.CreatedTime = DateTime.UtcNow;
-            wmsinbound.TInQcDs.Add(qcD);
+            //获取SKU的信息
+            var prodSku = productService.GetSkuByBarcode(qcD.Barcode);
 
-            Doing(id);
-
-            return true;
-        }
-
-        private bool Doing(long id)
-        {
             var qc = wmsinbound.TInQcs.Where(x => x.Id == id).FirstOrDefault();
-            qc.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing);
-            return wmsinbound.SaveChanges() > 0;
+            
+            var qty = wmsinbound.TInQcDs.Where(x=>x.HId == id && x.SkuId==prodSku.Id).Count();
+            var inbound = wmsinbound.TInInbounds.Where(x => x.Id == qc.InboundId).FirstOrDefault();
+
+            //质检扫描的时候要校验一下扫描的数量
+            var totalQty = wmsinbound.TInInboundDs.Where(x => x.SkuId == prodSku.Id).Select(x => x.Qty).FirstOrDefault();
+            if ( qty + 1 <= totalQty)
+            {
+                //新增质检扫描记录
+                qcD.HId = id;
+                qcD.SkuId = prodSku.Id;
+                qcD.Sku = prodSku.Code;
+                qcD.CreatedBy = DefaultUser.UserName;
+                qcD.CreatedTime = DateTime.UtcNow;
+                
+                qc.Qty+=1;
+                if(qc.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init))
+                {
+                    qc.FirstScanAt = DateTime.UtcNow;
+                }
+                qc.LastScanAt = DateTime.UtcNow;
+                qc.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing);
+                inbound.QcStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing);
+                
+                wmsinbound.TInQcDs.Add(qcD);
+                var b = wmsinbound.SaveChanges()>0;
+                return new Tuple<bool, string>(b,string.Format("{0}/{1}",qty+1,totalQty));
+            }
+            else
+            {
+                return new Tuple<bool, string>(false,string.Format("{0}/{1}",totalQty,totalQty));
+            }         
         }
 
         public bool Done(long id)

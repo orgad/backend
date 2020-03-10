@@ -10,6 +10,8 @@ namespace dotnet_wms_ef.Models
         public string Code { get; set; }
         public DateTime? FirstScanAt { get; set; }
         public DateTime? LastScanAt { get; set; }
+        public int CartonQty { get; set; }
+        public int Qty { get; set; }
         public string Status { get; set; }
         public ulong? IsDeleted { get; set; }
         public string CreatedBy { get; set; }

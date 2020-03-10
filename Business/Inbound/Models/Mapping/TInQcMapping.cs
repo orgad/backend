@@ -42,6 +42,10 @@ namespace dotnet_wms_ef.Models
                     .HasColumnType("datetime")
                     .HasComment("首次扫描时间");
 
+                entity.Property(e => e.CartonQty).HasColumnName("carton_qty");
+
+                entity.Property(e => e.Qty).HasColumnName("qty");
+
                 entity.Property(e => e.InboundId)
                     .HasColumnName("inbound_id")
                     .HasColumnType("bigint(20)");

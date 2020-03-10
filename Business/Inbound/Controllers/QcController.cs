@@ -24,8 +24,18 @@ namespace dotnet_wms_ef.Controllers
             );
         }
 
+        [Route("{id}")]
+        [HttpGet]
+        [EnableCors("any")]
+        public JsonResult Single([FromUri]long id)
+        {
+               var r = qcService.Get(id);
+
+               return new JsonResult(r);
+        }
+
         //质检详情
-        [Route("details/{id}")]
+        [Route("{id}/details")]
         [HttpGet]
         [EnableCors("any")]
         public JsonResult Details([FromUri]long id)

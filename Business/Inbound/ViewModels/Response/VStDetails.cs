@@ -3,7 +3,7 @@ using dotnet_wms_ef.Models;
 
 namespace dotnet_wms_ef.ViewModels
 {
-    public class VInSt
+    public class VInStDetails
     {
         public TSt TSt { get; set; }
 

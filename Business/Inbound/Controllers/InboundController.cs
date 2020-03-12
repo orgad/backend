@@ -33,7 +33,7 @@ namespace dotnet_wms_ef.Controllers
         [HttpGet]
         [Route("details/{id}")]
         [EnableCors("any")]
-        public VInbound Details(long id)
+        public VInboundDetails Details(long id)
         {
             var vInbound = inboundService.Details(id);
             return vInbound;

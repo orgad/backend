@@ -1,6 +1,6 @@
 namespace dotnet_wms_ef.ViewModels
 {
-    public class ScanResponse
+    public class VScanResponse
     {
         public bool IsAllFinished { get; set; }
 

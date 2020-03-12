@@ -2,7 +2,7 @@ using dotnet_wms_ef.Models;
 
 namespace dotnet_wms_ef
 {
-    internal class VPutAway
+    internal class VPutAwayDetails
     {
        public TInPutaway PutAway{get;set;}
         

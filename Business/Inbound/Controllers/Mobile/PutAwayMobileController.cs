@@ -52,7 +52,7 @@ namespace dotnet_wms_ef.Controllers
         public JsonResult Scan([FromUri]long id,[FromBody] TInPutawayD d)
         {
              var result = putAwayService.Scan(id,d);
-            return new JsonResult(new ScanResponse{
+            return new JsonResult(new VScanResponse{
                 IsAllFinished = result.Item1,
                 Message = result.Item2
             });

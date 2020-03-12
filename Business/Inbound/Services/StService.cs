@@ -25,9 +25,9 @@ namespace dotnet_wms_ef.Services
             .FirstOrDefault();
         }
 
-        public VInSt St(int id)
+        public VInStDetails St(int id)
         {
-            var r = new VInSt();
+            var r = new VInStDetails();
             var o = wmsinbound.TSts.Where(x => x.Id == id).FirstOrDefault();
             var d = StDList(id);
             var rcv = StRcv(id);

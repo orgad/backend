@@ -44,7 +44,7 @@ namespace dotnet_wms_ef.Controllers
 
         [HttpGet]
         [Route("details/{id}")]
-        public VAsn Details(long id)
+        public VAsnDetails Details(long id)
         {
             var vAsn = asnService.Details(id);
             return vAsn;
@@ -52,7 +52,7 @@ namespace dotnet_wms_ef.Controllers
 
         [HttpPost]
         [Route("full")]
-        public JsonResult CreateFull([FromBody]VAsn vAsn)
+        public JsonResult CreateFull([FromBody]VAsnDetails vAsn)
         {
             var r = asnService.CreateFull(vAsn);
             var response = new JsonResult(r);

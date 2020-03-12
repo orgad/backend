@@ -32,7 +32,7 @@ namespace dotnet_wms_ef.Controllers
 
         [HttpGet]
         [Route("{id}/details")]
-        public VAsnCheck Details(long id)
+        public VAsnCheckDetails Details(long id)
         {
             var vAsnCheck = asnCheckService.Details(id);
             return vAsnCheck;

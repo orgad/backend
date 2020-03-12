@@ -39,13 +39,13 @@ namespace dotnet_wms_ef
             return o;
         }
 
-        public VQc Details(long id)
+        public VQcDetails Details(long id)
         {
             var o = wmsinbound.TInQcs.Where(x => x.Id == id).FirstOrDefault();
 
             var ds = wmsinbound.TInQcDs.Where(x => x.HId == id).ToList();
 
-            return new VQc { Qc = o, QcDs = ds.Any() ? ds.ToArray() : null };
+            return new VQcDetails { Qc = o, QcDs = ds.Any() ? ds.ToArray() : null };
         }
 
         public TInQc Create(TInInbound inbound)

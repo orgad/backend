@@ -2,7 +2,7 @@ using dotnet_wms_ef.Models;
 
 namespace dotnet_wms_ef
 {
-    internal class VQc
+    internal class VQcDetails
     {
        public TInQc Qc{get;set;}
         

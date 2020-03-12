@@ -91,16 +91,16 @@ namespace dotnet_wms_ef.Services
             return wms.TInAsns.ToList();
         }
 
-        public VAsn Details(long id)
+        public VAsnDetails Details(long id)
         {
             var o = wms.TInAsns.Where(x => x.Id == id).FirstOrDefault();
 
             var ds = wms.TInAsnDs.Where(x => x.HId == id).ToList();
 
-            return new VAsn { Asn = o, AsnDs = ds.Any() ? ds.ToArray() : null };
+            return new VAsnDetails { Asn = o, AsnDs = ds.Any() ? ds.ToArray() : null };
         }
 
-        public bool CreateFull(VAsn vAsn)
+        public bool CreateFull(VAsnDetails vAsn)
         {
             var o = new TInAsn
             {

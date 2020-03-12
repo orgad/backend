@@ -36,7 +36,7 @@ namespace dotnet_wms_ef.Controllers
             try
             {
                 var result = qcService.Scan(id, qcD);
-                return new JsonResult(new ScanResponse
+                return new JsonResult(new VScanResponse
                 {
                     IsAllFinished = result.Item1,
                     Message = result.Item2

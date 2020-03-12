@@ -87,11 +87,11 @@ namespace dotnet_wms_ef.Services
             .Count();
         }
 
-        public VPutAway Details(long id)
+        public VPutAwayDetails Details(long id)
         {
             var o = wmsinbound.TInPutaways.Where(x => x.Id == id).FirstOrDefault();
             var detailList = wmsinbound.TInPutawayDs.Where(x => x.HId == id).ToArray();
-            return new VPutAway { PutAway = o, PutAwayDs = detailList };
+            return new VPutAwayDetails { PutAway = o, PutAwayDs = detailList };
         }
 
         public Tuple<bool, string> Scan(long id, TInPutawayD detail)

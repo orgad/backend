@@ -114,13 +114,13 @@ namespace dotnet_wms_ef.Services
             return query;
         }
 
-        public VAsnCheck Details(long id)
+        public VAsnCheckDetails Details(long id)
         {
             var d = wms.TInChecks.Where(x => x.Id == id).FirstOrDefault();
             if (d == null) return null;
             var o = wms.TInAsns.Where(x => x.Id == d.HId).FirstOrDefault();
             var ds = wms.TInCheckDs.Where(x => x.HId == id).ToList();
-            return new VAsnCheck { Asn = o, AsnCheck = d, AsnCheckDs = ds.Any() ? ds.ToArray() : null };
+            return new VAsnCheckDetails { Asn = o, AsnCheck = d, AsnCheckDs = ds.Any() ? ds.ToArray() : null };
         }
 
         public bool UploadsAndCreateDetail(long id, string barcode, IFormFileCollection files)

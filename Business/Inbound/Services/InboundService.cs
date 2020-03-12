@@ -61,13 +61,13 @@ namespace dotnet_wms_ef
             return this.Query().Count();
         }
 
-        public VInbound Details(long id)
+        public VInboundDetails Details(long id)
         {
             var o = wmsinbound.TInInbounds.Where(x => x.Id == id).FirstOrDefault();
 
             var ds = wmsinbound.TInInboundDs.Where(x => x.HId == id).ToList();
 
-            return new VInbound { Inbound = o, InboundDs = ds.Any() ? ds.ToArray() : null };
+            return new VInboundDetails { Inbound = o, InboundDs = ds.Any() ? ds.ToArray() : null };
         }
 
         public List<TInOptlog> OptList()

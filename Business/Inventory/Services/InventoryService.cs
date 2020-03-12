@@ -61,8 +61,20 @@ namespace dotnet_wms_ef.Services
 
         private IQueryable<TInvt> Query(QueryInvt queryInvt)
         {
-
-            return wmsinventory.TInvts;
+            if(queryInvt.PageSize==0)
+            {
+                queryInvt.PageSize = 20;
+            }
+            var query = wmsinventory.TInvts as IQueryable<TInvt>;
+            if (queryInvt.SkuId > 0)
+            {
+                query = query.Where(x => x.SkuId == queryInvt.SkuId);
+            }
+            if (!string.IsNullOrEmpty(queryInvt.Barcode))
+            {
+                query = query.Where(x => x.Barcode == queryInvt.Barcode);
+            }
+            return query;
         }
 
         private TInvt Do1(TInvt h, int whId, TInInboundD t)

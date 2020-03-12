@@ -22,6 +22,17 @@ namespace dotnet_wms_ef.Controllers
              });
          }
 
+          [Route("details")]
+          public JsonResult Details(QueryInvt queryInvt)
+          {
+              var result = inventoryDetailService.PageList(queryInvt);
+              var totalCount = inventoryDetailService.TotalCount(queryInvt);
+              return new JsonResult(new SingleResponse{
+                  Data = result,
+                  TotalCount = totalCount
+              });
+          }
+
          [Route("detail-list")]
          public JsonResult DetailList(QueryInvt queryInvt)
          {

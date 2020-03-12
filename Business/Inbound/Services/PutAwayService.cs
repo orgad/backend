@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using dotnet_wms_ef.Models;
+using dotnet_wms_ef.ViewModels;
 
 namespace dotnet_wms_ef.Services
 {
@@ -44,8 +45,8 @@ namespace dotnet_wms_ef.Services
 
         private IQueryable<TInPutaway> Query(QueryPutAway queryPutAway)
         {
-            if (queryPutAway.pageSize == 0)
-                queryPutAway.pageSize = 20;
+            if (queryPutAway.PageSize == 0)
+                queryPutAway.PageSize = 20;
 
             var query = wmsinbound.TInPutaways as IQueryable<TInPutaway>;
             if (!string.IsNullOrEmpty(queryPutAway.status))
@@ -58,7 +59,7 @@ namespace dotnet_wms_ef.Services
         public List<TInPutaway> PageList(QueryPutAway queryPutAway)
         {
             return this.Query(queryPutAway).
-            OrderByDescending(x => x.Id).Skip(queryPutAway.pageIndex).Take(queryPutAway.pageSize).ToList();
+            OrderByDescending(x => x.Id).Skip(queryPutAway.PageIndex).Take(queryPutAway.PageSize).ToList();
         }
 
         public int TotalCount(QueryPutAway queryPutAway)
@@ -68,14 +69,14 @@ namespace dotnet_wms_ef.Services
 
         public List<TInPutaway> PageTaskList(QueryPutAway queryPutAway)
         {
-            if (queryPutAway.pageSize == 0)
-                queryPutAway.pageSize = 20;
+            if (queryPutAway.PageSize == 0)
+                queryPutAway.PageSize = 20;
 
             return this.Query(queryPutAway).
             Where(
                 x => x.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init) ||
                 x.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing))
-                .OrderByDescending(x => x.Id).Skip(queryPutAway.pageIndex).Take(queryPutAway.pageSize).ToList();
+                .OrderByDescending(x => x.Id).Skip(queryPutAway.PageIndex).Take(queryPutAway.PageSize).ToList();
         }
 
         public int TotalTaskCount(QueryPutAway queryPutAway)
@@ -152,7 +153,7 @@ namespace dotnet_wms_ef.Services
             return wmsinbound.SaveChanges() > 0;
         }
 
-        public Tuple<bool,string> Confirm(long id)
+        public Tuple<bool, string> Confirm(long id)
         {
             //更新状态
             var pt = wmsinbound.TInPutaways.Where(x => x.Id == id).FirstOrDefault();
@@ -168,8 +169,8 @@ namespace dotnet_wms_ef.Services
             inventoryService.PutAways(pt.WhId, details.ToArray());
 
             //更新库存
-            var r= wmsinbound.SaveChanges() > 0;
-            return new Tuple<bool, string>(r,"");
+            var r = wmsinbound.SaveChanges() > 0;
+            return new Tuple<bool, string>(r, "");
         }
     }
 }

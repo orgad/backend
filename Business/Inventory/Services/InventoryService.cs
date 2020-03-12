@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using dotnet_wms_ef.Models;
+using dotnet_wms_ef.ViewModels;
 
 namespace dotnet_wms_ef.Services
 {
@@ -31,7 +32,7 @@ namespace dotnet_wms_ef.Services
                 {
                     r = Do2(whId, t);
                     rs.Add(r);
-                }    
+                }
             }
             wmsinventory.TInvts.AddRange(rs);
 
@@ -44,6 +45,24 @@ namespace dotnet_wms_ef.Services
         {
             WhService whService = new WhService();
             return whService.getRcvDefaultBin(whId);
+        }
+
+        public List<TInvt> PageList(QueryInvt queryInvt)
+        {
+            if (queryInvt.PageSize == 0) queryInvt.PageSize = 20;
+            return this.Query(queryInvt).
+            OrderByDescending(x => x.Id).Skip(queryInvt.PageIndex).Take(queryInvt.PageSize).ToList();
+        }
+
+        public int TotalCount(QueryInvt queryInvt)
+        {
+            return this.Query(queryInvt).Count();
+        }
+
+        private IQueryable<TInvt> Query(QueryInvt queryInvt)
+        {
+
+            return wmsinventory.TInvts;
         }
 
         private TInvt Do1(TInvt h, int whId, TInInboundD t)
@@ -149,12 +168,12 @@ namespace dotnet_wms_ef.Services
 
                 //开始上架: 增加目的货位的库存，减少收货区货位的库存
                 var psBysku = ps.Where(x => x.SkuId == toInvt.Key).ToArray();
-                PutAway(whId,psBysku, invts);
+                PutAway(whId, psBysku, invts);
             }
             return wmsinventory.SaveChanges() > 0;
         }
 
-        private void PutAway(int whId,TInPutawayD[] putAwayDetailList, List<TInvtD> invts)
+        private void PutAway(int whId, TInPutawayD[] putAwayDetailList, List<TInvtD> invts)
         {
             //单个SKU上架
             var hid = invts.Select(x => x.HId).FirstOrDefault();
@@ -174,13 +193,13 @@ namespace dotnet_wms_ef.Services
                 wmsinventory.TInvtDs.Add(new TInvtD
                 {
                     HId = hid,
-                    WhId =  whId,
+                    WhId = whId,
                     SkuId = Sku.SkuId,
                     Sku = Sku.Sku,
                     Barcode = Sku.Barcode,
                     ZoneId = toZoneId,
                     ZoneCode = toZone,
-                    BinId  = toBinId,
+                    BinId = toBinId,
                     BinCode = toBin,
                     Qty = qty,
                     CreatedBy = DefaultUser.UserName,

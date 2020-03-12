@@ -23,7 +23,7 @@ namespace dotnet_wms_ef.Controllers
             var response = new JsonResult(
                 new SingleResponse
                 {
-                    data = list,
+                    Data = list,
                     TotalCount = totalCount
                 }
                 );

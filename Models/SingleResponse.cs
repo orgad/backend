@@ -7,6 +7,6 @@ namespace dotnet_wms_ef.Controllers
         public int TotalCount { get; set; }
 
 
-        public object data { get; set; }
+        public object Data { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 using System.Web.Http;
 using dotnet_wms_ef.Services;
+using dotnet_wms_ef.ViewModels;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +19,7 @@ namespace dotnet_wms_ef.Controllers
         {
             return new JsonResult(new SingleResponse
             {
-                data = putAwayService.PageList(queryPutAway),
+                Data = putAwayService.PageList(queryPutAway),
                 TotalCount = putAwayService.TotalCount(queryPutAway),
             });
         }

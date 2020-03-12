@@ -8,6 +8,7 @@ using dotnet_wms_ef.Services;
 using dotnet_wms_ef.Views;
 using dotnet_wms_ef.Views.ViewModels;
 using Microsoft.AspNetCore.Hosting;
+using dotnet_wms_ef.ViewModels;
 
 namespace dotnet_wms_ef.Controllers
 {
@@ -34,7 +35,7 @@ namespace dotnet_wms_ef.Controllers
             var response = new JsonResult(
                 new SingleResponse
                 {
-                    data = list,
+                    Data = list,
                     TotalCount = totalCount
                 }
                 );
@@ -69,10 +70,10 @@ namespace dotnet_wms_ef.Controllers
 
         [HttpPost]
         [EnableCors("any")]
-        [Route("importdetail")] 
-        public JsonResult Upload(IFormFile file,[FromUri]ImportRequest importRequest)
+        [Route("importdetail")]
+        public JsonResult Upload(IFormFile file, [FromUri]ImportRequest importRequest)
         {
-            var r = asnService.Upload(file,importRequest.id,importRequest.code);
+            var r = asnService.Upload(file, importRequest.id, importRequest.code);
             return new JsonResult(r);
         }
 
@@ -81,7 +82,7 @@ namespace dotnet_wms_ef.Controllers
         [Route("details/download/{id}")]
         public IActionResult DownLoad(long id)
         {
-            var r = asnService.DownLoad(id,id.ToString()); 
+            var r = asnService.DownLoad(id, id.ToString());
             return new PhysicalFileResult(r, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         }
 
@@ -91,7 +92,7 @@ namespace dotnet_wms_ef.Controllers
         public JsonResult Do([FromBody] long[] ids)
         {
             var r = asnService.Affirm(ids);
-           return new JsonResult(r);
+            return new JsonResult(r);
         }
 
         [HttpPost]
@@ -100,7 +101,7 @@ namespace dotnet_wms_ef.Controllers
         public JsonResult Check([FromBody] long[] ids)
         {
             var r = asnService.Check(ids);
-           return new JsonResult(r);
+            return new JsonResult(r);
         }
     }
 }

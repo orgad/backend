@@ -31,12 +31,12 @@ namespace dotnet_wms_ef.Services
             return o;
         }
 
-        public List<TInCheck> PageList(QueryAsnCheck queryAsnCheck)
+        public List<VAsnCheck> PageList(QueryAsnCheck queryAsnCheck)
         {
             return this.Query(queryAsnCheck)
                        .OrderByDescending(x => x.Id)
-                       .Skip(queryAsnCheck.pageIndex)
-                       .Take(queryAsnCheck.pageSize)
+                       .Skip(queryAsnCheck.PageIndex)
+                       .Take(queryAsnCheck.PageSize)
                        .ToList();
         }
 
@@ -86,14 +86,14 @@ namespace dotnet_wms_ef.Services
             return false;
         }
 
-        public List<TInCheck> TaskPageList(QueryAsnCheck queryAsnCheck)
+        public List<VAsnCheck> TaskPageList(QueryAsnCheck queryAsnCheck)
         {
             return this.Query(queryAsnCheck)
                        .Where(x => x.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing) &&
                                  x.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init))
                        .OrderByDescending(x => x.Id)
-                       .Skip(queryAsnCheck.pageIndex)
-                       .Take(queryAsnCheck.pageSize).ToList();
+                       .Skip(queryAsnCheck.PageIndex)
+                       .Take(queryAsnCheck.PageSize).ToList();
         }
 
         public int TaskTotalCount(QueryAsnCheck queryAsnCheck)
@@ -104,12 +104,29 @@ namespace dotnet_wms_ef.Services
                     .Count();
         }
 
-        private IQueryable<TInCheck> Query(QueryAsnCheck queryAsnCheck)
+        private IQueryable<VAsnCheck> Query(QueryAsnCheck queryAsnCheck)
         {
-            if (queryAsnCheck.pageSize == 0)
-                queryAsnCheck.pageSize = 20;
+            if (queryAsnCheck.PageSize == 0)
+                queryAsnCheck.PageSize = 20;
 
-            var query = wms.TInChecks as IQueryable<TInCheck>;
+            var query = (from check in wms.TInChecks
+                         join asn in wms.TInAsns on check.HId equals asn.Id
+                         select new VAsnCheck
+                         {
+                             Id = check.Id,
+                             HId = check.HId,
+                             Code = check.Code,
+                             AsnCode = asn.Code,
+                             IsCiq = check.IsCiq,
+                             Status = check.Status,
+                             CartonQty = check.CartonQty,
+                             Qty = check.Qty,
+                             DamageCartonQty = check.DamageCartonQty,
+                             DamageQty = check.DamageQty,
+                             CreatedTime = check.CreatedTime,
+                             CreatedBy = check.CreatedBy
+                         })
+                          as IQueryable<VAsnCheck>;
 
             return query;
         }

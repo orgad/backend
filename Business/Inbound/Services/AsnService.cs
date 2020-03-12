@@ -4,6 +4,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using dotnet_wms_ef.Models;
+using dotnet_wms_ef.ViewModels;
 using dotnet_wms_ef.Views.ViewModels;
 using Microsoft.AspNetCore.Http;
 
@@ -23,13 +24,13 @@ namespace dotnet_wms_ef.Services
         public List<TInAsn> PageList(QueryAsn queryAsn)
         {
             return this.Query(queryAsn).
-            OrderByDescending(x => x.Id).Skip(queryAsn.pageIndex).Take(queryAsn.pageSize).ToList();
+            OrderByDescending(x => x.Id).Skip(queryAsn.PageIndex).Take(queryAsn.PageSize).ToList();
         }
 
         private IQueryable<TInAsn> Query(QueryAsn queryAsn)
         {
-            if (queryAsn.pageSize == 0)
-                queryAsn.pageSize = 20;
+            if (queryAsn.PageSize == 0)
+                queryAsn.PageSize = 20;
 
             var query = wms.TInAsns as IQueryable<TInAsn>;
 

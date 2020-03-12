@@ -22,7 +22,7 @@ namespace dotnet_wms_ef.Controllers
             var r = new SingleResponse
             {
                 TotalCount = qcService.TotalCount(queryQc),
-                data = qcService.PageList(queryQc),
+                Data = qcService.PageList(queryQc),
             };
             return new JsonResult(r);
         }

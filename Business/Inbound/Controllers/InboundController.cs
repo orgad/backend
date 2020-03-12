@@ -21,7 +21,7 @@ namespace dotnet_wms_ef.Controllers
             var response = new JsonResult(
                 new SingleResponse
                 {
-                    data = list,
+                    Data = list,
                     TotalCount = totalCount
                 }
                 );
@@ -45,7 +45,7 @@ namespace dotnet_wms_ef.Controllers
         public JsonResult RcvOptList()
         {
             var r= inboundService.OptList();
-            return new JsonResult(new SingleResponse{ TotalCount = 0,data = r});
+            return new JsonResult(new SingleResponse{ TotalCount = 0,Data = r});
         }
         
         [HttpGet]

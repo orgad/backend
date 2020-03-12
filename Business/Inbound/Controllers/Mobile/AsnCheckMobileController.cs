@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using dotnet_wms_ef.Models;
 using dotnet_wms_ef.Services;
 using Microsoft.AspNetCore.Hosting;
+using dotnet_wms_ef.ViewModels;
 
 namespace dotnet_wms_ef.Controllers
 {
@@ -31,7 +32,7 @@ namespace dotnet_wms_ef.Controllers
             var response = new JsonResult(
                 new SingleResponse
                 {
-                    data = list,
+                    Data = list,
                     TotalCount = totalCount
                 }
                 );

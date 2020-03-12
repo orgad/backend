@@ -21,7 +21,7 @@ namespace dotnet_wms_ef.Controllers
             return new JsonResult(new SingleResponse
             {
                 TotalCount = putAwayService.TotalTaskCount(queryPutAway),
-                data = putAwayService.PageTaskList(queryPutAway)
+                Data = putAwayService.PageTaskList(queryPutAway)
             });
         }
 

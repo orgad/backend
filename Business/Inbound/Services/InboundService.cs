@@ -85,6 +85,8 @@ namespace dotnet_wms_ef
         {
             return wmsinbound.TInOptlogs.Where(x => x.OrderId == id).ToList();
         }
+
+        //收货确认,生成库存
         public List<Tuple<long, bool>> RcvAffirm(long[] ids)
         {
             var list = new List<Tuple<long, bool>>();
@@ -95,10 +97,10 @@ namespace dotnet_wms_ef
                 var detailList = inboundDs.Where(x => x.HId == inbound.Id).ToArray();
 
                 //生成库存记录
-                inventoryService.Create(inbound.WhId, detailList);
+                inventoryService.Create(inbound.WhId, inbound.CustId, detailList);
 
                 //修改单据状态
-                inbound.RStatus = "Finished";
+                inbound.RStatus = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Finished);
 
                 //调用策略
                 if (strategyService.NextFlow(inbound.WhId, inbound.CustId, inbound.BrandId,

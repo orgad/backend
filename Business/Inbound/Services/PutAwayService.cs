@@ -124,7 +124,10 @@ namespace dotnet_wms_ef.Services
                     pt.FirstPutawayAt = DateTime.UtcNow;
                 pt.LastPutawayAt = DateTime.UtcNow;
 
+                pt.Qty += qty+1;
+
                 pt.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing);
+                detail.SkuId = prodSku.Id;
                 detail.ZoneId = zone.Id;
                 detail.ZoneCode = zone.Code;
                 detail.BinId = bin.Id;

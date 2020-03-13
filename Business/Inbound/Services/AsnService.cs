@@ -272,13 +272,17 @@ namespace dotnet_wms_ef.Services
             var list = new List<Tuple<long,bool>>();
             //生成入库单
             var asns = wms.TInAsns.Where(x => ids.Contains(x.Id)).ToList();
+            var asnChecks = wms.TInChecks.Where(x=>ids.Contains(x.HId)).ToList();
             foreach (var asn in asns)
             {
                 var r = inboundService.Create(asn);
                 wms.TInInbounds.Add(r);
                 //修改到货通知单的单据状态
                 asn.CheckStatus = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Finished);
-                
+                 
+                var asnCheck = asnChecks.Where(x=>x.HId == asn.Id).FirstOrDefault();
+                asnCheck.Status = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Finished);
+
                 var result = wms.SaveChanges()>0;
                 list.Add(new Tuple<long, bool>(asn.Id,result));
             }

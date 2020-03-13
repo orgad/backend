@@ -13,6 +13,7 @@ using dotnet_wms_ef.ViewModels;
 namespace dotnet_wms_ef.Controllers
 {
     [Route("/api/in/asn/")]
+    [EnableCors("any")]
     public class AsnController : ApiController
     {
         AsnService asnService = new AsnService();
@@ -27,7 +28,6 @@ namespace dotnet_wms_ef.Controllers
 
         [HttpGet]
         [Route("list")]
-        [EnableCors("any")]
         public JsonResult Index([FromUri]QueryAsn queryAsn)
         {
             var list = asnService.PageList(queryAsn);

@@ -36,7 +36,11 @@ namespace dotnet_wms_ef
                 //查询到货明细
                 var asnDetail = wmsinbound.TInAsnDs.Where(x => x.HId == asnId && x.Barcode == opt.Barcode)
                 .FirstOrDefault();
-
+                
+                if(asnDetail==null)
+                {
+                    throw new Exception("barcode" + opt.Barcode + "not exists." );
+                }
                 totalQty = asnDetail.Qty;
 
                 // 核对扫描内容是否完整
@@ -45,7 +49,7 @@ namespace dotnet_wms_ef
                 //校验数量
                 if (inboundDetail != null)
                 {
-                    inbound.RStatus = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Doing);
+                    inbound.RStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing);
                     scanFinished = DoCheckQty(asnDetail.Qty, inbound.WhId, inbound.CustId, inbound.BrandId, inboundDetail.Qty);
                 }
             }
@@ -112,8 +116,7 @@ namespace dotnet_wms_ef
 
         private Tuple<bool, string> Save(long skuId, string sku, int totalQty, long inboundId, TInInboundD inboundDetail, TInOptlog opt)
         {
-
-            if (inboundDetail.Qty + 1 <= totalQty)
+            if (inboundDetail==null || inboundDetail.Qty + 1 <= totalQty)
             {
                 //生成入库记录
                 if (inboundDetail != null)

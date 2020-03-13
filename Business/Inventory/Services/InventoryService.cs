@@ -11,12 +11,12 @@ namespace dotnet_wms_ef.Services
         wmsinventoryContext wmsinventory = new wmsinventoryContext();
 
         //收货
-        public void Create(int whId, TInInboundD[] ts)
+        public void Create(int whId, int custId, TInInboundD[] ts)
         {
             var id = ts.Select(x => x.HId).FirstOrDefault();
             var rs = new List<TInvt>();
             // 首先查询有没有库存记录,有就更新TInvt和TInvtD;
-            var detailList = new List<TInvtD>();
+ 
             var logs = new List<TInvtChangeLog>();
 
             // 没有就新增
@@ -26,11 +26,11 @@ namespace dotnet_wms_ef.Services
                 var h = wmsinventory.TInvts.Where(x => x.WhId == whId && x.SkuId == t.SkuId).FirstOrDefault();
                 if (h != null)
                 {
-                    r = Do1(h, whId, t);
+                    r = Do1(h, whId, custId, t);
                 }
                 else
                 {
-                    r = Do2(whId, t);
+                    r = Do2(whId, custId, t);
                     rs.Add(r);
                 }
             }
@@ -61,7 +61,7 @@ namespace dotnet_wms_ef.Services
 
         private IQueryable<TInvt> Query(QueryInvt queryInvt)
         {
-            if(queryInvt.PageSize==0)
+            if (queryInvt.PageSize == 0)
             {
                 queryInvt.PageSize = 20;
             }
@@ -77,7 +77,7 @@ namespace dotnet_wms_ef.Services
             return query;
         }
 
-        private TInvt Do1(TInvt h, int whId, TInInboundD t)
+        private TInvt Do1(TInvt h, int whId, int custId, TInInboundD t)
         {
             h.Qty += t.Qty;
             var bin = GetDefalutBin(whId);
@@ -102,6 +102,7 @@ namespace dotnet_wms_ef.Services
                 OrderId = t.HId,
                 OrderType = Enum.GetName(typeof(EnumOrderType), EnumOrderType.RCV),
                 WhId = whId,
+                CustId = custId,
                 InvtDId = d1.Id,
                 SkuId = t.SkuId,
                 Barcode = t.Barcode,
@@ -116,8 +117,9 @@ namespace dotnet_wms_ef.Services
             return h;
         }
 
-        private TInvt Do2(int whId, TInInboundD t)
+        private TInvt Do2(int whId, int custId, TInInboundD t)
         {
+            //这是新增的情况
             var h = new TInvt
             {
                 WhId = whId,
@@ -153,6 +155,7 @@ namespace dotnet_wms_ef.Services
                 OrderType = Enum.GetName(typeof(EnumOrderType), EnumOrderType.RCV),
                 WhId = whId,
                 InvtDId = d2.Id,
+                CustId = custId,
                 SkuId = t.SkuId,
                 Barcode = t.Barcode,
                 BinId = d2.BinId,
@@ -164,7 +167,7 @@ namespace dotnet_wms_ef.Services
 
             d2.TInvtChangeLog = log;
             h.DetailList.Add(d2);
-            h.Qty += d2.Qty;
+            h.Qty = d2.Qty;
             return h;
         }
 

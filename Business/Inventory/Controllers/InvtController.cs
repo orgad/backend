@@ -12,6 +12,7 @@ namespace dotnet_wms_ef.Controllers
     {
         InventoryService inventoryService = new InventoryService();
         InventoryDetailService inventoryDetailService = new InventoryDetailService();
+        InventoryLogService inventoryLogService = new InventoryLogService();
 
         [Route("list")]
          public JsonResult List(QueryInvt queryInvt)
@@ -39,6 +40,15 @@ namespace dotnet_wms_ef.Controllers
              return new JsonResult(new SingleResponse{
                  TotalCount = inventoryDetailService.TotalCount(queryInvt),
                  Data = inventoryDetailService.PageList(queryInvt)
+             });
+         }
+
+         [Route("log-list")]
+         public JsonResult LogList(QueryInvt queryInvt)
+         {
+             return new JsonResult(new SingleResponse{
+                 TotalCount = inventoryLogService.TotalCount(queryInvt),
+                 Data = inventoryLogService.PageList(queryInvt)
              });
          }
     }

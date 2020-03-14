@@ -10,6 +10,7 @@ namespace dotnet_wms_ef.Controllers
     public class PutAwayController : ApiController
     {
         PutAwayService putAwayService = new PutAwayService();
+        PutAwayAdviceService putAwayAdvice = new PutAwayAdviceService();
 
         //上架单查询
         [HttpGet]
@@ -43,6 +44,18 @@ namespace dotnet_wms_ef.Controllers
         {
             var result = putAwayService.Confirm(id);
             return new JsonResult(result);
+        }
+
+        [HttpGet]
+        [Route("advice-list")]
+        [EnableCors("any")]
+        public JsonResult AdviceList()
+        {
+            return new JsonResult(new SingleResponse
+            {
+                Data = putAwayAdvice.PageList(),
+                TotalCount = putAwayAdvice.TotalCount(),
+            });
         }
     }
 }

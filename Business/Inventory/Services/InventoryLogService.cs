@@ -5,10 +5,10 @@ using dotnet_wms_ef.ViewModels;
 
 namespace dotnet_wms_ef.Services
 {
-    public class InventoryDetailService
+    public class InventoryLogService
     {
         wmsinventoryContext wmsinventory = new wmsinventoryContext();
-        public List<TInvtD> PageList(QueryInvt queryInvt)
+        public List<TInvtChangeLog> PageList(QueryInvt queryInvt)
         {
             if (queryInvt.PageSize == 0) queryInvt.PageSize = 20;
             return this.Query(queryInvt).
@@ -20,14 +20,14 @@ namespace dotnet_wms_ef.Services
             return this.Query(queryInvt).Count();
         }
 
-        private IQueryable<TInvtD> Query(QueryInvt queryInvt)
+        private IQueryable<TInvtChangeLog> Query(QueryInvt queryInvt)
         {
             if (queryInvt.PageSize == 0)
             {
                 queryInvt.PageSize = 20;
             }
 
-            var query = wmsinventory.TInvtDs as IQueryable<TInvtD>;
+            var query = wmsinventory.TInvtChangeLogs as IQueryable<TInvtChangeLog>;
             
             if (queryInvt.SkuId > 0)
             {

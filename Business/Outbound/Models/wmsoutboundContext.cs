@@ -16,15 +16,15 @@ namespace dotnet_wms_ef.Business.Models
         {
         }
 
-        public virtual DbSet<TOut> TOut { get; set; }
+        public virtual DbSet<TOut> TOuts { get; set; }
         public virtual DbSet<TOutAddress> TOutAddress { get; set; }
         public virtual DbSet<TOutAlot> TOutAlot { get; set; }
         public virtual DbSet<TOutAlotD> TOutAlotD { get; set; }
         public virtual DbSet<TOutCheck> TOutCheck { get; set; }
         public virtual DbSet<TOutCheckD> TOutCheckD { get; set; }
-        public virtual DbSet<TOutD> TOutD { get; set; }
-        public virtual DbSet<TOutDn> TOutDn { get; set; }
-        public virtual DbSet<TOutDnD> TOutDnD { get; set; }
+        public virtual DbSet<TOutD> TOutDs { get; set; }
+        public virtual DbSet<TOutDn> TOutDns { get; set; }
+        public virtual DbSet<TOutDnD> TOutDnDs { get; set; }
         public virtual DbSet<TOutExpress> TOutExpress { get; set; }
         public virtual DbSet<TOutHandover> TOutHandover { get; set; }
         public virtual DbSet<TOutHandoverD> TOutHandoverD { get; set; }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using dotnet_wms_ef.Business.Models;
 using dotnet_wms_ef.Models;
 using dotnet_wms_ef.ViewModels;
 
@@ -188,6 +189,14 @@ namespace dotnet_wms_ef.Services
             return wmsinventory.SaveChanges() > 0;
         }
 
+        public TInvt[] Alot(int whId,TOutD[] details)
+        {
+            foreach(var detail in details)
+            {
+                //返回库存明细信息
+            }
+            return null;
+        }
         private void PutAway(int whId, TInPutawayD[] putAwayDetailList, List<TInvtD> invts)
         {
             //单个SKU上架

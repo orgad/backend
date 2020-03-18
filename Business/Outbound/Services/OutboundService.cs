@@ -41,6 +41,8 @@ namespace dotnet_wms_ef.Services
             var outbound = wmsoutbound.TOuts.Where(x => x.DnId == dn.Id).FirstOrDefault();
             if (outbound != null)
                 results.Add(new Tuple<bool, string>(false, dn.Code + "is exist"));
+            
+            dn.DetailList = wmsoutbound.TOutDnDs.Where(x=>x.HId == dn.Id).ToList();
 
             var shops = dn.DetailList.Select(x => x.Store).ToList();
             if (shops != null && shops.Any())
@@ -51,6 +53,10 @@ namespace dotnet_wms_ef.Services
                     var detailList = dn.DetailList.Where(x => x.Store == group.Key).ToList();
                     results.Add(CreateOutbound(dn, group.Key, detailList));
                 }
+            }
+            else
+            {
+                results.Add(CreateOutbound(dn, "", dn.DetailList.ToList()));
             }
 
             return results;
@@ -79,6 +85,7 @@ namespace dotnet_wms_ef.Services
                 CreatedBy = DefaultUser.UserName,
                 CreatedTime = DateTime.UtcNow
             };
+            
 
             var detailList = new List<TOutD>();
             foreach (TOutDnD detail in list)
@@ -101,6 +108,10 @@ namespace dotnet_wms_ef.Services
             }
 
             dn.Status = Enum.GetName(typeof(EnumStatus),EnumStatus.Audit);
+
+            outbound.DetailList = detailList;
+
+            wmsoutbound.TOuts.Add(outbound);
 
             var r = wmsoutbound.SaveChanges() > 0;
 

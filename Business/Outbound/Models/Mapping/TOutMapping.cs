@@ -227,8 +227,10 @@ SHP2019XXXX0000001")
 
             entity.Property(e => e.BizCode).HasColumnName("biz_code");
             entity.Property(e => e.GoodsType).HasColumnName("goods_type");
+            entity.Property(e =>e.SrcCode).HasColumnName("src_code");
             entity.Property(e => e.OrderPayment).HasColumnName("order_payment");
             entity.Property(e => e.Payment).HasColumnName("payment");
+            entity.Property(e =>e.IsDeleted).HasColumnName("is_deleted");
         }
     }
 }

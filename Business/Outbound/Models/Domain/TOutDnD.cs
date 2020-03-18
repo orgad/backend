@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace dotnet_wms_ef.Business.Models
 {
@@ -24,6 +25,7 @@ namespace dotnet_wms_ef.Business.Models
         public string LastModifiedBy { get; set; }
         public DateTime? LastModifiedTime { get; set; }
 
+        [IgnoreDataMember]
         public virtual TOutDn TOutDn{get;set;}
     }
 }

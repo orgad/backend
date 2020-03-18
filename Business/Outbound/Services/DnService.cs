@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using dotnet_wms_ef.Business.Models;
 using dotnet_wms_ef.ViewModels;
+using Microsoft.AspNetCore.Http;
 
 namespace dotnet_wms_ef.Services
 {
@@ -10,7 +12,11 @@ namespace dotnet_wms_ef.Services
     {
         wmsoutboundContext wmsoutbound = new wmsoutboundContext();
 
+        ExcelIOService ioService = new ExcelIOService();
+
         OutboundService outboundService = new OutboundService();
+
+        public string Root { get; set; } //上传文件的路径
 
         public Tuple<bool, string> Create(TOutDn dn)
         {
@@ -27,11 +33,57 @@ namespace dotnet_wms_ef.Services
 
             dn.CreatedBy = DefaultUser.UserName;
             dn.CreatedTime = DateTime.UtcNow;
-            
+
             wmsoutbound.Add(dn);
 
             var result = wmsoutbound.SaveChanges() > 0;
             return new Tuple<bool, string>(result, "");
+        }
+
+        public bool Upload(IFormFile file, long id, string code)
+        {
+            ioService.basePath = this.Root;
+            //保存文件
+            DataTable dataTable = ioService.Import(file, "DN",code);
+
+            var details = new List<TOutDnD>();
+            //写入到数据库
+            for (int i = 0; i < dataTable.Rows.Count; i++)
+            {
+                TOutDnD d = new TOutDnD();
+                d.HId = id;
+                d.Barcode = dataTable.Rows[i]["barcode"].ToString();
+                d.Sku = dataTable.Rows[i]["sku"].ToString();
+                d.Qty = Convert.ToInt32(dataTable.Rows[i]["qty"].ToString());
+                d.CreatedBy = "rickli";
+                d.CreatedTime = DateTime.UtcNow;
+                details.Add(d);
+            }
+            var r= CreateDnDetail(id, details.ToArray());
+            return r;
+        }
+
+        public bool CreateDnDetail(long id, TOutDnD[] details)
+        {
+            var o = wmsoutbound.TOutDns.Where(x => x.Id == id).FirstOrDefault();
+            if (o == null) return false;
+            o.Qty = details.Sum(x => x.Qty);
+            foreach (var d in details)
+            {
+                var n = new TOutDnD
+                {
+                    HId = id,
+                    Sku = d.Sku,
+                    Barcode = d.Barcode,
+                    Qty = d.Qty,
+                    //IsDeleted = false,
+                    CreatedBy = "rickli",
+                    CreatedTime = DateTime.UtcNow,
+                };
+                wmsoutbound.TOutDnDs.Add(n);
+            }
+
+            return wmsoutbound.SaveChanges() > 0;
         }
 
         public List<TOutDn> PageList(QueryDn queryDn)

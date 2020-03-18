@@ -186,7 +186,7 @@ namespace dotnet_wms_ef.Services
         {
             ioService.basePath = this.Root;
             //保存文件
-            DataTable dataTable = ioService.Import(file, code);
+            DataTable dataTable = ioService.Import(file,"ASN", code);
 
             var details = new List<TInAsnD>();
             //写入到数据库
@@ -242,7 +242,7 @@ namespace dotnet_wms_ef.Services
                 dr["qty"] = item.Qty;
                 dt.Rows.Add(dr);
             }
-            return ioService.Export(code, dt);
+            return ioService.Export(code, "ASN",dt);
         }
 
         //

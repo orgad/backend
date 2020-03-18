@@ -2,7 +2,10 @@ using System.Web.Http;
 using dotnet_wms_ef.Business.Models;
 using dotnet_wms_ef.Services;
 using dotnet_wms_ef.ViewModels;
+using dotnet_wms_ef.Views;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace dotnet_wms_ef.Controllers
@@ -12,6 +15,15 @@ namespace dotnet_wms_ef.Controllers
     public class DnController : ApiController
     {
         DnService dnService = new DnService();
+
+        private readonly IWebHostEnvironment _webHostEnvironment;
+
+        public DnController(IWebHostEnvironment webHostEnvironment)
+        {
+            _webHostEnvironment = webHostEnvironment;
+            dnService.Root = _webHostEnvironment.WebRootPath;
+        }
+
         DnDetailService dnDetailService = new DnDetailService();
 
         [Route("list")]
@@ -61,6 +73,14 @@ namespace dotnet_wms_ef.Controllers
         {
             var result = dnService.Audit(ids);
             return  new JsonResult(result);
+        }
+
+        [Route("importdetail")]
+        [HttpPost]
+        public JsonResult Upload(IFormFile file, [FromUri]ImportRequest importRequest)
+        {
+            var r = dnService.Upload(file, importRequest.id, importRequest.code);
+            return new JsonResult(r);
         }
     }
 }

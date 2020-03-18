@@ -7,7 +7,7 @@ namespace dotnet_wms_ef.Business.Models
     {
         public TOut()
         {
-            DetailList = new TOutD[] { };
+            DetailList = new HashSet<TOutD>();
         }
 
         public long Id { get; set; }
@@ -51,6 +51,6 @@ namespace dotnet_wms_ef.Business.Models
         public string LastModifiedBy { get; set; }
         public DateTime? LastModifiedTime { get; set; }
 
-        public TOutD[] DetailList { get; set; }
+        public ICollection<TOutD> DetailList { get; set; }
     }
 }

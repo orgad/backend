@@ -11,16 +11,16 @@ namespace dotnet_wms_ef
     {
         public string basePath="";
 
-        public DataTable Import(IFormFile excelfile, string code)
+        public DataTable Import(IFormFile excelfile,string domain, string code)
         {
-            var sFileName = basePath + "\\files\\Asn\\" + code + ".xls";
-            var sPath = basePath + "\\files\\Asn";
+            var sFileName = basePath + "\\files\\"+domain+"\\" + code + ".xls";
+            var sPath = basePath + "\\files\\"+domain;
 
             FileInfo file = new FileInfo(sFileName);
             if(!Directory.Exists(sPath))
             { 
                 Directory.CreateDirectory(basePath+"\\files");
-                Directory.CreateDirectory(basePath+"\\files\\Asn");
+                Directory.CreateDirectory(basePath+"\\files\\"+domain);
             }
 
             if (!file.Exists)
@@ -37,10 +37,10 @@ namespace dotnet_wms_ef
             return ImportData(file, true);
         }
 
-        public string Export(string code, DataTable dt)
+        public string Export(string code, string domain,DataTable dt)
         {
             var sFileName = code + ".xls";
-            var fullFileName = basePath + "\\Asn\\" + sFileName;
+            var fullFileName = basePath + "\\"+domain+"\\" + sFileName;
             if (!File.Exists(fullFileName))
             {
                 FileInfo file = new FileInfo(fullFileName);

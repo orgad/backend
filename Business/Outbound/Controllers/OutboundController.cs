@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace dotnet_wms_ef.Controllers
 {
-    [Route("/api/out/")]
+    [Route("/api/out/outbound/")]
     [EnableCors("any")]
     public class OutboundController : ApiController
     {
@@ -20,6 +20,13 @@ namespace dotnet_wms_ef.Controllers
                 TotalCount = outboundService.TotalCount(queryOut),
                 Data = outboundService.PageList(queryOut)
             });
+        }
+
+         [Route("{id}/details")]
+        public JsonResult Details([FromUri] long id)
+        {
+            var r = outboundService.Details(id);
+            return new JsonResult(r);
         }
     }
 }

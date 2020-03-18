@@ -7,7 +7,7 @@ namespace dotnet_wms_ef.Business.Models
     {
         public TOutDn()
         {
-            this.DetailList = new TOutDnD[]{};
+            this.DetailList = new HashSet<TOutDnD>{};
         }
         public long Id { get; set; }
         public int? InboundId { get; set; }
@@ -17,7 +17,7 @@ namespace dotnet_wms_ef.Business.Models
         public int WhId { get; set; }
         public int CustId { get; set; }
         public int BrandId { get; set; }
-        public int BizCode { get; set; }
+        public string BizCode { get; set; }
         public string TransCode { get; set; }
         public string GoodsType { get; set; }
         public string TypeCode{get;set;}
@@ -41,6 +41,6 @@ namespace dotnet_wms_ef.Business.Models
         public string LastModifiedBy { get; set; }
         public DateTime? LastModifiedTime { get; set; }
 
-        public virtual TOutDnD[] DetailList{get;set;}
+        public virtual ICollection<TOutDnD> DetailList{get;set;}
     }
 }

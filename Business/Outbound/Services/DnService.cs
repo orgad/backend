@@ -19,14 +19,16 @@ namespace dotnet_wms_ef.Services
             {
                 dn.BatchNo = DateTime.Now.ToString("yyyyMMdd");
             }
-            dn.TypeCode = "SHP";
+            dn.TypeCode = "DN";
             dn.TransCode = "Outbound";
-            dn.SrcCode = "Interface";
+            dn.SrcCode = "Import";
             dn.Status = "None";
             dn.IsDeleted = false;
 
             dn.CreatedBy = DefaultUser.UserName;
             dn.CreatedTime = DateTime.UtcNow;
+            
+            wmsoutbound.Add(dn);
 
             var result = wmsoutbound.SaveChanges() > 0;
             return new Tuple<bool, string>(result, "");

@@ -169,12 +169,13 @@ namespace dotnet_wms_ef
                 .HasColumnName("wh_id")
                 .HasColumnType("int(11)")
                 .HasComment("仓库ID");
-            
+
             entity.Property(e => e.BizCode).HasColumnName("biz_code");
-            entity.Property(e => e.BizCode).HasColumnName("type_code");
+            entity.Property(e => e.TypeCode).HasColumnName("type_code");
             entity.Property(e => e.GoodsType).HasColumnName("goods_type");
             entity.Property(e => e.OrderPayment).HasColumnName("order_payment");
             entity.Property(e => e.Payment).HasColumnName("payment");
+            entity.Property(e => e.IsDeleted).HasColumnName("is_deleted");
         }
     }
 }

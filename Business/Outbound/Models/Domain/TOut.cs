@@ -17,7 +17,7 @@ namespace dotnet_wms_ef.Business.Models
         public int WhId { get; set; }
         public long InboundId { get; set; }
         public long DnId { get; set; }
-        public int BizCode { get; set; }
+        public string BizCode { get; set; }
         public string GoodsType { get; set; }
         public string TransCode { get; set; }
         public string TypeCode { get; set; }

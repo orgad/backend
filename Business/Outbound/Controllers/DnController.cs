@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace dotnet_wms_ef.Controllers
 {
-    [Route("/api/out/")]
+    [Route("/api/out/dn/")]
     [EnableCors("any")]
     public class DnController : ApiController
     {
@@ -47,6 +47,10 @@ namespace dotnet_wms_ef.Controllers
         [HttpPost]
         public JsonResult Create([FromBody] TOutDn dn)
         {
+            if(dn==null)
+            {
+                return new JsonResult("dn is null.");
+            }
             var result = dnService.Create(dn);
             return new JsonResult(result);
         }

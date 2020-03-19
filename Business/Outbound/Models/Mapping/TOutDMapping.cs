@@ -114,8 +114,8 @@ namespace dotnet_wms_ef
             entity.Property(e => e.Discount).HasColumnName("discount");
 
             entity.HasOne(d => d.TOut)
-            .WithMany(p => p.DetailList)
-            .HasForeignKey(d => d.HId);
+                  .WithMany(p => p.DetailList)
+                  .HasForeignKey(d => d.HId);
         }
     }
 }

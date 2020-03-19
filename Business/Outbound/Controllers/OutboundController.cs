@@ -28,5 +28,13 @@ namespace dotnet_wms_ef.Controllers
             var r = outboundService.Details(id);
             return new JsonResult(r);
         }
+
+        [Route("alot")]
+        [HttpPost]
+        public JsonResult Alot([FromBody] long[] ids)
+        {
+            var r = outboundService.Alots(ids);
+            return new JsonResult(r);
+        }
     }
 }

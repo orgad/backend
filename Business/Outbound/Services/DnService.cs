@@ -116,6 +116,8 @@ namespace dotnet_wms_ef.Services
             foreach (var dn in dns)
             {
                 outboundService.CreateOutFromDn(dn);
+                dn.Status = Enum.GetName(typeof(EnumStatus),EnumStatus.Audit);
+                wmsoutbound.SaveChanges();
             }
             return true;
         }

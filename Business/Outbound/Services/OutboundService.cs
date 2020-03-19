@@ -10,6 +10,10 @@ namespace dotnet_wms_ef.Services
     {
         wmsoutboundContext wmsoutbound = new wmsoutboundContext();
 
+        InventoryService inventoryService = new InventoryService();
+
+        AlotService alotService = new AlotService();
+
         ProductService productService = new ProductService();
         public List<TOut> PageList(QueryOut queryOut)
         {
@@ -66,7 +70,7 @@ namespace dotnet_wms_ef.Services
         {
             var outbound = new TOut
             {
-                Code = dn.Code.Replace("Dn", "SHP"),
+                Code = dn.Code.Replace("DN", "SHP"),
                 BatchNo = dn.BatchNo,
                 WhId = dn.WhId,
                 CustId = dn.CustId,
@@ -107,8 +111,6 @@ namespace dotnet_wms_ef.Services
                 });
             }
 
-            dn.Status = Enum.GetName(typeof(EnumStatus),EnumStatus.Audit);
-
             outbound.DetailList = detailList;
 
             wmsoutbound.TOuts.Add(outbound);
@@ -118,11 +120,41 @@ namespace dotnet_wms_ef.Services
             return new Tuple<bool, string>(r, "");
         }
 
-        public void Alot(long id)
+        public bool Alots(long[] ids)
         {
+            foreach(var id in ids)
+            {
+                this.Alot(id);
+            }
+            return true;
+        }
+        private void Alot(long id)
+        {
+            // 获取出库明细
              var outbound = wmsoutbound.TOuts.Where(x=>x.Id == id).FirstOrDefault();
+            if(outbound==null) throw new Exception("outboud is not exist.");
+            
+            var detailList = wmsoutbound.TOutDs.Where(x=>x.HId == id).ToArray();
 
-             //获取库存明细
+            // 获取分配结果,更新库存记录
+            var inventoryList = inventoryService.Alot(outbound.WhId,detailList);
+
+            // 生成分配记录
+            var r= alotService.Create(outbound.WhId,outbound.Id,inventoryList);  
+            wmsoutbound.TOutAlot.Add(r);
+
+            //更新出库明细
+            foreach(var detail in detailList)
+            {
+                detail.MatchingQty = inventoryList.Where(x=>x.SkuId == detail.SkuId).Sum(X=>X.AlotQty);
+            }
+
+            //更新单据状态
+            outbound.AllotStatus = 2;
+            outbound.Status = Enum.GetName(typeof(EnumStatus),EnumStatus.Audit);
+
+            //保存
+            wmsoutbound.SaveChanges();
         }
     }
 }

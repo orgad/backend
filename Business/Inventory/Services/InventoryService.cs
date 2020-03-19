@@ -17,7 +17,7 @@ namespace dotnet_wms_ef.Services
             var id = ts.Select(x => x.HId).FirstOrDefault();
             var rs = new List<TInvt>();
             // 首先查询有没有库存记录,有就更新TInvt和TInvtD;
- 
+
             var logs = new List<TInvtChangeLog>();
 
             // 没有就新增
@@ -189,14 +189,71 @@ namespace dotnet_wms_ef.Services
             return wmsinventory.SaveChanges() > 0;
         }
 
-        public TInvt[] Alot(int whId,TOutD[] details)
+        public TInvtD[] Alot(int whId, TOutD[] singleOutdetails)
         {
-            foreach(var detail in details)
+            var alotInvts = new List<TInvtD>();
+            var groups = singleOutdetails.GroupBy(x => x.SkuId);
+
+            //按照sku进行分组,获得分配的库存返回值
+            foreach (var group in groups)
+            {
+                var singleSkuDetails = singleOutdetails.Where(x => x.SkuId == group.Key).ToList();
+                //按单个sku进行库存分配
+                var r = AlotBySku(group.Key, singleSkuDetails.ToArray());
+                if (r != null && r.Any())
+                    alotInvts.AddRange(r);
+            }
+
+            wmsinventory.SaveChanges();
+
+            return alotInvts.ToArray();
+        }
+
+        private TInvtD[] AlotBySku(long skuId, TOutD[] singleSkuDetails)
+        {
+            var alotInvts = new List<TInvtD>();
+
+            //找到某一个sku 的库存记录
+            var o = wmsinventory.TInvts.Where(x => x.SkuId == skuId).FirstOrDefault();
+
+            var leaveInvtQty = o.Qty - o.AlotQty - o.LockedQty;
+
+            var totalQty = singleSkuDetails.Sum(x => x.Qty);
+
+            if (leaveInvtQty == 0)
+            {
+                //没有可分配库存
+                return null;
+            }
+            else if (leaveInvtQty >= totalQty)
+            {
+                //库存够分配的情况
+                o.AlotQty += totalQty;
+            }
+            else
+            {
+                //库存部分分配的情况
+                o.AlotQty += leaveInvtQty;
+            }
+
+            foreach (var detail in singleSkuDetails)
             {
                 //返回库存明细信息
+                var skuQty = detail.Qty;
+                var invtDs = wmsinventory.TInvtDs.Where(x => x.SkuId == detail.SkuId && x.Qty - x.AlotQty - x.LockedQty > 0)
+                            .ToList();
+                if (invtDs.Any())
+                {
+                    if(skuQty>0)
+                    {
+                       alotInvts.AddRange(ReduceAlot(skuQty, invtDs));
+                    }
+                }
             }
-            return null;
+
+            return alotInvts.ToArray();
         }
+
         private void PutAway(int whId, TInPutawayD[] putAwayDetailList, List<TInvtD> invts)
         {
             //单个SKU上架
@@ -233,6 +290,28 @@ namespace dotnet_wms_ef.Services
                 //需要扣减的库存
                 Reduce(qty, invts);
             }
+        }
+
+        private List<TInvtD> ReduceAlot(int skuQty, List<TInvtD> invts)
+        {
+            var list = new List<TInvtD>();
+
+            foreach (var invt in invts)
+            {
+                if (invt.Qty >= skuQty)
+                {
+                    invt.AlotQty += skuQty;
+                    list.Add(invt);
+                    break;
+                }
+                else
+                {
+                    invt.AlotQty = skuQty;
+                    skuQty -= invt.AlotQty;
+                    list.Add(invt);
+                }
+            }
+            return list;
         }
 
         private void Reduce(int totalQty, List<TInvtD> invts)

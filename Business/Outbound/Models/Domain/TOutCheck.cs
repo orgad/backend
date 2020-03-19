@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace dotnet_wms_ef.Business.Models
+namespace dotnet_wms_ef.Models
 {
     public partial class TOutCheck
     {

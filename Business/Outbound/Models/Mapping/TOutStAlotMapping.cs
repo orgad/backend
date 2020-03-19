@@ -1,4 +1,4 @@
-using dotnet_wms_ef.Business.Models;
+using dotnet_wms_ef.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

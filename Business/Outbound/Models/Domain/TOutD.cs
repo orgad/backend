@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace dotnet_wms_ef.Business.Models
+namespace dotnet_wms_ef.Models
 {
     public partial class TOutD
     {

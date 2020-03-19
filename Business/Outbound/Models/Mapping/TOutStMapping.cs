@@ -1,12 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using dotnet_wms_ef.Business.Models;
 
-namespace dotnet_wms_ef
+namespace dotnet_wms_ef.Models
 {
-    public class TOutStMapping : IEntityTypeConfiguration<TSt>
+    public class TOutStMapping : IEntityTypeConfiguration<TOutSt>
     {
-         public void Configure(EntityTypeBuilder<TSt> entity)
+         public void Configure(EntityTypeBuilder<TOutSt> entity)
          {
              entity.ToTable("t_st");
 

@@ -1,5 +1,5 @@
 using System.Web.Http;
-using dotnet_wms_ef.Business.Models;
+using dotnet_wms_ef.Models;
 using dotnet_wms_ef.Services;
 using dotnet_wms_ef.ViewModels;
 using dotnet_wms_ef.Views;

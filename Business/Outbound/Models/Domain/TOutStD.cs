@@ -3,13 +3,12 @@ using System.Collections.Generic;
 
 namespace dotnet_wms_ef.Models
 {
-    public partial class TStDelivery
+    public partial class TOutStD
     {
         public int Id { get; set; }
-        public int? HId { get; set; }
-        public ulong? IsNeedExpress { get; set; }
-        public string ExpressNode { get; set; }
-        public string OutboundNode { get; set; }
+        public int HId { get; set; }
+        public string OptCode { get; set; }
+        public int Seq { get; set; }
         public ulong? IsDeleted { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreatedTime { get; set; }

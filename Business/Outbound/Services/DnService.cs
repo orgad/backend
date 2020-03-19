@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using dotnet_wms_ef.Business.Models;
+using dotnet_wms_ef.Models;
 using dotnet_wms_ef.ViewModels;
 using Microsoft.AspNetCore.Http;
 

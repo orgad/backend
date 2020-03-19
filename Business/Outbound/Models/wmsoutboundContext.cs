@@ -3,7 +3,7 @@ using dotnet_wms_ef.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace dotnet_wms_ef.Business.Models
+namespace dotnet_wms_ef.Models
 {
     public partial class wmsoutboundContext : DbContext
     {
@@ -18,8 +18,8 @@ namespace dotnet_wms_ef.Business.Models
 
         public virtual DbSet<TOut> TOuts { get; set; }
         public virtual DbSet<TOutAddress> TOutAddress { get; set; }
-        public virtual DbSet<TOutAlot> TOutAlot { get; set; }
-        public virtual DbSet<TOutAlotD> TOutAlotD { get; set; }
+        public virtual DbSet<TOutAlot> TOutAlots { get; set; }
+        public virtual DbSet<TOutAlotD> TOutAlotDs { get; set; }
         public virtual DbSet<TOutCheck> TOutCheck { get; set; }
         public virtual DbSet<TOutCheckD> TOutCheckD { get; set; }
         public virtual DbSet<TOutD> TOutDs { get; set; }

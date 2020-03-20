@@ -1,14 +1,22 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using dotnet_wms_ef.Models;
 using dotnet_wms_ef.ViewModels;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace dotnet_wms_ef.Services
 {
     public class AlotService
     {
         wmsoutboundContext wmsoutbound = new wmsoutboundContext();
+
+        public void UseTransaction(IDbContextTransaction transaction)
+        {
+            wmsoutbound.Database.UseTransaction(transaction.GetDbTransaction());
+        }
 
         public TOutAlot Create(int whId, long outboundId, TInvtD[] invtDs)
         {

@@ -1,24 +1,25 @@
 using System.Web.Http;
 using dotnet_wms_ef.Services;
+using dotnet_wms_ef.ViewModels;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace dotnet_wms_ef.Controllers
 {
-    [Route("/api/out/alot/")]
+    [Route("/api/out/pck/")]
     [EnableCors("any")]
-    public class AlotController : ApiController
+    public class PickController : ApiController
     {
-        AlotService alotService = new AlotService();
+         PickService pickService = new PickService();
 
-        [Route("list")]
+         [Route("list")]
         [HttpGet]
-        public JsonResult List()
+        public JsonResult List(QueryPick queryPick)
         {
             return new JsonResult(new SingleResponse
             {
-                TotalCount = alotService.TotalCount(),
-                Data = alotService.PageList()
+                TotalCount = pickService.TotalCount(queryPick),
+                Data = pickService.PageList(queryPick)
             });
         }
 
@@ -26,7 +27,7 @@ namespace dotnet_wms_ef.Controllers
         [HttpGet]
         public JsonResult Details([FromUri]long id)
         {
-            var result = alotService.Details(id);
+            var result = pickService.Details(id);
             return new JsonResult(result);
         }
     }

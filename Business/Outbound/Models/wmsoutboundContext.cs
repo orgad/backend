@@ -28,8 +28,8 @@ namespace dotnet_wms_ef.Models
         public virtual DbSet<TOutExpress> TOutExpress { get; set; }
         public virtual DbSet<TOutHandover> TOutHandover { get; set; }
         public virtual DbSet<TOutHandoverD> TOutHandoverD { get; set; }
-        public virtual DbSet<TOutPick> TOutPick { get; set; }
-        public virtual DbSet<TOutPickD> TOutPickD { get; set; }
+        public virtual DbSet<TOutPick> TOutPicks { get; set; }
+        public virtual DbSet<TOutPickD> TOutPickDs { get; set; }
         public virtual DbSet<TOutWave> TOutWave { get; set; }
         public virtual DbSet<TSt> TSt { get; set; }
         public virtual DbSet<TStAllot> TStAllot { get; set; }

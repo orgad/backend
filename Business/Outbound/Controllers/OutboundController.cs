@@ -30,10 +30,18 @@ namespace dotnet_wms_ef.Controllers
         }
 
         [Route("alot")]
-        [HttpPost]
+        [HttpPut]
         public JsonResult Alot([FromBody] long[] ids)
         {
             var r = outboundService.Alots(ids);
+            return new JsonResult(r);
+        }
+
+        [Route("pick")]
+        [HttpPut]
+        public JsonResult Pick([FromBody] long[] ids)
+        {
+            var r = outboundService.Picks(ids);
             return new JsonResult(r);
         }
     }

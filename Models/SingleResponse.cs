@@ -1,6 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
-
-namespace dotnet_wms_ef.Controllers
+namespace dotnet_wms_ef.ViewModels
 {
     public class SingleResponse
     {

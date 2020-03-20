@@ -14,6 +14,8 @@ namespace dotnet_wms_ef.Services
 
         AlotService alotService = new AlotService();
 
+        PickService pickService = new PickService();
+
         ProductService productService = new ProductService();
         public List<TOut> PageList(QueryOut queryOut)
         {
@@ -45,8 +47,8 @@ namespace dotnet_wms_ef.Services
             var outbound = wmsoutbound.TOuts.Where(x => x.DnId == dn.Id).FirstOrDefault();
             if (outbound != null)
                 results.Add(new Tuple<bool, string>(false, dn.Code + "is exist"));
-            
-            dn.DetailList = wmsoutbound.TOutDnDs.Where(x=>x.HId == dn.Id).ToList();
+
+            dn.DetailList = wmsoutbound.TOutDnDs.Where(x => x.HId == dn.Id).ToList();
 
             var shops = dn.DetailList.Select(x => x.Store).ToList();
             if (shops != null && shops.Any())
@@ -89,7 +91,7 @@ namespace dotnet_wms_ef.Services
                 CreatedBy = DefaultUser.UserName,
                 CreatedTime = DateTime.UtcNow
             };
-            
+
 
             var detailList = new List<TOutD>();
             foreach (TOutDnD detail in list)
@@ -122,7 +124,7 @@ namespace dotnet_wms_ef.Services
 
         public bool Alots(long[] ids)
         {
-            foreach(var id in ids)
+            foreach (var id in ids)
             {
                 this.Alot(id);
             }
@@ -131,30 +133,61 @@ namespace dotnet_wms_ef.Services
         private void Alot(long id)
         {
             // 获取出库明细
-             var outbound = wmsoutbound.TOuts.Where(x=>x.Id == id).FirstOrDefault();
-            if(outbound==null) throw new Exception("outboud is not exist.");
-            
-            var detailList = wmsoutbound.TOutDs.Where(x=>x.HId == id).ToArray();
+            var outbound = wmsoutbound.TOuts.Where(x => x.Id == id).FirstOrDefault();
+            if (outbound == null) throw new Exception("outboud is not exist.");
+
+            var detailList = wmsoutbound.TOutDs.Where(x => x.HId == id).ToArray();
 
             // 获取分配结果,更新库存记录
-            var inventoryList = inventoryService.Alot(outbound.WhId,detailList);
+            var inventoryList = inventoryService.Alot(outbound.WhId, detailList);
 
             // 生成分配记录
-            var r= alotService.Create(outbound.WhId,outbound.Id,inventoryList);  
+            var r = alotService.Create(outbound.WhId, outbound.Id, inventoryList);
             wmsoutbound.TOutAlots.Add(r);
 
             //更新出库明细
-            foreach(var detail in detailList)
+            foreach (var detail in detailList)
             {
-                detail.MatchingQty = inventoryList.Where(x=>x.SkuId == detail.SkuId).Sum(X=>X.AlotQty);
+                detail.MatchingQty = inventoryList.Where(x => x.SkuId == detail.SkuId).Sum(X => X.AlotQty);
             }
 
             //更新单据状态
             outbound.AllotStatus = 2;
-            outbound.Status = Enum.GetName(typeof(EnumStatus),EnumStatus.Audit);
+            outbound.Status = Enum.GetName(typeof(EnumStatus), EnumStatus.Audit);
 
             //保存
             wmsoutbound.SaveChanges();
+        }
+
+        public bool Picks(long[] ids)
+        {
+            foreach (var id in ids)
+            {
+                this.Pick(id);
+            }
+            return true;
+        }
+
+        private bool Pick(long id)
+        {
+            var tOut = wmsoutbound.TOuts.Where(x => x.Id == id).FirstOrDefault();
+            if (tOut == null)
+            {
+                throw new Exception("out is null.");
+            }
+
+            var detailList = wmsoutbound.TOutDs.Where(x => x.HId == id).ToList();
+            if (!detailList.Any())
+            {
+                throw new Exception("detail-list is null.");
+            }
+
+            tOut.DetailList = detailList;
+
+            var result =  pickService.Create(tOut);
+            
+            tOut.PickStatus = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Init);
+            return wmsoutbound.SaveChanges()>0;
         }
     }
 }

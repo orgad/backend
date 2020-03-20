@@ -1,6 +1,6 @@
 using dotnet_wms_ef.Models;
 
-namespace dotnet_wms_ef.Views.ViewModels
+namespace dotnet_wms_ef.ViewModels
 {
     public class VInboundDetails
     {

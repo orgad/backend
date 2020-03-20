@@ -20,22 +20,22 @@ namespace dotnet_wms_ef.Models
         public virtual DbSet<TOutAddress> TOutAddress { get; set; }
         public virtual DbSet<TOutAlot> TOutAlots { get; set; }
         public virtual DbSet<TOutAlotD> TOutAlotDs { get; set; }
-        public virtual DbSet<TOutCheck> TOutCheck { get; set; }
-        public virtual DbSet<TOutCheckD> TOutCheckD { get; set; }
+        public virtual DbSet<TOutCheck> TOutChecks { get; set; }
+        public virtual DbSet<TOutCheckD> TOutCheckDs { get; set; }
         public virtual DbSet<TOutD> TOutDs { get; set; }
         public virtual DbSet<TOutDn> TOutDns { get; set; }
         public virtual DbSet<TOutDnD> TOutDnDs { get; set; }
-        public virtual DbSet<TOutExpress> TOutExpress { get; set; }
-        public virtual DbSet<TOutHandover> TOutHandover { get; set; }
-        public virtual DbSet<TOutHandoverD> TOutHandoverD { get; set; }
+        public virtual DbSet<TOutExpress> TOutExpresses { get; set; }
+        public virtual DbSet<TOutHandover> TOutHandovers { get; set; }
+        public virtual DbSet<TOutHandoverD> TOutHandoverDs { get; set; }
         public virtual DbSet<TOutPick> TOutPicks { get; set; }
         public virtual DbSet<TOutPickD> TOutPickDs { get; set; }
-        public virtual DbSet<TOutWave> TOutWave { get; set; }
-        public virtual DbSet<TSt> TSt { get; set; }
+        public virtual DbSet<TOutWave> TOutWaves { get; set; }
+        public virtual DbSet<TOutSt> TSts { get; set; }
         public virtual DbSet<TStAllot> TStAllot { get; set; }
-        public virtual DbSet<TStD> TStD { get; set; }
+        public virtual DbSet<TOutStD> TStD { get; set; }
         public virtual DbSet<TStDelivery> TStDelivery { get; set; }
-        public virtual DbSet<TStOpt> TStOpt { get; set; }
+        public virtual DbSet<TOutStOpt> TStOpt { get; set; }
         public virtual DbSet<TStPick> TStPick { get; set; }
         public virtual DbSet<TStWave> TStWave { get; set; }
 

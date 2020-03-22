@@ -37,7 +37,7 @@ namespace dotnet_wms_ef.Models
         public virtual DbSet<TStDelivery> TStDelivery { get; set; }
         public virtual DbSet<TOutStOpt> TStOpt { get; set; }
         public virtual DbSet<TStPick> TStPick { get; set; }
-        public virtual DbSet<TStWave> TStWave { get; set; }
+        public virtual DbSet<TStWave> TStWaves { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -6,9 +6,9 @@ namespace dotnet_wms_ef.Models
     public partial class TStWave
     {
         public int Id { get; set; }
-        public int? HId { get; set; }
-        public int? MaxLine { get; set; }
-        public int? WaveSize { get; set; }
+        public int HId { get; set; }
+        public int MaxLine { get; set; }
+        public int WaveSize { get; set; }
         public string TypeCode { get; set; }
         public ulong IsDeleted { get; set; }
         public string CreatedBy { get; set; }

@@ -19,7 +19,7 @@ namespace dotnet_wms_ef.Models
         public int Qty { get; set; }
         public int? ActZoneId { get; set; }
         public string ActZoneCode { get; set; }
-        public int? ActBinId { get; set; }
+        public int ActBinId { get; set; }
         public string ActBinCode { get; set; }
         public bool IsPicked { get; set; }
         public ulong IsSorted { get; set; }

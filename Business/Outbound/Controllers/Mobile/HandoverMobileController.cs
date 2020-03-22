@@ -29,5 +29,22 @@ namespace dotnet_wms_ef.Controllers
             var result = handoverService.Details(id);
             return new JsonResult(result);
         }
+
+        
+        [Route("{id}/scan")]
+        [HttpPost]
+        public JsonResult Scan([FromUri] long id,[FromBody]VScanExpressRequest request)
+        {
+            var result = handoverService.Scan(id,request);
+            return new JsonResult(result);
+        }
+
+        [Route("affirm")]
+        [HttpPut]
+        public JsonResult Affirm([FromBody]long[] ids)
+        {
+            var result = handoverService.Affirms(ids);
+            return new JsonResult(result);
+        }
     }
 }

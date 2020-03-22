@@ -6,7 +6,7 @@ namespace dotnet_wms_ef.Models
     public partial class TOutCheckD
     {
         public long Id { get; set; }
-        public int? HId { get; set; }
+        public long HId { get; set; }
         public string Carton { get; set; }
         public string Barcode { get; set; }
         public int Qty { get; set; }

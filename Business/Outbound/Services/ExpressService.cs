@@ -9,17 +9,17 @@ namespace dotnet_wms_ef.Services
     {
         wmsoutboundContext wmsoutbound = new wmsoutboundContext();
 
-        public List<TOutExpress> PageList()
+        internal List<TOutExpress> PageList()
         {
             return this.Query().ToList();
         }
 
-        public IQueryable<TOutExpress> Query()
+        internal IQueryable<TOutExpress> Query()
         {
             return wmsoutbound.TOutHandovers as IQueryable<TOutExpress>;
         }
 
-        public int TotalCount()
+        internal int TotalCount()
         {
             return this.Query().Count();
         }
@@ -28,6 +28,11 @@ namespace dotnet_wms_ef.Services
         {
             express.CreatedBy = DefaultUser.UserName;
             express.CreatedTime = DateTime.UtcNow;
+
+            //更新出库单的面单号
+            var outboundId = express.OutboundId;
+            var outbound = wmsoutbound.TOuts.Where(x=>x.Id == outboundId).FirstOrDefault();
+            outbound.ExpressNo = express.Code;
             
             wmsoutbound.TOutExpresses.Add(express);
             return wmsoutbound.SaveChanges()>0;

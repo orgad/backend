@@ -7,7 +7,7 @@ namespace dotnet_wms_ef.Models
     {
         public long Id { get; set; }
         public string Code { get; set; }
-        public int? WhId { get; set; }
+        public long WhId { get; set; }
         public int? Size { get; set; }
         public int? SkuCatQty { get; set; }
         public int? SkuQty { get; set; }

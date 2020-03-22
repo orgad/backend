@@ -9,6 +9,9 @@ namespace dotnet_wms_ef.Services
     public class RecheckService
     {
         wmsoutboundContext wmsoutbound = new wmsoutboundContext();
+        ProductService productService = new ProductService();
+
+        InventoryService inventoryService = new InventoryService();
 
         public List<TOutCheck> PageList()
         {
@@ -36,36 +39,97 @@ namespace dotnet_wms_ef.Services
             };
         }
 
-        public void Create(TOutPick outPick)
+        public void CreateByPick(TOutPick outPick)
         {
-             var recheck = new TOutCheck{
-                 Code = outPick.Code.Replace("PCK","RCK"),
-                 Store = outPick.Store,
-                 CreatedBy = DefaultUser.UserName,
-                 CreatedTime = DateTime.Now,
-             };
+            var recheck = new TOutCheck
+            {
+                Code = outPick.Code.Replace("PCK", "RCK"),
+                Store = outPick.Store,
+                CreatedBy = DefaultUser.UserName,
+                CreatedTime = DateTime.Now,
+            };
 
-             wmsoutbound.TOutChecks.Add(recheck);
+            wmsoutbound.TOutChecks.Add(recheck);
 
-             wmsoutbound.SaveChanges();    
+            wmsoutbound.SaveChanges();
+        }
+
+        public bool Scan(long recheckId, VScanRequest request)
+        {
+            var recheck = wmsoutbound.TOutChecks.Where(x => x.Id == recheckId).FirstOrDefault();
+            if (recheck == null)
+            {
+                throw new Exception("pick is not exist.");
+            }
+
+            if (recheck.FirstScanAt == null)
+                recheck.FirstScanAt = DateTime.UtcNow;
+
+            recheck.LastScanAt = DateTime.UtcNow;
+            recheck.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing);
+
+            //获取SKU信息
+            var prodSku = productService.GetSkuByBarcode(request.Barcode);
+            if (prodSku == null)
+            {
+                throw new Exception("barcode is not exist.");
+            }
+
+            //新增复核明细
+            var recheckDetail = new TOutCheckD
+            {
+                HId = recheckId,
+                Qty = 1,
+                Carton = request.Carton,
+                Barcode = request.Barcode,
+                CreatedBy = DefaultUser.UserName,
+                CreatedTime = DateTime.Now,
+            };
+
+            //更新出库单状态
+            var outbound = wmsoutbound.TOuts.Where(x => x.Id == recheckId).FirstOrDefault();
+            outbound.ScanStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing);
+
+            wmsoutbound.TOutCheckDs.Add(recheckDetail);
+
+            return wmsoutbound.SaveChanges() > 0;
         }
 
         internal bool Affirms(long[] ids)
         {
             //复核确认扣减库存
-            foreach(var id in ids)
+            foreach (var id in ids)
             {
-
+                Affirm(id);
             }
             return true;
         }
 
-        private bool Affirm(long id)
+        private bool Affirm(long recheckId)
         {
             //更新单据状态
+            var recheck = wmsoutbound.TOutChecks.Where(x => x.Id == recheckId).FirstOrDefault();
+            recheck.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Finished);
+            
+            var outbound = wmsoutbound.TOuts.Where(x => x.Id == recheck.OutboundId).FirstOrDefault();
+            
+            //按拣货情况来扣减库存
+            
+            var picks = (from pickD in wmsoutbound.TOutPickDs
+                        join pick in wmsoutbound.TOutPicks on pickD.HId equals pick.Id
+                        where pick.OutboundId == outbound.Id
+                        select pickD)
+                        .ToList();
+
             //扣减库存
+            inventoryService.Delivery(outbound.WhId,picks);
+
             //更新出库状态
-            return true;
+            outbound.ScanStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Finished);
+            outbound.ActualAt = DateTime.UtcNow;
+            outbound.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Finished);
+
+            return wmsoutbound.SaveChanges()>0;
         }
     }
 }

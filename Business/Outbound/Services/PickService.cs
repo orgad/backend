@@ -20,7 +20,7 @@ namespace dotnet_wms_ef.Services
 
         }
 
-        public bool Create(TOut tOut)
+        public bool CreatePick(TOut tOut)
         {
             TOutPick tOutPick = new TOutPick
             {
@@ -96,7 +96,23 @@ namespace dotnet_wms_ef.Services
             return new VPickDetails { Pick = pick, DetailList = detailList };
         }
 
-        public bool Scan(long pickId, TOutPickD detail)
+        public VPickAdvice Advice(long pickId)
+        {
+            //找到已经存在的拣货记录
+            var detailList = wmsoutbound.TOutPickDs.Where(x => x.HId == pickId);
+
+            var binCodes = detailList.Where(x => !x.IsPicked).Select(x => x.BinCode).OrderBy(x => x).Distinct();
+
+            //查询当前货位的barcode列表
+            var binCode = binCodes.FirstOrDefault();
+
+            var barcodes = detailList.Select(x => x.Barcode).Distinct().ToArray();
+
+            return new VPickAdvice { BinCode = binCode, Barcodes = barcodes };
+        }
+
+
+        public bool Scan(long pickId, VScanBinRequest detail)
         {
             var pick = wmsoutbound.TOutPicks.Where(x => x.Id == pickId).FirstOrDefault();
             if (pick == null)
@@ -150,19 +166,5 @@ namespace dotnet_wms_ef.Services
             return wmsoutbound.SaveChanges() > 0;
         }
 
-        public VPickAdvice Advice(long pickId)
-        {
-            //找到已经存在的拣货记录
-            var detailList = wmsoutbound.TOutPickDs.Where(x => x.HId == pickId);
-
-            var binCodes = detailList.Where(x => !x.IsPicked).Select(x => x.BinCode).OrderBy(x => x).Distinct();
-
-            //查询当前货位的barcode列表
-            var binCode = binCodes.FirstOrDefault();
-
-            var barcodes = detailList.Select(x => x.Barcode).Distinct().ToArray();
-
-            return new VPickAdvice { BinCode = binCode, Barcodes = barcodes };
-        }
     }
 }

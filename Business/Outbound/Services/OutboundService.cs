@@ -184,7 +184,7 @@ namespace dotnet_wms_ef.Services
 
             tOut.DetailList = detailList;
 
-            var result =  pickService.Create(tOut);
+            var result =  pickService.CreatePick(tOut);
             
             tOut.PickStatus = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Init);
             return wmsoutbound.SaveChanges()>0;

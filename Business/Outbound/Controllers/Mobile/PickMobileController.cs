@@ -42,7 +42,7 @@ namespace dotnet_wms_ef.Mobile.Controllers
 
         [Route("{id}/scan")]
         [HttpPost]
-        public JsonResult Scan([FromUri] long id, [FromBody]TOutPickD detail)
+        public JsonResult Scan([FromUri] long id, [FromBody]VScanBinRequest detail)
         {
             var result = pickService.Scan(id, detail);
             return new JsonResult(result);

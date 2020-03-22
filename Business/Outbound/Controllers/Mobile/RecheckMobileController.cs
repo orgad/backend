@@ -8,7 +8,7 @@ namespace dotnet_wms_ef.Controllers
 {
     [Route("/api/mobile/out/recheck/")]
     [EnableCors("any")]
-    public class RecheckMobileController:ApiController
+    public class RecheckMobileController : ApiController
     {
         RecheckService recheckService = new RecheckService();
 
@@ -17,7 +17,8 @@ namespace dotnet_wms_ef.Controllers
         {
             var result = recheckService.PageList();
             var total = recheckService.TotalCount();
-            return new JsonResult(new SingleResponse{
+            return new JsonResult(new SingleResponse
+            {
                 TotalCount = total,
                 Data = result,
             });
@@ -27,6 +28,14 @@ namespace dotnet_wms_ef.Controllers
         public JsonResult Details([FromUri] long id)
         {
             var result = recheckService.Details(id);
+            return new JsonResult(result);
+        }
+
+        [Route("{id}/scan")]
+        [HttpPost]
+        public JsonResult Scan([FromUri] long id, [FromBody]VScanRequest vScan)
+        {
+            var result = recheckService.Scan(id,vScan);
             return new JsonResult(result);
         }
     }

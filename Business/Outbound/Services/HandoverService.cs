@@ -48,6 +48,23 @@ namespace dotnet_wms_ef.Services
             wmsoutbound.SaveChanges();
         }
 
+        public bool Scan(long handoverId, VScanExpressRequest vExpress)
+        {
+            var detail = new TOutHandoverD{
+                HId = handoverId,
+                Courier = vExpress.CourierCode,
+                ExpressNo = vExpress.ExpressNo,
+                CreatedBy = DefaultUser.UserName,
+                CreatedTime = DateTime.UtcNow,
+            };
+
+            var handOver = wmsoutbound.TOutHandovers.Where(x=>x.Id == handoverId).FirstOrDefault();
+            handOver.Status = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Doing);
+            
+            wmsoutbound.TOutHandoverDs.Add(detail);
+            return wmsoutbound.SaveChanges()>0;
+        }
+
         internal bool Affirms(long[] ids)
         {
             //交接确认.更新交接状态
@@ -58,9 +75,23 @@ namespace dotnet_wms_ef.Services
             return true;
         }
 
-        private bool Affirm(long id)
+        private bool Affirm(long hanoverId)
         {
-            return true;
+            //根据交接单id找到交接单明细
+            var handOver = wmsoutbound.TOutHandovers.Where(x=>x.Id == hanoverId).FirstOrDefault();
+            handOver.ShippedDate = DateTime.UtcNow;
+            handOver.Status = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Finished);
+            
+            var detailList = wmsoutbound.TOutHandoverDs.Where(x=>x.HId == hanoverId).ToList();
+            //根据快递面单找到出库单
+            var expressNos = detailList.Select(x=>x.ExpressNo).ToList();
+            var outbounds = wmsoutbound.TOuts.Where(x=>expressNos.Contains(x.ExpressNo)).ToList();
+            foreach(var outbound in outbounds)
+            {
+                outbound.Status = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Finished);
+                outbound.HandoverStatus = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Finished);
+            }
+            return wmsoutbound.SaveChanges()>0;
         }
     }
 }

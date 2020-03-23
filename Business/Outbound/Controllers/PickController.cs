@@ -12,6 +12,8 @@ namespace dotnet_wms_ef.Controllers
     {
          PickService pickService = new PickService();
 
+         RecheckService recheckService = new RecheckService();
+
          [Route("list")]
         [HttpGet]
         public JsonResult List(QueryPick queryPick)
@@ -28,6 +30,14 @@ namespace dotnet_wms_ef.Controllers
         public JsonResult Details([FromUri]long id)
         {
             var result = pickService.Details(id);
+            return new JsonResult(result);
+        }
+
+        [Route("affirm")]
+        [HttpPost]
+        public JsonResult Affirm([FromBody]long[] ids)
+        {
+            var result = recheckService.CreateByPicks(ids);
             return new JsonResult(result);
         }
     }

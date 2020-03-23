@@ -9,17 +9,17 @@ namespace dotnet_wms_ef.Services
         wmscustomerContext wms = new wmscustomerContext();
         public List<TCustBrand> PageList(int page)
         {
-            return wms.TCustBrand.ToList();
+            return wms.TCustBrands.ToList();
         }
 
         public List<TCustBrand> PageListByCustId(int custId)
         {
-             return wms.TCustBrand.Where(x=>x.CustId == custId).ToList();
+             return wms.TCustBrands.Where(x=>x.CustId == custId).ToList();
         }
 
         public int TotalCount()
         {
-            return wms.TCustBrand.Count();
+            return wms.TCustBrands.Count();
         }
     }
 }

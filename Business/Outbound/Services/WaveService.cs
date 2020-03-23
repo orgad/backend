@@ -63,7 +63,7 @@ namespace dotnet_wms_ef.Services
                 //产生波次
                 var wave = new TOutWave
                 {
-                    Code = "WAV" + DateTime.Now.ToString("yyyyMMddHHmmss"),
+                    Code = "WAV" + DateTime.Now.ToString(FormatString.DefaultFormat),
                     WhId = whId,
                     Size = waveSize,
                     //Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init),
@@ -105,7 +105,7 @@ namespace dotnet_wms_ef.Services
         {
             var wave = new TOutWave
             {
-                Code = "WAV" + DateTime.Now.ToString("yyyyMMddHHmmss"),
+                Code = "WAV" + DateTime.Now.ToString(FormatString.DefaultFormat),
                 WhId = whId,
                 Size = outbounds.Count(),
                 Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init),

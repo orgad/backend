@@ -39,15 +39,33 @@ namespace dotnet_wms_ef.Services
             };
         }
 
-        public void CreateByPick(TOutPick outPick)
+        public bool CreateByPicks(long[] pickIds)
+        {
+            var outPicks = wmsoutbound.TOutPicks.Where(x=>pickIds.Contains(x.Id)).ToList();
+            foreach(var outPick in outPicks)
+            {
+                CreateByPick(outPick);
+            }
+            return true;
+        }
+
+        private void CreateByPick(TOutPick outPick)
         {
             var recheck = new TOutCheck
             {
                 Code = outPick.Code.Replace("PCK", "RCK"),
+                OutboundId = outPick.OutboundId,
+                Status = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Init),
                 Store = outPick.Store,
                 CreatedBy = DefaultUser.UserName,
                 CreatedTime = DateTime.Now,
             };
+
+            outPick.Status = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Finished);
+
+            var outbound = wmsoutbound.TOuts.Where(x=>x.Id == outPick.OutboundId).FirstOrDefault();
+            outbound.PickStatus = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Finished);
+            outbound.ScanStatus = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Init);
 
             wmsoutbound.TOutChecks.Add(recheck);
 

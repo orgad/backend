@@ -27,7 +27,7 @@ namespace dotnet_wms_ef.Controllers
 
         [Route("create")]
         [HttpPost]
-        public JsonResult Create([FromBody] TOutExpress express)
+        public JsonResult Create([FromBody] VOutExpressRequest express)
         {
             var result = expressService.Create(express);
             return new JsonResult(result);

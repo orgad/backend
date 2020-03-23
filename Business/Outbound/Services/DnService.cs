@@ -20,7 +20,7 @@ namespace dotnet_wms_ef.Services
 
         public Tuple<bool, string> Create(TOutDn dn)
         {
-            dn.Code = "DN" + DateTime.Now.ToString("yyyyMMddHHmmss");
+            dn.Code = "DN" + DateTime.Now.ToString(FormatString.DefaultFormat);
             if (string.IsNullOrEmpty(dn.BatchNo))
             {
                 dn.BatchNo = DateTime.Now.ToString("yyyyMMdd");

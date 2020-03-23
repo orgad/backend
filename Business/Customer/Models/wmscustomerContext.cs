@@ -15,8 +15,9 @@ namespace dotnet_wms_ef.Models
         {
         }
 
-        public virtual DbSet<TCustBrand> TCustBrand { get; set; }
-        public virtual DbSet<TCustCustomer> TCustCustomer { get; set; }
+        public virtual DbSet<TCustBrand> TCustBrands { get; set; }
+        public virtual DbSet<TCustCustomer> TCustCustomers { get; set; }
+        public virtual DbSet<TCustShop> TCustShops{get;set;}
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -34,7 +35,7 @@ namespace dotnet_wms_ef.Models
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfiguration(new TCustCustomerMapping());
             modelBuilder.ApplyConfiguration(new TCustBrandMapping());
-
+            modelBuilder.ApplyConfiguration(new TCustShopMapping());
             OnModelCreatingPartial(modelBuilder);
         }
 

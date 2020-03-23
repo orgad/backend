@@ -21,7 +21,7 @@ namespace dotnet_wms_ef.Services
         {
             var alot = new TOutAlot
             {
-                Code = "ALT" + DateTime.Now.ToString("yyyyMMddHHmmss"),
+                Code = "ALT" + DateTime.Now.ToString(FormatString.DefaultFormat),
                 WhId = whId,
                 OutboundId = outboundId,
                 CreatedBy = DefaultUser.UserName,

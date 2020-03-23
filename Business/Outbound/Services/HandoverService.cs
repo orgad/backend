@@ -36,16 +36,19 @@ namespace dotnet_wms_ef.Services
             };
         }
 
-        public void Create(TOutHandover handover)
+        public bool Create(VHandOverRequest request)
         {
-            handover.Code = "HOV" + DateTime.Now.ToString("yyyyMMddHHmmsss");
-            handover.Store = handover.Store;
+            TOutHandover handover = new TOutHandover();
+            handover.Code = "HOV" + DateTime.Now.ToString(FormatString.DefaultFormat);
+            handover.WhId = request.WhId;
+            handover.Store = request.Store.ToString();
             handover.CreatedBy = DefaultUser.UserName;
             handover.CreatedTime = DateTime.Now;
+            handover.Status = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.None);
 
             wmsoutbound.TOutHandovers.Add(handover);
 
-            wmsoutbound.SaveChanges();
+            return wmsoutbound.SaveChanges()>0;
         }
 
         public bool Scan(long handoverId, VScanExpressRequest vExpress)

@@ -105,8 +105,8 @@ namespace dotnet_wms_ef.Services
         {
             var o = new TInAsn
             {
-                Code = DateTime.Now.ToString("yyyyMMddHHmmss"),
-                RefCode = DateTime.Now.ToString("yyyyMMddHHmmss"),
+                Code = DateTime.Now.ToString(FormatString.DefaultFormat),
+                RefCode = DateTime.Now.ToString(FormatString.DefaultFormat),
                 WhId = vAsn.Asn.WhId,
                 CustId = vAsn.Asn.CustId,
                 BrandId = vAsn.Asn.BrandId,
@@ -151,8 +151,8 @@ namespace dotnet_wms_ef.Services
         {
             var o = new TInAsn
             {
-                Code = Enum.GetName(typeof(EnumOrderType), EnumOrderType.ASN) + DateTime.Now.ToString("yyyyMMddHHmmss"),
-                RefCode = DateTime.Now.ToString("yyyyMMddHHmmss"),
+                Code = Enum.GetName(typeof(EnumOrderType), EnumOrderType.ASN) + DateTime.Now.ToString(FormatString.DefaultFormat),
+                RefCode = DateTime.Now.ToString(FormatString.DefaultFormat),
                 WhId = tAsn.WhId,
                 CustId = tAsn.CustId,
                 BrandId = tAsn.BrandId,

@@ -9,12 +9,12 @@ namespace dotnet_wms_ef.Services
         wmscustomerContext wms = new wmscustomerContext();
         public List<TCustCustomer> PageList(int page)
         {
-            return wms.TCustCustomer.ToList();
+            return wms.TCustCustomers.ToList();
         }
 
         public int TotalCount()
         {
-            return wms.TCustCustomer.Count();
+            return wms.TCustCustomers.Count();
         }
     }
 }

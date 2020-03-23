@@ -21,6 +21,8 @@ namespace dotnet_wms_ef
                     .HasColumnType("bigint(20)")
                     .HasComment("主键");
 
+                entity.Property(e =>e.WhId).HasColumnName("wh_id");
+
                 entity.Property(e => e.Code)
                     .IsRequired()
                     .HasColumnName("code")
@@ -30,7 +32,6 @@ namespace dotnet_wms_ef
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.Comment)
-                    .IsRequired()
                     .HasColumnName("comment")
                     .HasColumnType("varchar(50)")
                     .HasDefaultValueSql("''")

@@ -30,6 +30,13 @@ namespace dotnet_wms_ef.Controllers
             return new JsonResult(result);
         }
 
+         [Route("create")]
+         public JsonResult Create([FromBody] VHandOverRequest handOver)
+        {
+            var result = handoverService.Create(handOver);
+            return new JsonResult(result);
+        }
+
         [Route("affirm")]
         [HttpPut]
         public JsonResult Affirm([FromBody] long[] ids)

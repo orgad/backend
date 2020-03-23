@@ -17,7 +17,6 @@ namespace dotnet_wms_ef
                     .HasColumnType("bigint(20)");
 
                 entity.Property(e => e.Carton)
-                    .IsRequired()
                     .HasColumnName("carton")
                     .HasColumnType("varchar(30)")
                     .HasDefaultValueSql("''")
@@ -25,6 +24,7 @@ namespace dotnet_wms_ef
                     .HasCollation("utf8mb4_0900_ai_ci");
 
                 entity.Property(e => e.Courier)
+                    .IsRequired()
                     .HasColumnName("courier")
                     .HasColumnType("varchar(50)")
                     .HasCharSet("utf8mb4")
@@ -42,6 +42,7 @@ namespace dotnet_wms_ef
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.ExpressNo)
+                    .IsRequired()
                     .HasColumnName("express_no")
                     .HasColumnType("varchar(50)")
                     .HasCharSet("utf8mb4")
@@ -62,7 +63,6 @@ namespace dotnet_wms_ef
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.Pallet)
-                    .IsRequired()
                     .HasColumnName("pallet")
                     .HasColumnType("varchar(30)")
                     .HasDefaultValueSql("''")

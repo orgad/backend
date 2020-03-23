@@ -27,7 +27,7 @@ namespace dotnet_wms_ef.Services
 
         public IQueryable<TOutWave> Query()
         {
-            return wmsoutbound.TOutChecks as IQueryable<TOutWave>;
+            return wmsoutbound.TOutWaves as IQueryable<TOutWave>;
         }
 
         public int TotalCount()
@@ -83,26 +83,54 @@ namespace dotnet_wms_ef.Services
             return wmsoutbound.SaveChanges() > 0;
         }
 
-        public void CreateWave(long whId, long[] outboundIds)
+        public bool CreateWave(long[] outboundIds)
         {
             var outbounds = wmsoutbound.TOuts.Where(x => outboundIds.Contains(x.Id)
-                           && x.AllotStatus == 2 && x.PickStatus == "None")
-                           .ToList();
+                                       && x.AllotStatus == 2 && (x.PickStatus == "None" || string.IsNullOrEmpty(x.PickStatus)))
+                                       .ToList();
+            if (!outbounds.Any())
+            {
+                return false;
+            }
+            var whIds = outbounds.Select(x => x.WhId).Distinct();
+            foreach (var whId in whIds)
+            {
+                var outboundByIds = outbounds.Where(x => x.WhId == whId).ToArray();
+                CreateWaveByWhId(whId, outboundByIds);
+            }
+            return true;
+        }
+
+        private void CreateWaveByWhId(long whId, TOut[] outbounds)
+        {
             var wave = new TOutWave
             {
                 Code = "WAV" + DateTime.Now.ToString("yyyyMMddHHmmss"),
                 WhId = whId,
                 Size = outbounds.Count(),
-                //Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init),
+                Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init),
                 CreatedBy = DefaultUser.UserName,
                 CreatedTime = DateTime.UtcNow,
             };
-            foreach (var outbound in outbounds)
-            {
-                pickService.CreatePick(outbound);
-            }
 
-            wmsoutbound.SaveChanges();
+            using (var transaction = wmsoutbound.Database.BeginTransaction())
+            {
+                wmsoutbound.TOutWaves.Add(wave);
+                wmsoutbound.SaveChanges();
+
+                //增加事务控制
+                pickService.UseTransaction(transaction);
+
+                foreach (var outbound in outbounds)
+                {
+                    outbound.PickStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init);
+                    pickService.CreatePick(outbound,wave.Id);
+                }
+
+                wmsoutbound.SaveChanges();
+
+                wmsoutbound.Database.CommitTransaction();
+            }
         }
 
         public bool Scan(long waveId, VScanBinRequest detail)

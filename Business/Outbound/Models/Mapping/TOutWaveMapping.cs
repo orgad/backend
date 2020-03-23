@@ -66,6 +66,11 @@ namespace dotnet_wms_ef
                     .HasColumnName("wh_id")
                     .HasColumnType("int(11)")
                     .HasComment("仓库ID");
+                
+                entity.Property(e =>e.Qty).HasColumnName("qty");
+                entity.Property(e =>e.Status).HasColumnName("status");
+                entity.Property(e =>e.FirstScanAt).HasColumnName("first_scan_at");
+                entity.Property(e =>e.LastScanAt).HasColumnName("last_scan_at");
          }
     }
 }

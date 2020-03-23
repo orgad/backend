@@ -4,6 +4,8 @@ using System.Linq;
 using dotnet_wms_ef.Controllers;
 using dotnet_wms_ef.Models;
 using dotnet_wms_ef.ViewModels;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace dotnet_wms_ef.Services
 {
@@ -15,23 +17,29 @@ namespace dotnet_wms_ef.Services
 
         BinService binService = new BinService();
 
-        public void Use()
+        public void UseTransaction(IDbContextTransaction transaction)
         {
-
+            if (transaction != null)
+            {
+                //wmsoutbound.Database.UseTransaction(transaction.GetDbTransaction());
+            }
         }
 
-        public bool CreatePick(TOut tOut)
+        public bool  CreatePick(TOut tOut,long waveId=0)
         {
             TOutPick tOutPick = new TOutPick
             {
                 Code = tOut.Code.Replace("SHP", "PCK"),
                 WhId = tOut.WhId,
+                WaveId = waveId,
                 OutboundId = tOut.Id,
                 Store = tOut.Store,
                 Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init),
                 CreatedBy = DefaultUser.UserName,
                 CreatedTime = DateTime.UtcNow,
             };
+
+            tOut.DetailList = wmsoutbound.TOutDs.Where(x => x.HId == tOut.Id).ToList();
 
             var alotDetailList = (from detail in wmsoutbound.TOutAlotDs
                                   join alot in wmsoutbound.TOutAlots on detail.HId equals alot.Id
@@ -65,7 +73,6 @@ namespace dotnet_wms_ef.Services
             }
 
             wmsoutbound.TOutPicks.Add(tOutPick);
-
             return wmsoutbound.SaveChanges() > 0;
         }
 
@@ -83,8 +90,9 @@ namespace dotnet_wms_ef.Services
         {
             if (queryPick.PageSize == 0)
                 queryPick.PageSize = 20;
-
-            var query = wmsoutbound.TOutPicks;
+            
+            var query = wmsoutbound.TOutPicks.Where(x=>x.WaveId == queryPick.WaveId);
+            
             return query;
         }
 

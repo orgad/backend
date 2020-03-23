@@ -11,6 +11,7 @@ namespace dotnet_wms_ef.Controllers
     public class OutboundController : ApiController
     {
         OutboundService outboundService = new OutboundService();
+        WaveService waveService = new WaveService();
 
          [Route("list")]
         public JsonResult List(QueryOut queryOut)
@@ -34,6 +35,14 @@ namespace dotnet_wms_ef.Controllers
         public JsonResult Alot([FromBody] long[] ids)
         {
             var r = outboundService.Alots(ids);
+            return new JsonResult(r);
+        }
+
+        [Route("wave")]
+        [HttpPut]
+        public JsonResult Wave([FromBody] long[] outboundIds)
+        {
+            var r = waveService.CreateWave(outboundIds);
             return new JsonResult(r);
         }
 

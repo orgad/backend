@@ -17,7 +17,7 @@ namespace dotnet_wms_ef.Services
 
         internal IQueryable<TOutExpress> Query()
         {
-            return wmsoutbound.TOutHandovers as IQueryable<TOutExpress>;
+            return wmsoutbound.TOutExpresses as IQueryable<TOutExpress>;
         }
 
         internal int TotalCount()

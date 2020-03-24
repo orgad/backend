@@ -32,11 +32,11 @@ namespace dotnet_wms_ef.Models
         public virtual DbSet<TOutPickD> TOutPickDs { get; set; }
         public virtual DbSet<TOutWave> TOutWaves { get; set; }
         public virtual DbSet<TOutSt> TSts { get; set; }
-        public virtual DbSet<TStAllot> TStAllot { get; set; }
-        public virtual DbSet<TOutStD> TStD { get; set; }
+        public virtual DbSet<TStAllot> TStAllots { get; set; }
+        public virtual DbSet<TOutStD> TStDs { get; set; }
         public virtual DbSet<TStDelivery> TStDelivery { get; set; }
-        public virtual DbSet<TOutStOpt> TStOpt { get; set; }
-        public virtual DbSet<TStPick> TStPick { get; set; }
+        public virtual DbSet<TOutStOpt> TStOpts { get; set; }
+        public virtual DbSet<TStPick> TStPicks { get; set; }
         public virtual DbSet<TStWave> TStWaves { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -10,7 +10,7 @@ namespace dotnet_wms_ef.Services
     {
         wmsoutboundContext wmsoutbound = new wmsoutboundContext();
 
-        ProductService productService = new ProductService();
+        SkuService skuService = new SkuService();
 
         BinService binService = new BinService();
 
@@ -142,7 +142,7 @@ namespace dotnet_wms_ef.Services
             }
 
             //获取SKU信息
-            var prodSku = productService.GetSkuByBarcode(detail.Barcode);
+            var prodSku = skuService.GetSkuByBarcode(detail.Barcode);
             if (prodSku == null)
             {
                 throw new Exception("barcode is not exist.");

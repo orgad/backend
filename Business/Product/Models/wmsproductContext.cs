@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace dotnet_wms_ef.Models
 {
@@ -15,9 +13,9 @@ namespace dotnet_wms_ef.Models
         {
         }
 
-        public virtual DbSet<TProdBarcode> TProdBarcode { get; set; }
-        public virtual DbSet<TProdCatalog> TProdCatalog { get; set; }
-        public virtual DbSet<TProdProduct> TProdProduct { get; set; }
+        public virtual DbSet<TProdBarcode> TProdBarcodes { get; set; }
+        public virtual DbSet<TProdCatalog> TProdCatalogs { get; set; }
+        public virtual DbSet<TProdProduct> TProdProducts { get; set; }
         public virtual DbSet<TProdSku> TProdSkus { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -12,14 +12,16 @@ namespace dotnet_wms_ef.Services
             return wms.TCustBrands.ToList();
         }
 
+        public int TotalCount()
+        {
+            return wms.TCustBrands.Count();
+        }
+
         public List<TCustBrand> PageListByCustId(int custId)
         {
              return wms.TCustBrands.Where(x=>x.CustId == custId).ToList();
         }
 
-        public int TotalCount()
-        {
-            return wms.TCustBrands.Count();
-        }
+        
     }
 }

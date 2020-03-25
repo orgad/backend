@@ -16,7 +16,7 @@ namespace dotnet_wms_ef.Services
 
         PickService pickService = new PickService();
 
-        ProductService productService = new ProductService();
+        SkuService skuService = new SkuService();
         public List<TOut> PageList(QueryOut queryOut)
         {
             return this.Query(queryOut).ToList();
@@ -96,7 +96,7 @@ namespace dotnet_wms_ef.Services
             var detailList = new List<TOutD>();
             foreach (TOutDnD detail in list)
             {
-                var prodSku = productService.GetSkuByBarcode(detail.Barcode);
+                var prodSku = skuService.GetSkuByBarcode(detail.Barcode);
 
                 detailList.Add(new TOutD
                 {

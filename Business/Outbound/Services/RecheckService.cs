@@ -9,7 +9,7 @@ namespace dotnet_wms_ef.Services
     public class RecheckService
     {
         wmsoutboundContext wmsoutbound = new wmsoutboundContext();
-        ProductService productService = new ProductService();
+        SkuService skuService = new SkuService();
 
         InventoryService inventoryService = new InventoryService();
 
@@ -87,7 +87,7 @@ namespace dotnet_wms_ef.Services
             recheck.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing);
 
             //获取SKU信息
-            var prodSku = productService.GetSkuByBarcode(request.Barcode);
+            var prodSku = skuService.GetSkuByBarcode(request.Barcode);
             if (prodSku == null)
             {
                 throw new Exception("barcode is not exist.");

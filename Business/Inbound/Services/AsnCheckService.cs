@@ -15,7 +15,7 @@ namespace dotnet_wms_ef.Services
     {
         wmsinboundContext wms = new wmsinboundContext();
         ImageIOService imageService = new ImageIOService();
-        ProductService productService = new ProductService();
+        SkuService skuService = new SkuService();
         public string Root { get; set; }
 
         public TInCheck Create(TInAsn asn)
@@ -156,7 +156,7 @@ namespace dotnet_wms_ef.Services
             detail.HId = id;
             detail.Barcode = barcode;
             detail.TypeCode = "Damage";
-            var sku = productService.GetSkuByBarcode(barcode);
+            var sku = skuService.GetSkuByBarcode(barcode);
             if (sku != null)
             {
                 detail.Sku = sku.Code;

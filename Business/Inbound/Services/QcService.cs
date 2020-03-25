@@ -14,7 +14,7 @@ namespace dotnet_wms_ef
 
         StrategyService strategyService = new StrategyService();
 
-        ProductService productService = new ProductService();
+        SkuService skuService = new SkuService();
 
         private IQueryable<TInQc> Query(QueryQc queryQc)
         {
@@ -62,7 +62,7 @@ namespace dotnet_wms_ef
         public Tuple<bool,string> Scan(long id, TInQcD qcD)
         {
             //获取SKU的信息
-            var prodSku = productService.GetSkuByBarcode(qcD.Barcode);
+            var prodSku = skuService.GetSkuByBarcode(qcD.Barcode);
 
             var qc = wmsinbound.TInQcs.Where(x => x.Id == id).FirstOrDefault();
             

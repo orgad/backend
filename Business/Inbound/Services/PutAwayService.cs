@@ -10,7 +10,7 @@ namespace dotnet_wms_ef.Services
     {
         wmsinboundContext wmsinbound = new wmsinboundContext();
 
-        ProductService productService = new ProductService();
+        SkuService skuService = new SkuService();
 
         ZoneService zoneService = new ZoneService();
         BinService binService = new BinService();
@@ -98,7 +98,7 @@ namespace dotnet_wms_ef.Services
         public Tuple<bool, string> Scan(long id, TInPutawayD detail)
         {
             //校验商品
-            var prodSku = productService.GetSkuByBarcode(detail.Barcode);
+            var prodSku = skuService.GetSkuByBarcode(detail.Barcode);
             if (prodSku == null)
                 return new Tuple<bool, string>(false, "barcode is not exist.");
 

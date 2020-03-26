@@ -10,6 +10,8 @@ namespace dotnet_wms_ef.ViewModels
         public string AsnCode{get;set;}
         public bool IsCiq { get; set; }
         public string Status { get; set; }
+        public int AsnCartonQty{get;set;}
+        public int AsnQty{get;set;}
         public int? CartonQty { get; set; }
         public int? Qty { get; set; }
         public int? DamageCartonQty { get; set; }

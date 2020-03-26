@@ -23,6 +23,7 @@ namespace dotnet_wms_ef.Services
             {
                 Code = qc.Code.Replace("QC", "PTA"),
                 InboundId = qc.InboundId,
+                InboundCode = qc.InboundCode,
                 CreatedBy = DefaultUser.UserName,
                 CreatedTime = DateTime.UtcNow,
             };
@@ -36,6 +37,7 @@ namespace dotnet_wms_ef.Services
                 Code = inbound.Code.Replace("RCV", "PTA"),
                 WhId = inbound.WhId,
                 InboundId = inbound.Id,
+                InboundCode = inbound.Code,
                 Status = inbound.PStatus,
                 CreatedBy = DefaultUser.UserName,
                 CreatedTime = DateTime.UtcNow,
@@ -120,11 +122,11 @@ namespace dotnet_wms_ef.Services
 
             if (qty + 1 <= inboundQty)
             {
-                if (pt.FirstPutawayAt == null)
-                    pt.FirstPutawayAt = DateTime.UtcNow;
-                pt.LastPutawayAt = DateTime.UtcNow;
+                if (pt.FirstScanAt == null)
+                    pt.FirstScanAt = DateTime.UtcNow;
+                pt.LastScanAt = DateTime.UtcNow;
 
-                pt.Qty += qty+1;
+                pt.Qty += qty + 1;
 
                 pt.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing);
                 detail.SkuId = prodSku.Id;
@@ -160,6 +162,8 @@ namespace dotnet_wms_ef.Services
         {
             //更新状态
             var pt = wmsinbound.TInPutaways.Where(x => x.Id == id).FirstOrDefault();
+            if (pt == null)
+                throw new Exception("pt is not exists.");
             pt.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Finished);
 
             var inbound = wmsinbound.TInInbounds.Where(x => x.Id == pt.InboundId).FirstOrDefault();

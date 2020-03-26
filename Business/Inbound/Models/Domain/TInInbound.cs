@@ -15,7 +15,8 @@ namespace dotnet_wms_ef.Models
         public int WhId { get; set; }
         public int CustId { get; set; }
         public int BrandId { get; set; }
-        public long? AsnId { get; set; }
+        public long AsnId { get; set; }
+        public string AsnCode { get; set; }
         public string BizCode { get; set; }
         public string GoodsType { get; set; }
         public string TransCode { get; set; }
@@ -40,6 +41,6 @@ namespace dotnet_wms_ef.Models
         public string LastModifiedBy { get; set; }
         public DateTime? LastModifiedTime { get; set; }
 
-        public virtual ICollection<TInInboundD> DetailList{get;set;}
+        public virtual ICollection<TInInboundD> DetailList { get; set; }
     }
 }

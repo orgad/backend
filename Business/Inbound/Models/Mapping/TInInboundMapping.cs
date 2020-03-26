@@ -32,6 +32,8 @@ namespace dotnet_wms_ef.Models
                     .HasColumnType("bigint(20)")
                     .HasComment("通知单号");
 
+                entity.Property(e =>e.AsnCode).HasColumnName("asn_code");
+
                 entity.Property(e => e.BatchNo)
                     .HasColumnName("batch_no")
                     .HasColumnType("varchar(50)")

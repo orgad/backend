@@ -7,6 +7,7 @@ namespace dotnet_wms_ef.Models
     {
         public long Id { get; set; }
         public long InboundId { get; set; }
+        public string InboundCode { get; set; }
         public string Code { get; set; }
         public DateTime? FirstScanAt { get; set; }
         public DateTime? LastScanAt { get; set; }

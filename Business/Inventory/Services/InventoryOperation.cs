@@ -138,8 +138,8 @@ namespace dotnet_wms_ef.Services
             foreach (var toInvt in toInvts)
             {
                 //找到收货区库存
-                var invts = wmsinventory.TInvtDs.Where(x => x.SkuId == toInvt.Key && x.BinId == bin.Item3)
-                .ToList();
+                var invts = wmsinventory.TInvtDs.Where(x => x.SkuId == toInvt.Key && x.BinId == bin.Item3
+                            && x.Qty - x.AlotQty - x.LockedQty > 0).ToList();
 
                 //开始上架: 增加目的货位的库存，减少收货区货位的库存
                 var psBysku = ps.Where(x => x.SkuId == toInvt.Key).ToArray();
@@ -189,7 +189,9 @@ namespace dotnet_wms_ef.Services
         {
             foreach (var invt in invts)
             {
-                if (totalQty > 0)
+                var canQty = invt.Qty - invt.AlotQty - invt.LockedQty;
+
+                if (totalQty > 0 && canQty > 0)
                 {
                     if (invt.Qty >= totalQty)
                     {
@@ -198,8 +200,8 @@ namespace dotnet_wms_ef.Services
                     }
                     else
                     {
-                        invt.Qty = 0;
                         totalQty -= invt.Qty;
+                        invt.Qty = 0;
                     }
                 }
             }
@@ -347,7 +349,7 @@ namespace dotnet_wms_ef.Services
             }
 
             //保存数据
-            return wmsinventory.SaveChanges()>0;
+            return wmsinventory.SaveChanges() > 0;
         }
 
         private void ReduceQtyAndAlotQty(int totalQty, List<TInvtD> invts)
@@ -371,7 +373,7 @@ namespace dotnet_wms_ef.Services
                 }
             }
         }
-        
+
         //只减少分配占用数
         private void ReduceAlotQty(int totalQty, List<TInvtD> invts)
         {

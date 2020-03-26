@@ -9,8 +9,9 @@ namespace dotnet_wms_ef.Models
         public string Code { get; set; }
         public int WhId { get; set; }
         public long InboundId { get; set; }
-        public DateTime? FirstPutawayAt { get; set; }
-        public DateTime? LastPutawayAt { get; set; }
+        public string InboundCode{get;set;}
+        public DateTime? FirstScanAt { get; set; }
+        public DateTime? LastScanAt { get; set; }
         public string Status { get; set; }
         public int? CartonQty { get; set; }
         public int? BinQty { get; set; }

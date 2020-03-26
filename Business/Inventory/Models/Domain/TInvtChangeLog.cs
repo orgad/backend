@@ -8,6 +8,7 @@ namespace dotnet_wms_ef.Models
         public long Id { get; set; }
         public long OrderId { get; set; }
         public string OrderType { get; set; }
+        public string OrderCode { get; set; }
         public long InvtDId { get; set; }
         public int WhId { get; set; }
         public int CustId { get; set; }

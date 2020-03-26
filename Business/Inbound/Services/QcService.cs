@@ -55,6 +55,9 @@ namespace dotnet_wms_ef
             qc.CreatedBy = DefaultUser.UserName;
             qc.CreatedTime = DateTime.UtcNow;
             qc.InboundId = inbound.Id;
+            qc.InboundCode = inbound.Code;
+            qc.CartonQty = 0;
+            qc.Qty = 0;
             qc.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init);
             return qc;
         }
@@ -63,6 +66,8 @@ namespace dotnet_wms_ef
         {
             //获取SKU的信息
             var prodSku = skuService.GetSkuByBarcode(qcD.Barcode);
+            if(prodSku==null)
+              throw new Exception("prodSku is null.");
 
             var qc = wmsinbound.TInQcs.Where(x => x.Id == id).FirstOrDefault();
             
@@ -70,7 +75,7 @@ namespace dotnet_wms_ef
             var inbound = wmsinbound.TInInbounds.Where(x => x.Id == qc.InboundId).FirstOrDefault();
 
             //质检扫描的时候要校验一下扫描的数量
-            var totalQty = wmsinbound.TInInboundDs.Where(x => x.SkuId == prodSku.Id).Select(x => x.Qty).FirstOrDefault();
+            var totalQty = wmsinbound.TInInboundDs.Where(x =>x.HId == inbound.Id && x.SkuId == prodSku.Id).Select(x => x.Qty).FirstOrDefault();
             if ( qty + 1 <= totalQty)
             {
                 //新增质检扫描记录

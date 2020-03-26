@@ -29,6 +29,7 @@ namespace dotnet_wms_ef
             r.Code = asn.Code.Replace(Enum.GetName(typeof(EnumOrderType), EnumOrderType.ASN),
                                       Enum.GetName(typeof(EnumOrderType), EnumOrderType.RCV));
             r.AsnId = asn.Id;
+            r.AsnCode = asn.Code;
             r.BatchNo = asn.BatchNo;
             r.BizCode = asn.BizCode;
             r.WhId = asn.WhId;
@@ -175,7 +176,7 @@ namespace dotnet_wms_ef
         {
             var pt = wmsinbound.TInPutaways.Where(x => x.InboundId == id).FirstOrDefault();
 
-            return putAwayService.Confirm(id);
+            return putAwayService.Confirm(pt.Id);
         }
     }
 }

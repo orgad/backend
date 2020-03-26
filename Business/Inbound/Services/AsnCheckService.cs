@@ -119,6 +119,8 @@ namespace dotnet_wms_ef.Services
                              AsnCode = asn.Code,
                              IsCiq = check.IsCiq,
                              Status = check.Status,
+                             AsnCartonQty = asn.CartonQty,
+                             AsnQty = asn.PieceQty,
                              CartonQty = check.CartonQty,
                              Qty = check.Qty,
                              DamageCartonQty = check.DamageCartonQty,

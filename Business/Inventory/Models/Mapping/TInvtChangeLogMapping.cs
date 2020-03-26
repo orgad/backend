@@ -77,6 +77,8 @@ namespace dotnet_wms_ef.Models
                 .HasCharSet("utf8mb4")
                 .HasCollation("utf8mb4_0900_ai_ci");
 
+            entity.Property(e => e.OrderCode).HasColumnName("order_code");
+
             entity.Property(e => e.Qty)
                 .HasColumnName("qty")
                 .HasComment("数量 入库为正,出库为负");

@@ -27,6 +27,18 @@ namespace dotnet_wms_ef.Controllers
             return new JsonResult(r);
         }
 
+        [Route("task-list")]
+        [HttpGet]
+        public JsonResult TaskList(QueryQc queryQc)
+        {
+            var r = new SingleResponse
+            {
+                TotalCount = qcService.TaskTotalCount(queryQc),
+                Data = qcService.TaskPageList(queryQc),
+            };
+            return new JsonResult(r);
+        }
+
         //质检任务查询
         //质检扫描
         [Route("{id}/scan")]

@@ -89,7 +89,7 @@ namespace dotnet_wms_ef.Services
         public List<VAsnCheck> TaskPageList(QueryAsnCheck queryAsnCheck)
         {
             return this.Query(queryAsnCheck)
-                       .Where(x => x.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing) &&
+                       .Where(x => x.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing) ||
                                  x.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init))
                        .OrderByDescending(x => x.Id)
                        .Skip(queryAsnCheck.PageIndex)
@@ -99,7 +99,7 @@ namespace dotnet_wms_ef.Services
         public int TaskTotalCount(QueryAsnCheck queryAsnCheck)
         {
             return this.Query(queryAsnCheck)
-                   .Where(x => x.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing) &&
+                   .Where(x => x.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing) ||
                                  x.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init))
                     .Count();
         }

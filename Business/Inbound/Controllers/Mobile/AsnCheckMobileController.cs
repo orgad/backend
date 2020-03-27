@@ -39,6 +39,23 @@ namespace dotnet_wms_ef.Controllers
 
             return response;
         }
+        
+        [HttpGet]
+        [Route("asn-check-task-list")]
+        public JsonResult TaskList([FromUri]QueryAsnCheck queryAsnCheck)
+        {
+            var list = asnCheckService.TaskPageList(queryAsnCheck);
+            var totalCount = asnCheckService.TaskTotalCount(queryAsnCheck);
+            var response = new JsonResult(
+                new SingleResponse
+                {
+                    Data = list,
+                    TotalCount = totalCount
+                }
+                );
+
+            return response;
+        }
 
         [HttpGet]
         [Route("{id}")]

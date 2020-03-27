@@ -8,13 +8,13 @@ using dotnet_wms_ef.ViewModels;
 namespace dotnet_wms_ef.Controllers
 {
     [Route("/api/in/asn/check/")]
+    [EnableCors("any")]
     public class AsnCheckController : ApiController
     {
         AsnCheckService asnCheckService = new AsnCheckService();
 
         [HttpGet]
         [Route("asn-check-list")]
-        [EnableCors("any")]
         public JsonResult List([FromUri]QueryAsnCheck queryAsnCheck)
         {
             var list = asnCheckService.PageList(queryAsnCheck);

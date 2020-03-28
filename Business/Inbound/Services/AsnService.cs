@@ -15,9 +15,9 @@ namespace dotnet_wms_ef.Services
     {
         wmsinboundContext wms = new wmsinboundContext();
 
-        InboundService inboundService = new InboundService();
-
         ExcelIOService ioService = new ExcelIOService();
+
+        AsnCheckService asnCheckService = new AsnCheckService();
 
         public string Root{get;set;} //上传文件的路径
 
@@ -248,9 +248,11 @@ namespace dotnet_wms_ef.Services
         //
         // 调用验货服务生成验货单
         //
-        public bool Affirm(long[] ids)
+        public bool Affirms(long[] ids)
         {
-            var asns = wms.TInAsns.Where(x => ids.Contains(x.Id)).ToList();
+            var asns = wms.TInAsns
+                       .Where(x => ids.Contains(x.Id) && x.Status == "None")
+                       .ToList();
             int i = 0;
             foreach (var asn in asns)
             {
@@ -269,24 +271,7 @@ namespace dotnet_wms_ef.Services
 
         public List<Tuple<long,bool>> Check(long[] ids)
         {
-            var list = new List<Tuple<long,bool>>();
-            //生成入库单
-            var asns = wms.TInAsns.Where(x => ids.Contains(x.Id)).ToList();
-            var asnChecks = wms.TInChecks.Where(x=>ids.Contains(x.HId)).ToList();
-            foreach (var asn in asns)
-            {
-                var r = inboundService.Create(asn);
-                wms.TInInbounds.Add(r);
-                //修改到货通知单的单据状态
-                asn.CheckStatus = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Finished);
-                 
-                var asnCheck = asnChecks.Where(x=>x.HId == asn.Id).FirstOrDefault();
-                asnCheck.Status = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Finished);
-
-                var result = wms.SaveChanges()>0;
-                list.Add(new Tuple<long, bool>(asn.Id,result));
-            }
-            return list;
+            return asnCheckService.ChecksByAsn(ids);
         }
     }
 }

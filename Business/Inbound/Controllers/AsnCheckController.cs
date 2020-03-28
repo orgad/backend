@@ -37,5 +37,14 @@ namespace dotnet_wms_ef.Controllers
             var vAsnCheck = asnCheckService.Details(id);
             return vAsnCheck;
         }
+
+        [HttpPost]
+        [EnableCors("any")]
+        [Route("check-affirm")]
+        public JsonResult CheckConfirm([FromBody] long[] ids)
+        {
+            var r = asnCheckService.Checks(ids);
+            return new JsonResult(r);
+        }
     }
 }

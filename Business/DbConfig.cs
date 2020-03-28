@@ -12,7 +12,7 @@ namespace dotnet_wms_ef.Models
 
         private static string password = "8888";
 
-        private static string pre = "wms_";
+        private static string pre = "db_";
 
         private static string formatString = "server={0};port={1};database={2};user={3};password={4}";
 
@@ -43,17 +43,17 @@ namespace dotnet_wms_ef.Models
 
         public static string ProductDb
         {
-            get { return string.Format(formatString, server, port, "wms_product", user, password); }
+            get { return string.Format(formatString, server, port, pre + "product", user, password); }
         }
 
         public static string SupplierDb
         {
-            get { return string.Format(formatString, server, port, "wms_supplier", user, password); }
+            get { return string.Format(formatString, server, port, pre + "supplier", user, password); }
         }
 
         public static string StockDb
         {
-            get { return string.Format(formatString, server, port, "wms_stock", user, password); }
+            get { return string.Format(formatString, server, port, pre + "stock", user, password); }
         }
     }
 }

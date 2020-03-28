@@ -89,16 +89,16 @@ namespace dotnet_wms_ef.Controllers
         [HttpPost]
         [EnableCors("any")]
         [Route("affirm")]
-        public JsonResult Do([FromBody] long[] ids)
+        public JsonResult AsnConfirm([FromBody] long[] ids)
         {
-            var r = asnService.Affirm(ids);
+            var r = asnService.Affirms(ids);
             return new JsonResult(r);
         }
 
         [HttpPost]
         [EnableCors("any")]
         [Route("check-affirm")]
-        public JsonResult Check([FromBody] long[] ids)
+        public JsonResult CheckConfirm([FromBody] long[] ids)
         {
             var r = asnService.Check(ids);
             return new JsonResult(r);

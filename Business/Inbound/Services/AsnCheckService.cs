@@ -15,6 +15,7 @@ namespace dotnet_wms_ef.Services
     {
         wmsinboundContext wms = new wmsinboundContext();
         ImageIOService imageService = new ImageIOService();
+        InboundService inboundService = new InboundService();
         SkuService skuService = new SkuService();
         public string Root { get; set; }
 
@@ -140,6 +141,47 @@ namespace dotnet_wms_ef.Services
             var o = wms.TInAsns.Where(x => x.Id == d.HId).FirstOrDefault();
             var ds = wms.TInCheckDs.Where(x => x.HId == id).ToList();
             return new VAsnCheckDetails { Asn = o, AsnCheck = d, AsnCheckDs = ds.Any() ? ds.ToArray() : null };
+        }
+
+        public List<Tuple<long, bool>> ChecksByAsn(long[] asnIds)
+        {
+            var asnChecks = wms.TInChecks.Where(x => asnIds.Contains(x.Id)).ToList();
+            var asns = wms.TInAsns.Where(x => asnIds.Contains(x.Id)).ToList();
+
+            return this.Check(asnIds, asns, asnChecks);
+        }
+
+        public List<Tuple<long, bool>> Checks(long[] ids)
+        {
+            var asnChecks = wms.TInChecks.Where(x => ids.Contains(x.Id)).ToList();
+            var asnIds = asnChecks.Select(x => x.HId).ToArray();
+            var asns = wms.TInAsns.Where(x => asnIds.Contains(x.Id)).ToList();
+
+            return this.Check(asnIds, asns, asnChecks);
+        }
+
+        private List<Tuple<long, bool>> Check(long[] asnIds, List<TInAsn> asns, List<TInCheck> asnChecks)
+        {
+            var list = new List<Tuple<long, bool>>();
+
+            foreach (var id in asnIds)
+            {
+                var asn = asns.Where(x => x.Id == id).FirstOrDefault();
+                var asnCheck = asnChecks.Where(x => x.HId == asn.Id).FirstOrDefault();
+                CheckOne(asn, asnCheck);
+                var result = wms.SaveChanges() > 0;
+                list.Add(new Tuple<long, bool>(asn.Id, result));
+            }
+            return list;
+        }
+
+        private void CheckOne(TInAsn asn, TInCheck asnCheck)
+        {
+            var r = inboundService.Create(asn);
+            wms.TInInbounds.Add(r);
+            //修改到货通知单的单据状态
+            asn.CheckStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Finished);
+            asnCheck.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Finished);
         }
 
         public bool UploadsAndCreateDetail(long id, string barcode, IFormFileCollection files)

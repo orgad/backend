@@ -15,7 +15,7 @@ namespace dotnet_wms_ef.Models
         public string Barcode { get; set; }
         public int Qty { get; set; }
         public string Comment { get; set; }
-        public ulong? IsDeleted { get; set; }
+        public bool IsDeleted { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreatedTime { get; set; }
         public string LastModifiedBy { get; set; }

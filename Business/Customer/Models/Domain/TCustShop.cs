@@ -7,7 +7,7 @@ namespace dotnet_wms_ef.Models
     {
         public int Id { get; set; }
         public string Code { get; set; }
-        public int? CustId { get; set; }
+        public int CustId { get; set; }
         public string NameEn { get; set; }
         public string NameLc { get; set; }
         public string Contact { get; set; }

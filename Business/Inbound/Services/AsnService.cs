@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using dotnet_wms_ef.Aop;
 using dotnet_wms_ef.Models;
 using dotnet_wms_ef.ViewModels;
 using dotnet_wms_ef.Views.ViewModels;
@@ -19,7 +20,16 @@ namespace dotnet_wms_ef.Services
 
         AsnCheckService asnCheckService = new AsnCheckService();
 
-        public string Root{get;set;} //上传文件的路径
+        public string Root { get; set; } //上传文件的路径
+
+        private void setProxy(TInAsn asn)
+        {
+            LogHandlerAttribute logHandler = new LogHandlerAttribute(wms);
+            logHandler.OrderId = asn.Id;
+            logHandler.OrderCode = asn.Code;
+            logHandler.Status = asn.Status;
+            logHandler.OrderStatusChange();
+        }
 
         public List<TInAsn> PageList(QueryAsn queryAsn)
         {
@@ -147,18 +157,19 @@ namespace dotnet_wms_ef.Services
             return wms.SaveChanges() > 0;
         }
 
-        public bool CreateAsn(TInAsn tAsn)
+        public bool CreateAsn(TInAsn vAsn)
         {
             var o = new TInAsn
             {
                 Code = Enum.GetName(typeof(EnumOrderType), EnumOrderType.ASN) + DateTime.Now.ToString(FormatString.DefaultFormat),
-                RefCode = DateTime.Now.ToString(FormatString.DefaultFormat),
-                WhId = tAsn.WhId,
-                CustId = tAsn.CustId,
-                BrandId = tAsn.BrandId,
-                BatchNo = tAsn.BatchNo ?? DateTime.Now.ToString("yyyyMMdd"),
-                BizCode = tAsn.BizCode,
-                GoodsType = tAsn.GoodsType,
+                RefCode = vAsn.RefCode ?? DateTime.Now.ToString(FormatString.DefaultFormat),
+                WhId = vAsn.WhId,
+                CustId = vAsn.CustId,
+                BrandId = vAsn.BrandId,
+                BatchNo = vAsn.BatchNo ?? DateTime.Now.ToString("yyyyMMdd"),
+                BizCode = vAsn.BizCode,
+                GoodsType = vAsn.GoodsType,
+                Comment = vAsn.Comment,
                 TypeCode = Enum.GetName(typeof(EnumOrderType), EnumOrderType.ASN),
                 TransCode = "Inbound",
                 SrcCode = "Import",
@@ -173,7 +184,10 @@ namespace dotnet_wms_ef.Services
             wms.TInAsns.Add(o);
             try
             {
+                wms.SaveChanges();
+                this.setProxy(o);
                 return wms.SaveChanges() > 0;
+
             }
             catch (Exception ex)
             {
@@ -182,11 +196,28 @@ namespace dotnet_wms_ef.Services
             }
         }
 
+        public bool UpdateAsn(TInAsn vAsn)
+        {
+            var tAsn = wms.TInAsns.Where(x => x.Id == vAsn.Id).FirstOrDefault();
+            if (tAsn == null)
+            {
+                throw new Exception("asn is not exist.");
+            }
+
+            //可以修改的内容
+            tAsn.RefCode = vAsn.RefCode;
+            tAsn.WhId = vAsn.WhId;
+            tAsn.IsCiq = vAsn.IsCiq;
+            tAsn.Comment = vAsn.Comment;
+
+            return wms.SaveChanges() > 0;
+        }
+
         public bool Upload(IFormFile file, long id, string code)
         {
             ioService.basePath = this.Root;
             //保存文件
-            DataTable dataTable = ioService.Import(file,"ASN", code);
+            DataTable dataTable = ioService.Import(file, "ASN", code);
 
             var details = new List<TInAsnD>();
             //写入到数据库
@@ -242,7 +273,7 @@ namespace dotnet_wms_ef.Services
                 dr["qty"] = item.Qty;
                 dt.Rows.Add(dr);
             }
-            return ioService.Export(code, "ASN",dt);
+            return ioService.Export(code, "ASN", dt);
         }
 
         //
@@ -256,12 +287,12 @@ namespace dotnet_wms_ef.Services
             int i = 0;
             foreach (var asn in asns)
             {
-                if (asn.Status == Enum.GetName(typeof(EnumStatus),EnumStatus.None))
+                if (asn.Status == Enum.GetName(typeof(EnumStatus), EnumStatus.None))
                 {
-                    asn.Status = Enum.GetName(typeof(EnumStatus),EnumStatus.Audit);
-                    asn.CheckStatus = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Init);
-                    var o = new AsnCheckService().Create(asn);
-                    wms.Add(o);
+                    asn.Status = Enum.GetName(typeof(EnumStatus), EnumStatus.Audit);
+                    asn.CheckStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init);
+                    this.setProxy(asn);
+                    wms.Add(asnCheckService.Create(asn));
                     i++;
                 }
             }
@@ -269,9 +300,11 @@ namespace dotnet_wms_ef.Services
             return i > 0;
         }
 
-        public List<Tuple<long,bool>> Check(long[] ids)
+        public List<Tuple<long, bool>> Check(long[] ids)
         {
             return asnCheckService.ChecksByAsn(ids);
         }
+
+
     }
 }

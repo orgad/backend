@@ -6,7 +6,8 @@ namespace dotnet_wms_ef.Models
     public partial class TInLog
     {
         public long Id { get; set; }
-        public long? OrderId { get; set; }
+        public long OrderId { get; set; }
+        public string OrderCode { get; set; }
         public string OptCode { get; set; }
         public string Source { get; set; }
         public string Target { get; set; }

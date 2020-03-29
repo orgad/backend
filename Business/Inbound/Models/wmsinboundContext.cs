@@ -28,7 +28,7 @@ namespace dotnet_wms_ef.Models
         public virtual DbSet<TInPutaway> TInPutaways { get; set; }
         public virtual DbSet<TInPutawayD> TInPutawayDs { get; set; }
         public virtual DbSet<TInValue> TInValue { get; set; }
-        public virtual DbSet<TInLog> TInLog { get; set; }
+        public virtual DbSet<TInLog> TInLogs { get; set; }
         public virtual DbSet<TSt> TSts { get; set; }
         public virtual DbSet<TStD> TStDs { get; set; }
         public virtual DbSet<TStOpt> TStOpts { get; set; }

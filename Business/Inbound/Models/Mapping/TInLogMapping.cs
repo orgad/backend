@@ -53,6 +53,8 @@ namespace dotnet_wms_ef.Models
                 .HasColumnType("bigint(20)")
                 .HasComment("单据ID");
 
+            entity.Property(e =>e.OrderCode).HasColumnName("order_code");
+
             entity.Property(e => e.Source)
                 .HasColumnName("source")
                 .HasColumnType("varchar(50)")

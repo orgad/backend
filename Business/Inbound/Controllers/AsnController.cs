@@ -68,6 +68,14 @@ namespace dotnet_wms_ef.Controllers
             return response;
         }
 
+        [HttpPut]
+        public JsonResult UpdateAsn([FromBody]TInAsn vAsn)
+        {
+            var r = asnService.UpdateAsn(vAsn);
+            var response = new JsonResult(r);
+            return response;
+        }
+
         [HttpPost]
         [EnableCors("any")]
         [Route("importdetail")]

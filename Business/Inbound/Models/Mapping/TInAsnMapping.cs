@@ -14,12 +14,6 @@ namespace dotnet_wms_ef.Models
 
             entity.HasComment("到货通知单主表");
 
-            entity.HasIndex(e => e.CustId)
-                .HasName("IDX_T_In_ASN_CustID");
-
-            entity.HasIndex(e => e.TransCode)
-                .HasName("IDX_T_In_ASN_TransCode");
-
             entity.Property(e => e.Id)
                 .HasColumnName("id")
                 .HasColumnType("bigint(20)")
@@ -31,6 +25,8 @@ namespace dotnet_wms_ef.Models
                 .HasColumnType("datetime")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasComment("创建时间");
+
+            entity.Property(e => e.Comment).HasColumnName("comment");
 
             entity.Property(e => e.BatchNo)
                 .IsRequired()

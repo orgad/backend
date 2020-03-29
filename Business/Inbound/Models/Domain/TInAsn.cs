@@ -35,6 +35,7 @@ namespace dotnet_wms_ef.Models
         public int CartonQty { get; set; }
         public int PieceQty { get; set; }
         public float? Weight { get; set; }
+        public string Comment{get;set;}
         public bool IsDeleted { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreatedTime { get; set; }

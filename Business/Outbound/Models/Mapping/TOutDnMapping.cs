@@ -79,10 +79,12 @@ namespace dotnet_wms_ef
                 .HasColumnType("datetime")
                 .HasComment("预计发货时间");
 
-            entity.Property(e => e.InboundId)
-                .HasColumnName("inbound_id")
-                .HasColumnType("int(11)")
-                .HasComment("入库单");
+            entity.Property(e => e.AsnId)
+                .HasColumnName("asn_id")
+                .HasColumnType("bigint(20)")
+                .HasComment("到货通知单号");
+
+            entity.Property(e => e.AsnCode).HasColumnName("asn_code");
 
             entity.Property(e => e.IsCancel)
                 .HasColumnName("is_cancel")

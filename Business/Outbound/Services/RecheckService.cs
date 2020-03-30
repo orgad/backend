@@ -15,17 +15,34 @@ namespace dotnet_wms_ef.Services
 
         public List<TOutCheck> PageList()
         {
-            return this.Query().ToList();
-        }
-
-        public IQueryable<TOutCheck> Query()
-        {
-            return wmsoutbound.TOutChecks as IQueryable<TOutCheck>;
+            return this.Query().OrderByDescending(x => x.Id).ToList();
         }
 
         public int TotalCount()
         {
             return this.Query().Count();
+        }
+
+        public List<TOutCheck> TaskPageList()
+        {
+            return this.Query()
+                       .Where(x=>x.Status == Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Doing) || 
+                              x.Status == Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Init))
+                       .OrderByDescending(x => x.Id)
+                       .ToList();
+        }
+
+        public int TaskTotalCount()
+        {
+            return this.Query()
+                       .Where(x => x.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing) ||
+                              x.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init))
+                       .Count();
+        }
+
+        public IQueryable<TOutCheck> Query()
+        {
+            return wmsoutbound.TOutChecks as IQueryable<TOutCheck>;
         }
 
         public VRecheckDetails Details(long id)
@@ -41,8 +58,8 @@ namespace dotnet_wms_ef.Services
 
         public bool CreateByPicks(long[] pickIds)
         {
-            var outPicks = wmsoutbound.TOutPicks.Where(x=>pickIds.Contains(x.Id)).ToList();
-            foreach(var outPick in outPicks)
+            var outPicks = wmsoutbound.TOutPicks.Where(x => pickIds.Contains(x.Id)).ToList();
+            foreach (var outPick in outPicks)
             {
                 CreateByPick(outPick);
             }
@@ -55,17 +72,17 @@ namespace dotnet_wms_ef.Services
             {
                 Code = outPick.Code.Replace("PCK", "RCK"),
                 OutboundId = outPick.OutboundId,
-                Status = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Init),
+                Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init),
                 Store = outPick.Store,
                 CreatedBy = DefaultUser.UserName,
                 CreatedTime = DateTime.Now,
             };
 
-            outPick.Status = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Finished);
+            outPick.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Finished);
 
-            var outbound = wmsoutbound.TOuts.Where(x=>x.Id == outPick.OutboundId).FirstOrDefault();
-            outbound.PickStatus = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Finished);
-            outbound.ScanStatus = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Init);
+            var outbound = wmsoutbound.TOuts.Where(x => x.Id == outPick.OutboundId).FirstOrDefault();
+            outbound.PickStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Finished);
+            outbound.ScanStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init);
 
             wmsoutbound.TOutChecks.Add(recheck);
 
@@ -128,26 +145,26 @@ namespace dotnet_wms_ef.Services
             //更新单据状态
             var recheck = wmsoutbound.TOutChecks.Where(x => x.Id == recheckId).FirstOrDefault();
             recheck.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Finished);
-            
+
             var outbound = wmsoutbound.TOuts.Where(x => x.Id == recheck.OutboundId).FirstOrDefault();
-            
+
             //按拣货情况来扣减库存
-            
+
             var picks = (from pickD in wmsoutbound.TOutPickDs
-                        join pick in wmsoutbound.TOutPicks on pickD.HId equals pick.Id
-                        where pick.OutboundId == outbound.Id
-                        select pickD)
+                         join pick in wmsoutbound.TOutPicks on pickD.HId equals pick.Id
+                         where pick.OutboundId == outbound.Id
+                         select pickD)
                         .ToList();
 
             //扣减库存
-            inventoryService.Delivery(outbound.WhId,picks);
+            inventoryService.Delivery(outbound.WhId, picks);
 
             //更新出库状态
             outbound.ScanStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Finished);
             outbound.ActualAt = DateTime.UtcNow;
             outbound.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Finished);
 
-            return wmsoutbound.SaveChanges()>0;
+            return wmsoutbound.SaveChanges() > 0;
         }
     }
 }

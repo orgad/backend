@@ -17,7 +17,7 @@ namespace dotnet_wms_ef.Services
             wmsoutbound.Database.UseTransaction(transaction.GetDbTransaction());
         }
 
-        public TOutAlot Create(int whId, long outboundId, TInvtD[] invtDs)
+        public TOutAlot Create(int whId, long outboundId,TOutD[] outds, TInvtD[] alots)
         {
             var alot = new TOutAlot
             {
@@ -28,13 +28,13 @@ namespace dotnet_wms_ef.Services
                 CreatedTime = DateTime.UtcNow,
             };
 
-            foreach (var detail in invtDs)
+            foreach (var detail in alots)
             {
                 var alotDetail = new TOutAlotD
                 {
                     Product = "",
                     SkuId = detail.SkuId,
-                    InventoryId = detail.Id,
+                    InvtDId = detail.Id,
                     Barcode = detail.Barcode,
                     Carton = detail.Carton,
                     ZoneId = detail.ZoneId,
@@ -55,7 +55,7 @@ namespace dotnet_wms_ef.Services
 
         public List<TOutAlot> PageList()
         {
-            return this.Query().ToList();
+            return this.Query().OrderByDescending(x=>x.Id).ToList();
         }
 
         public int TotalCount()

@@ -66,10 +66,10 @@ namespace dotnet_wms_ef.Models
                 .HasColumnType("bigint(11)")
                 .HasComment("外键");
 
-            entity.Property(e => e.InventoryId)
-                .HasColumnName("inventory_id")
+            entity.Property(e => e.InvtDId)
+                .HasColumnName("invt_d_id")
                 .HasColumnType("bigint(11)")
-                .HasComment("库存ID");
+                .HasComment("库存明细ID");
 
             entity.Property(e => e.LastModifiedBy)
                 .HasColumnName("last_modified_by")

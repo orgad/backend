@@ -88,7 +88,7 @@ namespace dotnet_wms_ef.Services
 
         public List<TOutDn> PageList(QueryDn queryDn)
         {
-            return this.Query(queryDn).ToList();
+            return this.Query(queryDn).OrderByDescending(x=>x.Id).ToList();
         }
 
         public int TotalCount(QueryDn queryDn)

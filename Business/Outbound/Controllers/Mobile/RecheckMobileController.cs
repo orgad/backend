@@ -23,6 +23,17 @@ namespace dotnet_wms_ef.Controllers
                 Data = result,
             });
         }
+        
+        [Route("task-list")]
+        public JsonResult TaskList()
+        {
+            var result = recheckService.TaskPageList();
+            var total = recheckService.TaskTotalCount();
+            return new JsonResult(new SingleResponse{
+                TotalCount = total,
+                Data = result,
+            });
+        }
 
         [Route("{id}/details")]
         public JsonResult Details([FromUri] long id)

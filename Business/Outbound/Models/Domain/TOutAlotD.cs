@@ -12,7 +12,7 @@ namespace dotnet_wms_ef.Models
         public string Barcode { get; set; }
         public string Carton { get; set; }
         public int Qty { get; set; }
-        public long InventoryId { get; set; }
+        public long InvtDId { get; set; }
         public int MatchingQty { get; set; }
         public int ZoneId { get; set; }
         public string ZoneCode { get; set; }

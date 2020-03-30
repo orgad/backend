@@ -19,7 +19,7 @@ namespace dotnet_wms_ef.Services
         SkuService skuService = new SkuService();
         public List<TOut> PageList(QueryOut queryOut)
         {
-            return this.Query(queryOut).ToList();
+            return this.Query(queryOut).OrderByDescending(x=>x.Id).ToList();
         }
 
         public int TotalCount(QueryOut queryOut)
@@ -74,16 +74,19 @@ namespace dotnet_wms_ef.Services
             {
                 Code = dn.Code.Replace("DN", "SHP"),
                 BatchNo = dn.BatchNo,
+                AsnId = dn.AsnId,
                 WhId = dn.WhId,
                 CustId = dn.CustId,
                 BrandId = dn.BrandId,
                 DnId = dn.Id,
+                DnCode = dn.Code,
                 BizCode = dn.BizCode,
                 GoodsType = dn.GoodsType,
                 TypeCode = "SHP",
                 TransCode = "Outbound",
-                SrcCode = "Interface",
+                SrcCode = dn.SrcCode,
                 Store = store,
+                IsPriority = false,
                 Status = "None",
                 IsDeleted = false,
                 OrderPayment = dn.OrderPayment,
@@ -139,16 +142,16 @@ namespace dotnet_wms_ef.Services
             var detailList = wmsoutbound.TOutDs.Where(x => x.HId == id).ToArray();
 
             // 获取分配结果,更新库存记录
-            var inventoryList = inventoryService.Alot(outbound.WhId, detailList);
+            var alotList = inventoryService.Alot(outbound.WhId, detailList);
 
             // 生成分配记录
-            var r = alotService.Create(outbound.WhId, outbound.Id, inventoryList);
+            var r = alotService.Create(outbound.WhId, outbound.Id, detailList, alotList);
             wmsoutbound.TOutAlots.Add(r);
 
             //更新出库明细
             foreach (var detail in detailList)
             {
-                detail.MatchingQty = inventoryList.Where(x => x.SkuId == detail.SkuId).Sum(X => X.AlotQty);
+                detail.MatchingQty = alotList.Where(x => x.SkuId == detail.SkuId).Sum(X => X.AlotQty);
             }
 
             //更新单据状态

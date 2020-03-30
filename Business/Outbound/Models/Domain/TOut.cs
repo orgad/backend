@@ -15,8 +15,9 @@ namespace dotnet_wms_ef.Models
         public string BatchNo { get; set; }
         public string RefNo { get; set; }
         public int WhId { get; set; }
-        public long InboundId { get; set; }
+        public long? AsnId { get; set; }
         public long DnId { get; set; }
+        public string DnCode { get; set; }
         public string BizCode { get; set; }
         public string GoodsType { get; set; }
         public string TransCode { get; set; }
@@ -25,9 +26,9 @@ namespace dotnet_wms_ef.Models
         public int CustId { get; set; }
         public int? BrandId { get; set; }
         public string Store { get; set; }
-        public int? CartonQty { get; set; }
-        public int? Qty { get; set; }
-        public ulong? IsPriority { get; set; }
+        public int CartonQty { get; set; }
+        public int Qty { get; set; }
+        public bool IsPriority { get; set; }
         public string ExpressNo { get; set; }
         public DateTime? ExpectAt { get; set; }
         public string Status { get; set; }

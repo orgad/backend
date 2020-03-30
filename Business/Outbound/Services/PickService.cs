@@ -25,7 +25,7 @@ namespace dotnet_wms_ef.Services
             }
         }
 
-        public bool  CreatePick(TOut tOut,long waveId=0)
+        public bool CreatePick(TOut tOut, long waveId = 0)
         {
             TOutPick tOutPick = new TOutPick
             {
@@ -51,7 +51,7 @@ namespace dotnet_wms_ef.Services
 
             foreach (var detail in alotDetailList)
             {
-                for (int i = 0; i < detail.Qty; i++)
+                for (int i = 0; i < detail.MatchingQty; i++)
                 {
                     var outDetail = detaiList.Where(x => x.SkuId == detail.SkuId).FirstOrDefault();
                     TOutPickD tOutPickD = new TOutPickD
@@ -86,13 +86,30 @@ namespace dotnet_wms_ef.Services
             return this.Query(queryPick).Count();
         }
 
+        public List<TOutPick> TaskPageList(QueryPick queryPick)
+        {
+            return this.Query(queryPick)
+            .Where(x => x.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing) ||
+                   x.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init))
+            .ToList();
+        }
+
+        public int TaskTotalCount(QueryPick queryPick)
+        {
+            return this.Query(queryPick)
+            .Where(x => x.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing) ||
+                   x.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init))
+            .Count();
+        }
+
         private IQueryable<TOutPick> Query(QueryPick queryPick)
         {
             if (queryPick.PageSize == 0)
                 queryPick.PageSize = 20;
-            
-            var query = wmsoutbound.TOutPicks.Where(x=>x.WaveId == queryPick.WaveId);
-            
+
+            var query = wmsoutbound.TOutPicks.Where(x => x.WaveId == queryPick.WaveId)
+            .OrderByDescending(x => x.Id);
+
             return query;
         }
 
@@ -134,15 +151,19 @@ namespace dotnet_wms_ef.Services
             {
                 throw new Exception("barcode is not exist.");
             }
+            
+            //获取货区货位信息
+            var zoneBin = binService.GetBinByCode(pick.WhId, detail.BinCode);
+            if (zoneBin == null)
+            {
+                throw new Exception("zoneBin is not exist.");
+            }
 
-            //新增拣货明细
-            var pickDetail = wmsoutbound.TOutPickDs.Where(x => x.HId == pickId && x.Barcode == detail.Barcode).FirstOrDefault();
+            //更新拣货明细
+            var pickDetail = wmsoutbound.TOutPickDs.Where(x => x.HId == pickId && x.Barcode == detail.Barcode && !x.IsPicked).FirstOrDefault();
             if (pickDetail == null)
             {
-                pickDetail = new TOutPickD
-                {
-                    HId = pick.Id,
-                };
+               throw new Exception("pickDetail is not exist.");
             }
 
             if (pick.FirstScanAt == null)
@@ -154,9 +175,6 @@ namespace dotnet_wms_ef.Services
 
             pick.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing);
 
-            //获取货区货位信息
-            var zoneBin = binService.GetBinByCode(pick.WhId, detail.BinCode);
-
             pickDetail.ActBinId = zoneBin.Id;
             pickDetail.ActBinCode = detail.BinCode;
             pickDetail.Qty = 1;
@@ -166,10 +184,9 @@ namespace dotnet_wms_ef.Services
             pickDetail.LastModifiedBy = DefaultUser.UserName;
             pickDetail.LastModifiedTime = DateTime.UtcNow;
 
-            if (pickDetail.Id == 0)
-            {
-                wmsoutbound.TOutPickDs.Add(pickDetail);
-            }
+            //更新出库单状态
+            var outbound = wmsoutbound.TOuts.Where(x=>x.Id == pick.OutboundId).FirstOrDefault();
+            outbound.PickStatus = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Doing);
 
             return wmsoutbound.SaveChanges() > 0;
         }

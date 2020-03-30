@@ -10,7 +10,8 @@ namespace dotnet_wms_ef.Models
             this.DetailList = new HashSet<TOutDnD>{};
         }
         public long Id { get; set; }
-        public int? InboundId { get; set; }
+        public long? AsnId { get; set; }
+        public string AsnCode { get; set; }
         public string Code { get; set; }
         public string RefNo { get; set; }
         public string BatchNo { get; set; }

@@ -55,8 +55,7 @@ namespace dotnet_wms_ef
             entity.Property(e => e.Code)
                 .HasColumnName("code")
                 .HasColumnType("varchar(30)")
-                .HasComment(@"出库单单号，规则为
-SHP2019XXXX0000001")
+                .HasComment(@"出库单单号，规则为SHP2019XXXX0000001")
                 .HasCharSet("utf8mb4")
                 .HasCollation("utf8mb4_0900_ai_ci");
 
@@ -87,8 +86,10 @@ SHP2019XXXX0000001")
 
             entity.Property(e => e.DnId)
                 .HasColumnName("dn_id")
-                .HasColumnType("int(20)")
+                .HasColumnType("bigint(20)")
                 .HasComment("发货通知单");
+            
+            entity.Property(e => e.DnCode).HasColumnName("dn_code");
 
             entity.Property(e => e.ExpectAt)
                 .HasColumnName("expect_at")
@@ -109,10 +110,10 @@ SHP2019XXXX0000001")
                 .HasCharSet("utf8mb4")
                 .HasCollation("utf8mb4_0900_ai_ci");
 
-            entity.Property(e => e.InboundId)
-                .HasColumnName("inbound_id")
-                .HasColumnType("int(20)")
-                .HasComment("入库单");
+            entity.Property(e => e.AsnId)
+                .HasColumnName("asn_id")
+                .HasColumnType("bigint(20)")
+                .HasComment("到货通知单");
 
             entity.Property(e => e.IsCancel)
                 .HasColumnName("is_cancel")

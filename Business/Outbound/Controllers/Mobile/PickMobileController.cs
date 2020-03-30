@@ -19,8 +19,19 @@ namespace dotnet_wms_ef.Mobile.Controllers
         {
             return new JsonResult(new SingleResponse
             {
-                TotalCount = pickService.TotalCount(queryPick),
-                Data = pickService.PageList(queryPick)
+                Data = pickService.PageList(queryPick),
+                TotalCount = pickService.TotalCount(queryPick)
+            });
+        }
+
+        [Route("task-list")]
+        [HttpGet]
+        public JsonResult TaskList(QueryPick queryPick)
+        {
+            return new JsonResult(new SingleResponse
+            {
+                Data = pickService.TaskPageList(queryPick),
+                TotalCount = pickService.TaskTotalCount(queryPick)
             });
         }
 

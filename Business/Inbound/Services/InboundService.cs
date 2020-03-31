@@ -98,7 +98,7 @@ namespace dotnet_wms_ef
                 var detailList = inboundDs.Where(x => x.HId == inbound.Id).ToArray();
 
                 //生成库存记录
-                inventoryService.Rcv(inbound.WhId, inbound.CustId, detailList);
+                inventoryService.Rcv(inbound.WhId, inbound.CustId,inbound.Code, detailList);
 
                 //修改单据状态
                 inbound.RStatus = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Finished);

@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using dotnet_wms_ef.Models;
+using dotnet_wms_ef.ViewModels;
 
 namespace dotnet_wms_ef.Services
 {
     public partial class InventoryService
     {
         //收货
-        public void Rcv(int whId, int custId, TInInboundD[] ts)
+        public void Rcv(int whId, int custId,string rcvCode, TInInboundD[] ts)
         {
             var id = ts.Select(x => x.HId).FirstOrDefault();
             var rs = new List<TInvt>();
@@ -23,11 +24,11 @@ namespace dotnet_wms_ef.Services
                 var h = wmsinventory.TInvts.Where(x => x.WhId == whId && x.SkuId == t.SkuId).FirstOrDefault();
                 if (h != null)
                 {
-                    r = Do1(h, whId, custId, t);
+                    r = Do1(h, whId, custId,rcvCode, t);
                 }
                 else
                 {
-                    r = Do2(whId, custId, t);
+                    r = Do2(whId, custId,rcvCode, t);
                     rs.Add(r);
                 }
             }
@@ -38,7 +39,7 @@ namespace dotnet_wms_ef.Services
             wmsinventory.SaveChanges();
         }
 
-        private TInvt Do1(TInvt h, int whId, int custId, TInInboundD t)
+        private TInvt Do1(TInvt h, int whId, int custId, string rcvCode, TInInboundD t)
         {
             h.Qty += t.Qty;
             var bin = GetDefalutBin(whId);
@@ -62,6 +63,7 @@ namespace dotnet_wms_ef.Services
             {
                 OrderId = t.HId,
                 OrderType = Enum.GetName(typeof(EnumOrderType), EnumOrderType.RCV),
+                OrderCode = rcvCode,
                 WhId = whId,
                 CustId = custId,
                 InvtDId = d1.Id,
@@ -77,7 +79,7 @@ namespace dotnet_wms_ef.Services
             h.DetailList.Add(d1);
             return h;
         }
-        private TInvt Do2(int whId, int custId, TInInboundD t)
+        private TInvt Do2(int whId, int custId, string rcvCode, TInInboundD t)
         {
             //这是新增的情况
             var h = new TInvt
@@ -113,6 +115,7 @@ namespace dotnet_wms_ef.Services
             {
                 OrderId = t.HId,
                 OrderType = Enum.GetName(typeof(EnumOrderType), EnumOrderType.RCV),
+                OrderCode = rcvCode,
                 WhId = whId,
                 InvtDId = d2.Id,
                 CustId = custId,
@@ -318,7 +321,7 @@ namespace dotnet_wms_ef.Services
 
 
         //扣库存
-        public bool Delivery(int whId, List<TOutPickD> pickDetails)
+        public bool Delivery(int whId, long shpId, int custId, string shpCode, List<TOutPickD> pickDetails)
         {
             //首先计算出要处理的SKU和货位
             var source = pickDetails.Select(x => new { x.SkuId, x.BinId }).Distinct().ToList();
@@ -354,39 +357,107 @@ namespace dotnet_wms_ef.Services
                 );
             }
 
-            //开始进行处理
-            foreach (var pickDetail in pickDetails)
+            //对pickDetail进行汇总处理
+            //按推荐货位
+            var advPicks = pickDetails.Where(x => x.BinId == x.ActBinId)
+            .GroupBy(x => new { x.SkuId, x.Sku, x.BinId, x.BinCode })
+            .Select(x => new SkuBinCodeQty
+            {
+                SkuId = x.Key.SkuId,
+                Sku = x.Key.Sku,
+                BinId = x.Key.BinId,
+                BinCode = x.Key.BinCode,
+                Qty = x.Count()
+            }).ToList();
+
+            //按实际货位
+            var actPicks = pickDetails.Where(x => x.BinId != x.ActBinId).GroupBy(x => new { x.SkuId, x.Sku, x.ActBinId, x.ActBinCode })
+             .Select(x => new SkuBinCodeQty
+             {
+                 SkuId = x.Key.SkuId,
+                 Sku = x.Key.Sku,
+                 BinId = x.Key.ActBinId,
+                 BinCode = x.Key.ActBinCode,
+                 Qty = x.Count()
+             }).ToList(); ;
+
+            //开始进行处理:一条一条的扣减库存
+            foreach (var pickDetail in advPicks)
             {
                 var invt = inventoryList.Where(x => x.SkuId == pickDetail.SkuId).FirstOrDefault();
-                var detailList = inventoryDetailList.Where(x => x.SkuId == pickDetail.SkuId &&
-                    x.BinId == pickDetail.BinId && x.AlotQty > 0).ToList();
-                if (pickDetail.BinId == pickDetail.ActBinId)
-                {
-                    //全部按推荐货位扣减库存
-                    ReduceQtyAndAlotQty(1, invt, detailList);
-                }
-                else
-                {
-                    //按推荐货位扣减锁定数
-                    var detailList1 = inventoryDetailList.Where(x => x.SkuId == pickDetail.SkuId &&
-                        x.BinId == pickDetail.BinId && x.AlotQty > 0).ToList();
-                    ReduceAlotQty(1, invt, detailList1);
 
-                    //按实际货位扣减在库数
-                    var detailList2 = inventoryDetailList.Where(x => x.SkuId == pickDetail.SkuId &&
-                        x.BinId == pickDetail.ActBinId && x.Qty > 0).ToList();
-                    ReduceQty(1, invt, detailList2);
+                var invtDetailList = inventoryDetailList.Where(x => x.SkuId == pickDetail.SkuId &&
+                    x.BinId == pickDetail.BinId && x.AlotQty > 0).ToList();
+                //全部按推荐货位扣减库存
+                var invtds = ReduceQtyAndAlotQty(pickDetail.Qty, invt, invtDetailList);
+                foreach (var r in invtds)
+                {
+                    this.DoDeliveryLog(shpId, shpCode, whId, custId, r, r.Qty);
                 }
+            }
+
+            foreach (var pickDetail in actPicks)
+            {
+                var invt = inventoryList.Where(x => x.SkuId == pickDetail.SkuId).FirstOrDefault();
+
+                var invtDetailList = inventoryDetailList.Where(x => x.SkuId == pickDetail.SkuId &&
+                    x.BinId == pickDetail.BinId && x.AlotQty > 0).ToList();
+                //按推荐货位扣减锁定数
+                var detailList1 = inventoryDetailList.Where(x => x.SkuId == pickDetail.SkuId &&
+                    x.BinId == pickDetail.BinId && x.AlotQty > 0).ToList();
+                ReduceAlotQty(pickDetail.Qty, invt, detailList1);
+
+                //按实际货位扣减在库数
+                var detailList2 = inventoryDetailList.Where(x => x.SkuId == pickDetail.SkuId &&
+                    x.BinId == pickDetail.BinId && x.Qty > 0).ToList();
+                ReduceQty(pickDetail.Qty, invt, detailList2);
             }
 
             //保存数据
             return wmsinventory.SaveChanges() > 0;
         }
 
-        private void ReduceQtyAndAlotQty(int totalQty, TInvt invt, List<TInvtD> invtDs)
+        private void DoDeliveryLog(long shpId, string shpCode, int whId, int custId, TInvtD invtd, int qty)
         {
+            var log = new TInvtChangeLog
+            {
+                OrderId = shpId,
+                OrderType = Enum.GetName(typeof(EnumOrderType), EnumOrderType.SHP),
+                OrderCode = shpCode,
+                WhId = whId,
+                CustId = custId,
+                InvtDId = invtd.Id,
+                SkuId = invtd.SkuId,
+                Barcode = invtd.Barcode,
+                BinId = invtd.BinId,
+                ZoneId = invtd.ZoneId,
+                Qty = qty,
+                CreatedBy = DefaultUser.UserName,
+                CreatedTime = DateTime.UtcNow,
+            };
+            wmsinventory.TInvtChangeLogs.Add(log);
+        }
+
+        private List<TInvtD> ReduceQtyAndAlotQty(int totalQty, TInvt invt, List<TInvtD> invtDs)
+        {
+            var newInvtDs = new List<TInvtD>();
             foreach (var invtd in invtDs)
             {
+                var newInvtD = new TInvtD
+                {
+                    Id = invtd.Id,
+                    HId = invtd.HId,
+                    SkuId = invtd.SkuId,
+                    Sku = invtd.Sku,
+                    Barcode = invtd.Barcode,
+                    Qty = 0,
+                    AlotQty = 0,
+                    ZoneId = invtd.ZoneId,
+                    ZoneCode = invtd.ZoneCode,
+                    BinId = invtd.BinId,
+                    BinCode = invtd.BinCode,
+                };
+
                 if (totalQty > 0)
                 {
                     if (totalQty <= invtd.AlotQty) //有其他出库单分配数
@@ -396,6 +467,11 @@ namespace dotnet_wms_ef.Services
 
                         invt.AlotQty -= totalQty;
                         invt.Qty -= totalQty;
+
+                        newInvtD.Qty = totalQty;
+
+                        newInvtDs.Add(newInvtD);
+
                         break;
                     }
                     else
@@ -407,9 +483,14 @@ namespace dotnet_wms_ef.Services
                         invtd.AlotQty = 0;
                         invt.Qty -= invt.AlotQty;
                         invt.AlotQty = 0;
+
+                        newInvtD.Qty = invtd.AlotQty;
+                        newInvtDs.Add(newInvtD);
                     }
                 }
             }
+
+            return newInvtDs;
         }
 
         //只减少分配占用数

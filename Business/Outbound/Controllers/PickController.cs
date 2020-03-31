@@ -37,7 +37,7 @@ namespace dotnet_wms_ef.Controllers
         [HttpPost]
         public JsonResult Affirm([FromBody]long[] ids)
         {
-            var result = recheckService.CreateByPicks(ids);
+            var result = recheckService.CreateRckByPicks(ids);
             return new JsonResult(result);
         }
     }

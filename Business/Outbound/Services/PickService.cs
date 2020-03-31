@@ -136,9 +136,15 @@ namespace dotnet_wms_ef.Services
             return new VPickAdvice { BinCode = binCode, Barcodes = barcodes };
         }
 
-
-        public bool Scan(long pickId, VScanBinRequest detail)
+        public VPickScanResponse Scan(long pickId, VScanBinRequest detail)
         {
+            VPickScanResponse response = new VPickScanResponse
+            {
+                AllFinished = false,
+                BinFinished = false,
+                Message = ""
+            };
+
             var pick = wmsoutbound.TOutPicks.Where(x => x.Id == pickId).FirstOrDefault();
             if (pick == null)
             {
@@ -151,7 +157,7 @@ namespace dotnet_wms_ef.Services
             {
                 throw new Exception("barcode is not exist.");
             }
-            
+
             //获取货区货位信息
             var zoneBin = binService.GetBinByCode(pick.WhId, detail.BinCode);
             if (zoneBin == null)
@@ -163,9 +169,39 @@ namespace dotnet_wms_ef.Services
             var pickDetail = wmsoutbound.TOutPickDs.Where(x => x.HId == pickId && x.Barcode == detail.Barcode && !x.IsPicked).FirstOrDefault();
             if (pickDetail == null)
             {
-               throw new Exception("pickDetail is not exist.");
+                throw new Exception("pickDetail is not exist.");
             }
 
+            //计算每个条码的需要扫描的总数量和货位数量
+            var skuAllQty = wmsoutbound.TOutPickDs.Where(x => x.HId == pick.Id && x.Barcode == detail.Barcode).Count();
+            var pickAllQty = wmsoutbound.TOutPickDs.Where(x => x.HId == pick.Id && x.Barcode == detail.Barcode && x.IsPicked).Count();
+
+            //计算每个条码的当前货位需要扫描的数量
+            var skuBinQty = wmsoutbound.TOutPickDs.Where(x => x.HId == pickId && x.Barcode == detail.Barcode && x.BinCode == detail.AdvBinCode)
+                                .Count();
+
+            //计算每个条码的当前货位已扫描的数量
+            var pickBinQty = wmsoutbound.TOutPickDs.Where(x => x.HId == pickId && x.Barcode == detail.Barcode
+                  && x.BinCode == detail.AdvBinCode && x.IsPicked).Count();
+
+            //计算当前货位是否已经都扫描完毕了,如果是的话,需要跳转到下一个货位的
+            if (skuAllQty == skuBinQty)
+            {
+                response.AllFinished = true;
+                response.Message = string.Format("{0}/{1}/{2}", skuBinQty, skuBinQty, skuAllQty);
+            }
+            else if (pickBinQty + 1 <= skuBinQty)
+            {
+                response.BinFinished = true;
+                UpdatePickDetail(zoneBin, pick, pickDetail);
+                response.Message = string.Format("{0}/{1}/{2}", pickBinQty + 1, skuBinQty, skuAllQty);
+            }
+
+            return response;
+        }
+
+        private void UpdatePickDetail(TWhBin zoneBin, TOutPick pick, TOutPickD pickDetail)
+        {
             if (pick.FirstScanAt == null)
                 pick.FirstScanAt = DateTime.UtcNow;
 
@@ -175,20 +211,20 @@ namespace dotnet_wms_ef.Services
 
             pick.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing);
 
-            pickDetail.ActBinId = zoneBin.Id;
-            pickDetail.ActBinCode = detail.BinCode;
             pickDetail.Qty = 1;
-            pickDetail.ActZoneCode = zoneBin.ZoneCode;
             pickDetail.ActZoneId = zoneBin.ZoneId;
+            pickDetail.ActZoneCode = zoneBin.ZoneCode;
+            pickDetail.ActBinId = zoneBin.Id;
+            pickDetail.ActBinCode = zoneBin.Code;
             pickDetail.IsPicked = true;
             pickDetail.LastModifiedBy = DefaultUser.UserName;
             pickDetail.LastModifiedTime = DateTime.UtcNow;
 
             //更新出库单状态
-            var outbound = wmsoutbound.TOuts.Where(x=>x.Id == pick.OutboundId).FirstOrDefault();
-            outbound.PickStatus = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Doing);
+            var outbound = wmsoutbound.TOuts.Where(x => x.Id == pick.OutboundId).FirstOrDefault();
+            outbound.PickStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing);
 
-            return wmsoutbound.SaveChanges() > 0;
+            wmsoutbound.SaveChanges();
         }
 
     }

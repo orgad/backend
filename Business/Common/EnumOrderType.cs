@@ -7,5 +7,6 @@ namespace dotnet_wms_ef
         RCV,
         QC,
         PTA,
+        SHP,
     }
 }

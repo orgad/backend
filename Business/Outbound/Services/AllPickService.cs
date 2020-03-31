@@ -40,12 +40,18 @@ namespace dotnet_wms_ef.Services
                 return waveService.Advice(id);
         }
 
-        public bool Scan(long id, string TypeCode, VScanBinRequest detail)
+        public VPickScanResponse Scan(long id, string TypeCode, VScanBinRequest detail)
         {
-             if (TypeCode == "Pick")
-                return pickService.Scan(id,detail);
+            if (TypeCode == "Pick")
+            {
+                var result = pickService.Scan(id, detail);
+                return result;
+            }
             else
-                return waveService.Scan(id,detail);
+            {
+                var result = waveService.Scan(id, detail);
+                return new VPickScanResponse();
+            }
         }
     }
 }

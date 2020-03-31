@@ -26,8 +26,8 @@ namespace dotnet_wms_ef.Services
         public List<TOutCheck> TaskPageList()
         {
             return this.Query()
-                       .Where(x=>x.Status == Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Doing) || 
-                              x.Status == Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Init))
+                       .Where(x => x.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing) ||
+                              x.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init))
                        .OrderByDescending(x => x.Id)
                        .ToList();
         }
@@ -56,17 +56,17 @@ namespace dotnet_wms_ef.Services
             };
         }
 
-        public bool CreateByPicks(long[] pickIds)
+        public bool CreateRckByPicks(long[] pickIds)
         {
             var outPicks = wmsoutbound.TOutPicks.Where(x => pickIds.Contains(x.Id)).ToList();
             foreach (var outPick in outPicks)
             {
-                CreateByPick(outPick);
+                CreateRckByPick(outPick);
             }
             return true;
         }
 
-        private void CreateByPick(TOutPick outPick)
+        private void CreateRckByPick(TOutPick outPick)
         {
             var recheck = new TOutCheck
             {
@@ -89,19 +89,18 @@ namespace dotnet_wms_ef.Services
             wmsoutbound.SaveChanges();
         }
 
-        public bool Scan(long recheckId, VScanRequest request)
+        public VOutScanResponse Scan(long recheckId, VScanRequest request)
         {
+            VOutScanResponse response = new VOutScanResponse
+            {
+                AllFinished = false,
+                Message = ""
+            };
             var recheck = wmsoutbound.TOutChecks.Where(x => x.Id == recheckId).FirstOrDefault();
             if (recheck == null)
             {
                 throw new Exception("pick is not exist.");
             }
-
-            if (recheck.FirstScanAt == null)
-                recheck.FirstScanAt = DateTime.UtcNow;
-
-            recheck.LastScanAt = DateTime.UtcNow;
-            recheck.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing);
 
             //获取SKU信息
             var prodSku = skuService.GetSkuByBarcode(request.Barcode);
@@ -110,6 +109,26 @@ namespace dotnet_wms_ef.Services
                 throw new Exception("barcode is not exist.");
             }
 
+            //校验复核的数量和出库单的数量
+            var recheckQty = wmsoutbound.TOutCheckDs.Where(x => x.Id == recheckId && x.Barcode == request.Barcode).Sum(x => x.Qty);
+            var skuQty = wmsoutbound.TOutDs.Where(x => x.Id == recheck.OutboundId && x.Barcode == request.Barcode).Sum(x => x.Qty);
+
+            if (recheckQty < skuQty)
+            {
+                AddRecheckDetail(recheck, request);
+                response.Message = string.Format("{0}/{1}", recheckQty + 1, skuQty);
+            }
+            else
+            {
+                response.AllFinished = true;
+                response.Message = string.Format("{0}/{1}", recheckQty, skuQty);
+            }
+            return response;
+        }
+
+        private bool AddRecheckDetail(TOutCheck recheck, VScanRequest request)
+        {
+            var recheckId = recheck.Id;
             //新增复核明细
             var recheckDetail = new TOutCheckD
             {
@@ -120,6 +139,14 @@ namespace dotnet_wms_ef.Services
                 CreatedBy = DefaultUser.UserName,
                 CreatedTime = DateTime.Now,
             };
+
+            if (recheck.FirstScanAt == null)
+                recheck.FirstScanAt = DateTime.UtcNow;
+
+            recheck.Qty += 1;
+
+            recheck.LastScanAt = DateTime.UtcNow;
+            recheck.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing);
 
             //更新出库单状态
             var outbound = wmsoutbound.TOuts.Where(x => x.Id == recheckId).FirstOrDefault();
@@ -148,16 +175,15 @@ namespace dotnet_wms_ef.Services
 
             var outbound = wmsoutbound.TOuts.Where(x => x.Id == recheck.OutboundId).FirstOrDefault();
 
-            //按拣货情况来扣减库存
+            //按拣货情况来扣减库存(按SKU和库位分组)
 
             var picks = (from pickD in wmsoutbound.TOutPickDs
                          join pick in wmsoutbound.TOutPicks on pickD.HId equals pick.Id
                          where pick.OutboundId == outbound.Id
                          select pickD)
                         .ToList();
-
             //扣减库存
-            inventoryService.Delivery(outbound.WhId, picks);
+            inventoryService.Delivery(outbound.WhId, outbound.Id, outbound.CustId, outbound.Code, picks);
 
             //更新出库状态
             outbound.ScanStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Finished);

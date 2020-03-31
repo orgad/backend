@@ -93,6 +93,8 @@ namespace dotnet_wms_ef
                     .HasColumnType("int(11)")
                     .HasComment("出库单号");
 
+                entity.Property(e =>e.OutboundCode).HasColumnName("outbound_code");
+
                 entity.Property(e => e.Printat)
                     .HasColumnName("printat")
                     .HasColumnType("datetime")
@@ -121,8 +123,10 @@ namespace dotnet_wms_ef
 
                 entity.Property(e => e.WaveId)
                     .HasColumnName("wave_id")
-                    .HasColumnType("int(11)")
+                    .HasColumnType("bigint(20)")
                     .HasComment("波次单号 批次挑货时使用");
+
+                entity.Property(e =>e.WaveCode).HasColumnName("wave_code");
 
                 entity.Property(e => e.WhId)
                     .HasColumnName("wh_id")

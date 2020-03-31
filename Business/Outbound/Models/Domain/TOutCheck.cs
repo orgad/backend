@@ -8,6 +8,7 @@ namespace dotnet_wms_ef.Models
         public long Id { get; set; }
         public string Code { get; set; }
         public long OutboundId { get; set; }
+        public string OutboundCode { get; set; }
         public string Store { get; set; }
         public int Qty { get; set; }
         public int CartonQty { get; set; }

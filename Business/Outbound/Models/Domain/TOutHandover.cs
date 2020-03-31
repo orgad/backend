@@ -12,9 +12,12 @@ namespace dotnet_wms_ef.Models
         public string Store { get; set; }
         public string Driver { get; set; }
         public string PlateNo { get; set; }
+        public DateTime? FirstScanAt { get; set; }
+        public DateTime? LastScanAt { get; set; }
         public string Comment { get; set; }
         public bool IsConfirm { get; set; }
         public DateTime? ShippedDate { get; set; }
+        public int Qty { get; set; }
         public string Status { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreatedTime { get; set; }

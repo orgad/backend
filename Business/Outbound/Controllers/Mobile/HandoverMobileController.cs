@@ -23,6 +23,17 @@ namespace dotnet_wms_ef.Controllers
             });
         }
 
+        [Route("task-list")]
+        public JsonResult TaskList()
+        {
+            var result = handoverService.TaskPageList();
+            var total = handoverService.TaskTotalCount();
+            return new JsonResult(new SingleResponse{
+                TotalCount = total,
+                Data = result,
+            });
+        }
+
         [Route("{id}/details")]
         public JsonResult Details([FromUri] long id)
         {

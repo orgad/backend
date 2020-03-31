@@ -13,6 +13,7 @@ namespace dotnet_wms_ef.Models
         public long Id { get; set; }
         public string Code { get; set; }
         public long OutboundId { get; set; }
+        public string OutboundCode { get; set; }
         public int WhId { get; set; }
         public bool IsCancel { get; set; }
         public string CreatedBy { get; set; }
@@ -20,6 +21,6 @@ namespace dotnet_wms_ef.Models
         public string LastModifiedBy { get; set; }
         public DateTime? LastModifiedTime { get; set; }
 
-        public virtual ICollection<TOutAlotD> DetailList{get;set;}
+        public virtual ICollection<TOutAlotD> DetailList { get; set; }
     }
 }

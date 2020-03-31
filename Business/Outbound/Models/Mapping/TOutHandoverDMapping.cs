@@ -62,12 +62,7 @@ namespace dotnet_wms_ef
                     .HasColumnName("last_modified_time")
                     .HasColumnType("datetime");
 
-                entity.Property(e => e.Pallet)
-                    .HasColumnName("pallet")
-                    .HasColumnType("varchar(30)")
-                    .HasDefaultValueSql("''")
-                    .HasCharSet("utf8mb4")
-                    .HasCollation("utf8mb4_0900_ai_ci");
+                entity.Property(e => e.Pallet).HasColumnName("pallet");
          }
     }
 }

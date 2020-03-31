@@ -23,6 +23,12 @@ namespace dotnet_wms_ef
 
                 entity.Property(e =>e.WhId).HasColumnName("wh_id");
 
+                entity.Property(e =>e.Qty).HasColumnName("qty");
+
+                entity.Property(e =>e.FirstScanAt).HasColumnName("first_scan_at");
+
+                entity.Property(e =>e.LastScanAt).HasColumnName("last_scan_at");
+
                 entity.Property(e => e.Code)
                     .IsRequired()
                     .HasColumnName("code")

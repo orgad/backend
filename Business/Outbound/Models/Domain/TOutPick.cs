@@ -13,7 +13,9 @@ namespace dotnet_wms_ef.Models
         public string Code { get; set; }
         public int WhId { get; set; }
         public long WaveId { get; set; }
+        public string WaveCode { get; set; }
         public long OutboundId { get; set; }
+        public string OutboundCode { get; set; }
         public string Store { get; set; }
         public int BinQty { get; set; }
         public int CartonQty { get; set; }

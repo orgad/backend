@@ -88,6 +88,8 @@ namespace dotnet_wms_ef
                     .HasColumnType("int(11)")
                     .HasComment("出库单号");
 
+                entity.Property(e =>e.OutboundCode).HasColumnName("outbound_code");
+
                 entity.Property(e => e.Qty)
                     .HasColumnName("qty")
                     .HasColumnType("int(11)")

@@ -6,7 +6,7 @@ namespace dotnet_wms_ef.Models
     public partial class TOutHandoverD
     {
         public long Id { get; set; }
-        public long? HId { get; set; }
+        public long HId { get; set; }
         public string Courier { get; set; }
         public string ExpressNo { get; set; }
         public string Pallet { get; set; }

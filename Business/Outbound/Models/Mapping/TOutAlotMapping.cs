@@ -54,8 +54,10 @@ namespace dotnet_wms_ef.Models
 
                 entity.Property(e => e.OutboundId)
                     .HasColumnName("outbound_id")
-                    .HasColumnType("int(11)")
+                    .HasColumnType("bigint(20)")
                     .HasComment("出库单号");
+                
+                entity.Property(e =>e.OutboundCode).HasColumnName("outbound_code");
 
                 entity.Property(e => e.WhId)
                     .HasColumnName("wh_id")

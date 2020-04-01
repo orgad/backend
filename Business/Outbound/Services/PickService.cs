@@ -33,6 +33,7 @@ namespace dotnet_wms_ef.Services
                 WhId = tOut.WhId,
                 WaveId = waveId,
                 OutboundId = tOut.Id,
+                OutboundCode = tOut.Code,
                 Store = tOut.Store,
                 Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init),
                 CreatedBy = DefaultUser.UserName,
@@ -177,15 +178,14 @@ namespace dotnet_wms_ef.Services
             var pickAllQty = wmsoutbound.TOutPickDs.Where(x => x.HId == pick.Id && x.Barcode == detail.Barcode && x.IsPicked).Count();
 
             //计算每个条码的当前货位需要扫描的数量
-            var skuBinQty = wmsoutbound.TOutPickDs.Where(x => x.HId == pickId && x.Barcode == detail.Barcode && x.BinCode == detail.AdvBinCode)
-                                .Count();
+            var skuBinQty = wmsoutbound.TOutPickDs.Where(x => x.HId == pickId && x.Barcode == detail.Barcode && x.BinCode == detail.AdvBinCode).Count();
 
             //计算每个条码的当前货位已扫描的数量
             var pickBinQty = wmsoutbound.TOutPickDs.Where(x => x.HId == pickId && x.Barcode == detail.Barcode
                   && x.BinCode == detail.AdvBinCode && x.IsPicked).Count();
 
             //计算当前货位是否已经都扫描完毕了,如果是的话,需要跳转到下一个货位的
-            if (skuAllQty == skuBinQty)
+            if (skuAllQty == pickAllQty)
             {
                 response.AllFinished = true;
                 response.Message = string.Format("{0}/{1}/{2}", skuBinQty, skuBinQty, skuAllQty);

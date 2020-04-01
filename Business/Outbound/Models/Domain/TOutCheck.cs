@@ -7,6 +7,7 @@ namespace dotnet_wms_ef.Models
     {
         public long Id { get; set; }
         public string Code { get; set; }
+        public int WhId { get; set; }
         public long OutboundId { get; set; }
         public string OutboundCode { get; set; }
         public string Store { get; set; }
@@ -14,8 +15,8 @@ namespace dotnet_wms_ef.Models
         public int CartonQty { get; set; }
         public DateTime? FirstScanAt { get; set; }
         public DateTime? LastScanAt { get; set; }
-        public ulong IsCancel { get; set; }
-        public ulong IsConfirm { get; set; }
+        public bool IsCancel { get; set; }
+        public bool IsConfirm { get; set; }
         public string Status { get; set; }
         public string Comment { get; set; }
         public string CreatedBy { get; set; }

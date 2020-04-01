@@ -238,6 +238,11 @@ namespace dotnet_wms_ef.Services
             //找到某一个sku 的库存记录
             var o = wmsinventory.TInvts.Where(x => x.SkuId == skuId).FirstOrDefault();
 
+            if(o==null)
+            {
+                throw new Exception("inventory is not exists.");
+            }
+
             var leaveInvtQty = o.Qty - o.AlotQty - o.LockedQty;
 
             var totalQty = singleSkuDetails.Sum(x => x.Qty);

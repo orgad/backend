@@ -17,6 +17,8 @@ namespace dotnet_wms_ef
                     .HasColumnType("bigint(20)")
                     .HasComment("主键");
 
+                entity.Property(e => e.WhId).HasColumnName("wh_id");
+
                 entity.Property(e => e.CartonQty)
                     .HasColumnName("carton_qty")
                     .HasColumnType("int(11)")
@@ -85,7 +87,7 @@ namespace dotnet_wms_ef
 
                 entity.Property(e => e.OutboundId)
                     .HasColumnName("outbound_id")
-                    .HasColumnType("int(11)")
+                    .HasColumnType("bigint(20)")
                     .HasComment("出库单号");
 
                 entity.Property(e =>e.OutboundCode).HasColumnName("outbound_code");
@@ -104,9 +106,7 @@ namespace dotnet_wms_ef
                 entity.Property(e => e.Store)
                     .HasColumnName("store")
                     .HasColumnType("varchar(30)")
-                    .HasComment("店铺")
-                    .HasCharSet("utf8mb4")
-                    .HasCollation("utf8mb4_0900_ai_ci");
+                    .HasComment("店铺");
          }
     }
 }

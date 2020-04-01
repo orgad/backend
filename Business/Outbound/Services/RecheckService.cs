@@ -71,7 +71,9 @@ namespace dotnet_wms_ef.Services
             var recheck = new TOutCheck
             {
                 Code = outPick.Code.Replace("PCK", "RCK"),
+                WhId = outPick.WhId,
                 OutboundId = outPick.OutboundId,
+                OutboundCode = outPick.OutboundCode,
                 Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init),
                 Store = outPick.Store,
                 CreatedBy = DefaultUser.UserName,
@@ -110,8 +112,8 @@ namespace dotnet_wms_ef.Services
             }
 
             //校验复核的数量和出库单的数量
-            var recheckQty = wmsoutbound.TOutCheckDs.Where(x => x.Id == recheckId && x.Barcode == request.Barcode).Sum(x => x.Qty);
-            var skuQty = wmsoutbound.TOutDs.Where(x => x.Id == recheck.OutboundId && x.Barcode == request.Barcode).Sum(x => x.Qty);
+            var recheckQty = wmsoutbound.TOutCheckDs.Where(x => x.HId == recheckId && x.Barcode == request.Barcode).Sum(x => x.Qty);
+            var skuQty = wmsoutbound.TOutDs.Where(x => x.HId == recheck.OutboundId && x.Barcode == request.Barcode).Sum(x => x.Qty);
 
             if (recheckQty < skuQty)
             {

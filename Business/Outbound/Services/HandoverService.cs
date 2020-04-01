@@ -24,7 +24,7 @@ namespace dotnet_wms_ef.Services
         {
             return this.Query()
                    .Where(x => x.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing) ||
-                   x.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init))
+                   x.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.None))
             .ToList();
         }
 
@@ -32,7 +32,7 @@ namespace dotnet_wms_ef.Services
         {
             return this.Query()
                    .Where(x => x.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing) ||
-                   x.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init))
+                   x.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.None))
             .Count();
         }
 
@@ -72,7 +72,7 @@ namespace dotnet_wms_ef.Services
         public bool Scan(long handoverId, VScanExpressRequest vExpress)
         {
             //首先查找条码是否存在
-            var express = wmsoutbound.TOutExpresses.Where(x=>x.Code == vExpress.CourierCode).FirstOrDefault();
+            var express = wmsoutbound.TOutExpresses.Where(x=>x.Code == vExpress.ExpressCode).FirstOrDefault();
             if(express==null)
             {
                 throw new Exception("couriercode is not exists.");

@@ -94,8 +94,7 @@ namespace dotnet_wms_ef.Controllers
             return new PhysicalFileResult(r, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         }
 
-        [HttpPost]
-        [EnableCors("any")]
+        [HttpPut]
         [Route("affirm")]
         public JsonResult AsnConfirm([FromBody] long[] ids)
         {
@@ -103,12 +102,11 @@ namespace dotnet_wms_ef.Controllers
             return new JsonResult(r);
         }
 
-        [HttpPost]
-        [EnableCors("any")]
+        [HttpPut]
         [Route("check-affirm")]
         public JsonResult CheckConfirm([FromBody] long[] ids)
         {
-            var r = asnService.Check(ids);
+            var r = asnService.Checks(ids);
             return new JsonResult(r);
         }
     }

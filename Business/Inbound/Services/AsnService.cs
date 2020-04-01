@@ -279,11 +279,31 @@ namespace dotnet_wms_ef.Services
         //
         // 调用验货服务生成验货单
         //
-        public bool Affirms(long[] ids)
+        public List<Tuple<bool, string>> Affirms(long[] ids)
         {
+            var list = new List<Tuple<bool, string>>();
             var asns = wms.TInAsns
                        .Where(x => ids.Contains(x.Id) && x.Status == "None")
                        .ToList();
+            if (!asns.Any())
+            {
+                foreach (var id in ids)
+                {
+                    list.Add(new Tuple<bool, string>(false, string.Format("{0}", id)));
+                }
+                return list;
+            }
+            else
+            {
+                //把排除掉的记录标记为错误
+                foreach (var id in ids)
+                {
+                    if (!asns.Any(x => x.Id == id))
+                        list.Add(new Tuple<bool, string>(false, string.Format("{0}", id)));
+                }
+            }
+
+            //继续操作
             int i = 0;
             foreach (var asn in asns)
             {
@@ -294,17 +314,17 @@ namespace dotnet_wms_ef.Services
                     this.setProxy(asn);
                     wms.Add(asnCheckService.Create(asn));
                     i++;
+                    var r = wms.SaveChanges() > 0;
+                    list.Add(new Tuple<bool, string>(r, asn.Code));
                 }
             }
-            wms.SaveChanges();
-            return i > 0;
+
+            return list;
         }
 
-        public List<Tuple<long, bool>> Check(long[] ids)
+        public List<Tuple<long, bool>> Checks(long[] ids)
         {
             return asnCheckService.ChecksByAsn(ids);
         }
-
-
     }
 }

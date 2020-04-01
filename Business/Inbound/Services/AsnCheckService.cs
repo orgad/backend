@@ -163,14 +163,22 @@ namespace dotnet_wms_ef.Services
         private List<Tuple<long, bool>> Check(long[] asnIds, List<TInAsn> asns, List<TInCheck> asnChecks)
         {
             var list = new List<Tuple<long, bool>>();
-
             foreach (var id in asnIds)
             {
                 var asn = asns.Where(x => x.Id == id).FirstOrDefault();
-                var asnCheck = asnChecks.Where(x => x.HId == asn.Id).FirstOrDefault();
-                CheckOne(asn, asnCheck);
-                var result = wms.SaveChanges() > 0;
-                list.Add(new Tuple<long, bool>(asn.Id, result));
+                //初始或者已完成的不能做验货确认
+                if (asn.CheckStatus == Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Finished) || 
+                       asn.CheckStatus == Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Init))
+                {
+                    list.Add(new Tuple<long, bool>(asn.Id, false));
+                }
+                else
+                {
+                    var asnCheck = asnChecks.Where(x => x.HId == asn.Id).FirstOrDefault();
+                    CheckOne(asn, asnCheck);
+                    var result = wms.SaveChanges() > 0;
+                    list.Add(new Tuple<long, bool>(asn.Id, result));
+                }
             }
             return list;
         }

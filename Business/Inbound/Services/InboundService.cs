@@ -120,6 +120,7 @@ namespace dotnet_wms_ef
                 {
                     inbound.PStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Finished);
                     inbound.Status = Enum.GetName(typeof(EnumStatus), EnumStatus.Finished);
+                    inbound.IsConfirm = true;
                     inbound.ActualInAt = DateTime.UtcNow;
                 }
 

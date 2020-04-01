@@ -40,9 +40,9 @@ namespace dotnet_wms_ef.Controllers
         [Route("confirm")]
         [EnableCors("any")]
         //上架确认
-        public JsonResult Confirm([FromBody]long id)
+        public JsonResult Confirm([FromBody]long[] ids)
         {
-            var result = putAwayService.Confirm(id);
+            var result = putAwayService.Confirms(ids);
             return new JsonResult(result);
         }
 

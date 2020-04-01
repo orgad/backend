@@ -158,6 +158,16 @@ namespace dotnet_wms_ef.Services
             return wmsinbound.SaveChanges() > 0;
         }
 
+        public List<Tuple<bool, string>> Confirms(long[] ids)
+        {
+            var list = new List<Tuple<bool, string>>();
+            foreach(var id in ids)
+            {
+                list.Add(this.Confirm(id));
+            }
+            return list;
+        }
+
         public Tuple<bool, string> Confirm(long id)
         {
             //更新状态

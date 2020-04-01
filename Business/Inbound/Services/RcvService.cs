@@ -31,7 +31,7 @@ namespace dotnet_wms_ef
 
             var inboundDetail = wmsinbound.TInInboundDs.Where(x => x.HId == opt.OrderId && x.Barcode == opt.Barcode).FirstOrDefault();
 
-            if (asnId != null)
+            if (asnId>0)
             {
                 //查询到货明细
                 var asnDetail = wmsinbound.TInAsnDs.Where(x => x.HId == asnId && x.Barcode == opt.Barcode)

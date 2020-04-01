@@ -26,12 +26,13 @@ namespace dotnet_wms_ef.Services
         {
             var cf = Enum.GetName(typeof(EnumInOperation), currentFlow);
             var list = List(whId, custId, brandId);
-            var index = list.FindIndex(x => x.OptCode == cf);
-            var nf = list[index + 1].OptCode;
-
-            if (nf == Enum.GetName(typeof(EnumInOperation), EnumInOperation.Qc)) return EnumInOperation.Qc;
-            if (nf == Enum.GetName(typeof(EnumInOperation), EnumInOperation.PutAway)) return EnumInOperation.PutAway;
-
+            if (list.Any())
+            {
+                var index = list.FindIndex(x => x.OptCode == cf);
+                var nf = list[index + 1].OptCode;
+                if (nf == Enum.GetName(typeof(EnumInOperation), EnumInOperation.Qc)) return EnumInOperation.Qc;
+                if (nf == Enum.GetName(typeof(EnumInOperation), EnumInOperation.PutAway)) return EnumInOperation.PutAway;
+            }
             return EnumInOperation.None;
         }
 
@@ -49,6 +50,8 @@ namespace dotnet_wms_ef.Services
             //查策略主表
             var rcvSt = wmsinbound.TSts.Where(x => x.WhId == whId && x.CustId == custId && x.BrandId == brandId)
             .FirstOrDefault();
+            if (rcvSt == null)
+                return new Tuple<bool, decimal>(false, 0);
 
             //查策略明细
             var o = wmsinbound.TStRcvs.Where(x => x.HId == rcvSt.Id).FirstOrDefault();
@@ -62,11 +65,21 @@ namespace dotnet_wms_ef.Services
         //校验字段
         public List<string> CheckList(int whId, int custId, int brandId)
         {
+            var list = new List<string>();
             var rcvSt = wmsinbound.TSts.Where(x => x.WhId == whId && x.CustId == custId && x.BrandId == brandId)
             .FirstOrDefault();
-            var o = wmsinbound.TStRcvs.Where(x => x.HId == rcvSt.Id).Select(x => x.CheckList).FirstOrDefault();
-
-            return o.Split(',').ToList();
+            if (rcvSt != null)
+            {
+                var o = wmsinbound.TStRcvs.Where(x => x.HId == rcvSt.Id).Select(x => x.CheckList).FirstOrDefault();
+                if (string.IsNullOrEmpty(o))
+                    return list;
+                else
+                    return o.Split(',').ToList();
+            }
+            else
+            {
+                return list;
+            }
         }
     }
 }

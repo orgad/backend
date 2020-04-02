@@ -89,6 +89,7 @@ namespace dotnet_wms_ef.Services
 
             var handOver = wmsoutbound.TOutHandovers.Where(x => x.Id == handoverId).FirstOrDefault();
             handOver.Qty += 1;
+            handOver.IsConfirm = true;
             handOver.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing);
 
             if (handOver.FirstScanAt == null)

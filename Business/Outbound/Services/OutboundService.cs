@@ -128,7 +128,7 @@ namespace dotnet_wms_ef.Services
         public List<Tuple<bool, long, string>> Alots(long[] ids)
         {
             var list = new List<Tuple<bool, long, string>>();
-            var outbounds = wmsoutbound.TOuts.Where(x => !x.IsCancel && x.AllotStatus < 2 && ids.Contains(x.Id));
+            var outbounds = wmsoutbound.TOuts.Where(x => !x.IsCancel && x.AllotStatus < 2 && ids.Contains(x.Id)).ToList();
             //首先清理不需要处理的单据
             foreach (var id in ids)
             {
@@ -156,7 +156,7 @@ namespace dotnet_wms_ef.Services
             var alotList = inventoryService.Alot(outbound.WhId, detailList);
 
             // 生成分配记录
-            var r = alotService.Create(outbound.WhId, outbound.Id, detailList, alotList);
+            var r = alotService.Create(outbound.WhId, outbound.Id, outbound.Code, detailList, alotList);
             wmsoutbound.TOutAlots.Add(r);
 
             //更新出库明细
@@ -194,8 +194,8 @@ namespace dotnet_wms_ef.Services
             var list = new List<Tuple<bool, long, string>>();
             //首先排除掉已经做过拣货的
             var outs = wmsoutbound.TOuts
-                      .Where(x => x.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.None)
-                                   || string.IsNullOrEmpty(x.Status)
+                      .Where(x => x.AllotStatus > 0 && 
+                                 (x.PickStatus == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.None) || string.IsNullOrEmpty(x.PickStatus))
                                    && ids.Contains(x.Id))
                       .ToList();
             //不能重复处理的直接返回false

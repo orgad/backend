@@ -17,13 +17,14 @@ namespace dotnet_wms_ef.Services
             wmsoutbound.Database.UseTransaction(transaction.GetDbTransaction());
         }
 
-        public TOutAlot Create(int whId, long outboundId,TOutD[] outds, TInvtD[] alots)
+        public TOutAlot Create(int whId, long outboundId, string outboundCode, TOutD[] outds, TInvtD[] alots)
         {
             var alot = new TOutAlot
             {
                 Code = "ALT" + DateTime.Now.ToString(FormatString.DefaultFormat),
                 WhId = whId,
                 OutboundId = outboundId,
+                OutboundCode = outboundCode,
                 CreatedBy = DefaultUser.UserName,
                 CreatedTime = DateTime.UtcNow,
             };
@@ -55,7 +56,7 @@ namespace dotnet_wms_ef.Services
 
         public List<TOutAlot> PageList()
         {
-            return this.Query().OrderByDescending(x=>x.Id).ToList();
+            return this.Query().OrderByDescending(x => x.Id).ToList();
         }
 
         public int TotalCount()

@@ -177,6 +177,7 @@ namespace dotnet_wms_ef.Services
 
             if (pt.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Finished))
             {
+                //已经上架的不允许上架了
                 return new Tuple<bool, long, string>(false, id, "");
             }
             pt.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Finished);
@@ -188,7 +189,7 @@ namespace dotnet_wms_ef.Services
 
             var details = wmsinbound.TInPutawayDs.Where(x => x.HId == id).ToList();
 
-            inventoryService.PutAways(pt.WhId, details.ToArray());
+            inventoryService.PutAways(pt.WhId,inbound.CustId,pt.Id,pt.Code, details.ToArray());
 
             //更新库存
             var r = wmsinbound.SaveChanges() > 0;

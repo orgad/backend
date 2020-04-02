@@ -23,7 +23,7 @@ namespace dotnet_wms_ef
         StrategyService strategyService = new StrategyService();
 
         //创建入库单
-        public TInInbound Create(TInAsn asn)
+        public TInInbound CreateByAsn(TInAsn asn)
         {
             TInInbound r = new TInInbound();
             r.Code = asn.Code.Replace(Enum.GetName(typeof(EnumOrderType), EnumOrderType.ASN),
@@ -96,14 +96,24 @@ namespace dotnet_wms_ef
             foreach (var inbound in inbounds)
             {
                 if(inbound.Status != Enum.GetName(typeof(EnumStatus),EnumStatus.None))
-                {
+                {   
+                    //表示已经确认过了
                     list.Add(new Tuple<bool,long,string>(false,inbound.Id,inbound.Code));
                     continue;
                 }
+                if(inbound.RStatus == Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Init))
+                {   
+                    //表示还没做收货扫描
+                    list.Add(new Tuple<bool,long,string>(false,inbound.Id,inbound.Code));
+                    continue;
+                }
+
                 var detailList = inboundDs.Where(x => x.HId == inbound.Id).ToArray();
 
                 //生成库存记录
                 inventoryService.Rcv(inbound.WhId, inbound.CustId,inbound.Code, detailList);
+
+                inbound.Status = Enum.GetName(typeof(EnumStatus), EnumStatus.Audit);
 
                 //修改单据状态
                 inbound.RStatus = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Finished);

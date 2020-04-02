@@ -134,7 +134,7 @@ namespace dotnet_wms_ef.Services
             return h;
         }
 
-        public bool PutAways(int whId, TInPutawayD[] ps)
+        public bool PutAways(int whId, int custId, long ptaId, string ptaCode, TInPutawayD[] ps)
         {
             var toInvts = ps.GroupBy(x => x.SkuId);
             var bin = GetDefalutBin(whId);
@@ -146,11 +146,11 @@ namespace dotnet_wms_ef.Services
 
                 //开始上架: 增加目的货位的库存，减少收货区货位的库存
                 var psBysku = ps.Where(x => x.SkuId == toInvt.Key).ToArray();
-                PutAway(whId, psBysku, invts);
+                PutAway(whId, custId, ptaId, ptaCode, psBysku, invts);
             }
             return wmsinventory.SaveChanges() > 0;
         }
-        private void PutAway(int whId, TInPutawayD[] putAwayDetailList, List<TInvtD> invts)
+        private void PutAway(int whId, int custId, long ptaId, string ptaCode, TInPutawayD[] putAwayDetailList, List<TInvtD> invts)
         {
             //单个SKU上架
             var hid = invts.Select(x => x.HId).FirstOrDefault();
@@ -167,7 +167,7 @@ namespace dotnet_wms_ef.Services
                 var toBin = detailByBin.Key.BinCode;
                 var qty = putAwayDetailList.Where(x => x.BinId == toBinId).Sum(x => x.Qty);
 
-                wmsinventory.TInvtDs.Add(new TInvtD
+                var d2 = new TInvtD
                 {
                     HId = hid,
                     WhId = whId,
@@ -181,7 +181,26 @@ namespace dotnet_wms_ef.Services
                     Qty = qty,
                     CreatedBy = DefaultUser.UserName,
                     CreatedTime = DateTime.UtcNow
-                });
+                };
+
+                d2.TInvtChangeLog = new TInvtChangeLog
+                {
+                    OrderId = ptaId,
+                    OrderType = Enum.GetName(typeof(EnumOrderType), EnumOrderType.PTA),
+                    OrderCode = ptaCode,
+                    WhId = whId,
+                    InvtDId = d2.Id,
+                    CustId = custId,
+                    SkuId = Sku.SkuId,
+                    Barcode = Sku.Barcode,
+                    BinId = d2.BinId,
+                    ZoneId = d2.ZoneId,
+                    Qty = qty,
+                    CreatedBy = DefaultUser.UserName,
+                    CreatedTime = DateTime.UtcNow,
+                };
+
+                wmsinventory.TInvtDs.Add(d2);
 
                 //需要扣减的库存
                 ReduceQty(qty, null, invts);

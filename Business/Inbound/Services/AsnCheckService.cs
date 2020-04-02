@@ -82,6 +82,11 @@ namespace dotnet_wms_ef.Services
                 o.DamageCartonQty = check.DamageCartonQty;
                 o.DamageQty = check.DamageQty;
                 o.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing);
+
+                // 同时更新对应的到货通知单
+                var asn = wms.TInAsns.Where(x => x.Id == o.HId).FirstOrDefault();
+                asn.CheckStatus = o.Status;
+
                 return wms.SaveChanges() > 0;
             }
             return false;
@@ -185,7 +190,7 @@ namespace dotnet_wms_ef.Services
 
         private void CheckOne(TInAsn asn, TInCheck asnCheck)
         {
-            var r = inboundService.Create(asn);
+            var r = inboundService.CreateByAsn(asn);
             wms.TInInbounds.Add(r);
             //修改到货通知单的单据状态
             asn.CheckStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Finished);

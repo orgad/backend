@@ -40,6 +40,22 @@ namespace dotnet_wms_ef.Services
             return new Tuple<bool, string>(result, "");
         }
 
+        public Tuple<bool, string> UpdateDn(TOutDn vOutDn)
+        {
+            //首先去查询一把
+            var dn = wmsoutbound.TOutDns.Where(x => x.Id == vOutDn.Id).FirstOrDefault();
+            dn.WhId = vOutDn.WhId;
+            dn.CustId = vOutDn.CustId;
+            dn.BrandId = vOutDn.BrandId;
+            dn.RefNo = vOutDn.RefNo;
+            dn.Payment = vOutDn.Payment;
+            dn.GoodsType = vOutDn.GoodsType;
+            dn.BizCode = vOutDn.BizCode;
+
+            var result = wmsoutbound.SaveChanges() > 0;
+            return new Tuple<bool, string>(result, "");
+        }
+
         public bool Upload(IFormFile file, long id, string code)
         {
             ioService.basePath = this.Root;
@@ -115,14 +131,14 @@ namespace dotnet_wms_ef.Services
             var list = new List<Tuple<bool, long, string>>();
             var dns = wmsoutbound.TOutDns.Where(x => x.Status == "None" && ids.Contains(x.Id)).ToList();
             //排除已经审核过的
-            foreach(var id in ids)
+            foreach (var id in ids)
             {
-                if(!dns.Any(x=>x.Id == id))
+                if (!dns.Any(x => x.Id == id))
                 {
                     list.Add(new Tuple<bool, long, string>(false, id, ""));
                 }
             }
-            
+
             //处理剩余的
             foreach (var dn in dns)
             {

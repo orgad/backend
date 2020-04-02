@@ -45,25 +45,37 @@ namespace dotnet_wms_ef.Controllers
             return new JsonResult(result);
         }
 
-        [Route("{id}/detail-list")]
         [HttpGet]
-        public JsonResult DetailList([FromUri]long id,QueryDn queryDn)
+        [Route("{id}/detail-list")]
+        public JsonResult DetailList([FromUri]long id, QueryDn queryDn)
         {
             return new JsonResult(new SingleResponse
             {
-                TotalCount = dnDetailService.TotalCount(queryDn,id),
-                Data = dnDetailService.PageList(queryDn,id)
+                TotalCount = dnDetailService.TotalCount(queryDn, id),
+                Data = dnDetailService.PageList(queryDn, id)
             });
         }
 
         [HttpPost]
         public JsonResult Create([FromBody] TOutDn dn)
         {
-            if(dn==null)
+            if (dn == null)
             {
                 return new JsonResult("dn is null.");
             }
             var result = dnService.Create(dn);
+            return new JsonResult(result);
+        }
+
+        [HttpPut]
+        [Route("update")]
+        public JsonResult UpdateDn([FromBody] TOutDn dn)
+        {
+            if (dn == null)
+            {
+                return new JsonResult("dn is null.");
+            }
+            var result = dnService.UpdateDn(dn);
             return new JsonResult(result);
         }
 
@@ -72,7 +84,7 @@ namespace dotnet_wms_ef.Controllers
         public JsonResult Audit([FromBody] long[] ids)
         {
             var result = dnService.Audit(ids);
-            return  new JsonResult(result);
+            return new JsonResult(result);
         }
 
         [Route("importdetail")]

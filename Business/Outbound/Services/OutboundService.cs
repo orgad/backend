@@ -19,7 +19,7 @@ namespace dotnet_wms_ef.Services
         SkuService skuService = new SkuService();
         public List<TOut> PageList(QueryOut queryOut)
         {
-            return this.Query(queryOut).OrderByDescending(x=>x.Id).ToList();
+            return this.Query(queryOut).OrderByDescending(x => x.Id).ToList();
         }
 
         public int TotalCount(QueryOut queryOut)
@@ -82,12 +82,12 @@ namespace dotnet_wms_ef.Services
                 DnCode = dn.Code,
                 BizCode = dn.BizCode,
                 GoodsType = dn.GoodsType,
-                TypeCode = "SHP",
+                TypeCode = Enum.GetName(typeof(EnumOrderType), EnumOrderType.SHP),
                 TransCode = "Outbound",
                 SrcCode = dn.SrcCode,
                 Store = store,
                 IsPriority = false,
-                Status = "None",
+                Status = Enum.GetName(typeof(EnumStatus), EnumStatus.None),
                 IsDeleted = false,
                 OrderPayment = dn.OrderPayment,
                 Payment = dn.Payment,
@@ -125,23 +125,34 @@ namespace dotnet_wms_ef.Services
             return new Tuple<bool, string>(r, "");
         }
 
-        public bool Alots(long[] ids)
+        public List<Tuple<bool, long, string>> Alots(long[] ids)
         {
+            var list = new List<Tuple<bool, long, string>>();
+            var outbounds = wmsoutbound.TOuts.Where(x => !x.IsCancel && x.AllotStatus < 2 && ids.Contains(x.Id));
+            //首先清理不需要处理的单据
             foreach (var id in ids)
             {
-                this.Alot(id);
+                if (!outbounds.Any(x => x.Id == id))
+                {
+                    list.Add(new Tuple<bool, long, string>(false, id, ""));
+                }
             }
-            return true;
-        }
-        private void Alot(long id)
-        {
-            // 获取出库明细
-            var outbound = wmsoutbound.TOuts.Where(x => x.Id == id).FirstOrDefault();
-            if (outbound == null) throw new Exception("outboud is not exist.");
 
-            var detailList = wmsoutbound.TOutDs.Where(x => x.HId == id).ToArray();
+            //处理剩余的
+            foreach (var outbound in outbounds)
+            {
+                // 获取出库明细
+                if (outbound == null) throw new Exception("outboud is not exist.");
+                list.Add(this.Alot(outbound));
+            }
+            return list;
+        }
+        private Tuple<bool, long, string> Alot(TOut outbound)
+        {
+            var detailList = wmsoutbound.TOutDs.Where(x => x.HId == outbound.Id).ToArray();
 
             // 获取分配结果,更新库存记录
+            // 支持二次分配, 剩余未分配数 = 期望出库数 - 已分配数
             var alotList = inventoryService.Alot(outbound.WhId, detailList);
 
             // 生成分配记录
@@ -149,48 +160,74 @@ namespace dotnet_wms_ef.Services
             wmsoutbound.TOutAlots.Add(r);
 
             //更新出库明细
+            //支持二次分配,分配数量进行累加
             foreach (var detail in detailList)
             {
-                detail.MatchingQty = alotList.Where(x => x.SkuId == detail.SkuId).Sum(X => X.AlotQty);
+                detail.MatchingQty += alotList.Where(x => x.SkuId == detail.SkuId).Sum(X => X.AlotQty);
             }
 
             //更新单据状态
-            outbound.AllotStatus = 2;
+            var allMatchingQty = detailList.Sum(x => x.MatchingQty);
+            var allQty = detailList.Sum(x => x.Qty);
+            if (allMatchingQty == 0)
+            {
+                outbound.AllotStatus = -1;
+            }
+            else if (allQty > allMatchingQty)
+            {
+                outbound.AllotStatus = 1;
+            }
+            else
+            {
+                outbound.AllotStatus = 2;
+            }
+
             outbound.Status = Enum.GetName(typeof(EnumStatus), EnumStatus.Audit);
 
             //保存
-            wmsoutbound.SaveChanges();
+            var r1 = wmsoutbound.SaveChanges() > 0;
+            return new Tuple<bool, long, string>(r1, outbound.Id, "");
         }
 
-        public bool Picks(long[] ids)
+        public List<Tuple<bool, long, string>> Picks(long[] ids)
         {
+            var list = new List<Tuple<bool, long, string>>();
+            //首先排除掉已经做过拣货的
+            var outs = wmsoutbound.TOuts
+                      .Where(x => x.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.None)
+                                   || string.IsNullOrEmpty(x.Status)
+                                   && ids.Contains(x.Id))
+                      .ToList();
+            //不能重复处理的直接返回false
             foreach (var id in ids)
             {
-                this.Pick(id);
+                if (!outs.Any(x => x.Id == id))
+                    list.Add(new Tuple<bool, long, string>(false, id, ""));
             }
-            return true;
+            //可以继续操作的
+            foreach (var outboud in outs)
+            {
+                list.Add(this.Pick(outboud));
+            }
+            return list;
         }
 
-        private bool Pick(long id)
+        private Tuple<bool, long, string> Pick(TOut outbound)
         {
-            var tOut = wmsoutbound.TOuts.Where(x => x.Id == id).FirstOrDefault();
-            if (tOut == null)
-            {
-                throw new Exception("out is null.");
-            }
-
-            var detailList = wmsoutbound.TOutDs.Where(x => x.HId == id).ToList();
+            var detailList = wmsoutbound.TOutDs.Where(x => x.HId == outbound.Id).ToList();
             if (!detailList.Any())
             {
                 throw new Exception("detail-list is null.");
             }
 
-            tOut.DetailList = detailList;
+            outbound.DetailList = detailList;
 
-            var result =  pickService.CreatePick(tOut);
-            
-            tOut.PickStatus = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Init);
-            return wmsoutbound.SaveChanges()>0;
+            var result = pickService.CreatePick(outbound);
+
+            outbound.PickStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init);
+            var r1 = wmsoutbound.SaveChanges() > 0;
+
+            return new Tuple<bool, long, string>(r1, outbound.Id, "");
         }
     }
 }

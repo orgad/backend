@@ -34,7 +34,7 @@ namespace dotnet_wms_ef.Controllers
         }
 
         [Route("affirm")]
-        [HttpPost]
+        [HttpPut]
         public JsonResult Affirm([FromBody]long[] ids)
         {
             var result = recheckService.CreateRckByPicks(ids);

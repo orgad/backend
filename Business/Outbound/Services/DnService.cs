@@ -44,7 +44,7 @@ namespace dotnet_wms_ef.Services
         {
             ioService.basePath = this.Root;
             //保存文件
-            DataTable dataTable = ioService.Import(file, "DN",code);
+            DataTable dataTable = ioService.Import(file, "DN", code);
 
             var details = new List<TOutDnD>();
             //写入到数据库
@@ -59,7 +59,7 @@ namespace dotnet_wms_ef.Services
                 d.CreatedTime = DateTime.UtcNow;
                 details.Add(d);
             }
-            var r= CreateDnDetail(id, details.ToArray());
+            var r = CreateDnDetail(id, details.ToArray());
             return r;
         }
 
@@ -88,7 +88,7 @@ namespace dotnet_wms_ef.Services
 
         public List<TOutDn> PageList(QueryDn queryDn)
         {
-            return this.Query(queryDn).OrderByDescending(x=>x.Id).ToList();
+            return this.Query(queryDn).OrderByDescending(x => x.Id).ToList();
         }
 
         public int TotalCount(QueryDn queryDn)
@@ -110,16 +110,28 @@ namespace dotnet_wms_ef.Services
             return new VDnDetails { Dn = dn, DetailList = detailList };
         }
 
-        public bool Audit(long[] ids)
+        public List<Tuple<bool, long, string>> Audit(long[] ids)
         {
+            var list = new List<Tuple<bool, long, string>>();
             var dns = wmsoutbound.TOutDns.Where(x => x.Status == "None" && ids.Contains(x.Id)).ToList();
+            //排除已经审核过的
+            foreach(var id in ids)
+            {
+                if(!dns.Any(x=>x.Id == id))
+                {
+                    list.Add(new Tuple<bool, long, string>(false, id, ""));
+                }
+            }
+            
+            //处理剩余的
             foreach (var dn in dns)
             {
                 outboundService.CreateOutFromDn(dn);
-                dn.Status = Enum.GetName(typeof(EnumStatus),EnumStatus.Audit);
-                wmsoutbound.SaveChanges();
+                dn.Status = Enum.GetName(typeof(EnumStatus), EnumStatus.Audit);
+                var r = wmsoutbound.SaveChanges() > 0;
+                list.Add(new Tuple<bool, long, string>(r, dn.Id, ""));
             }
-            return true;
+            return list;
         }
     }
 }

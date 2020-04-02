@@ -56,17 +56,32 @@ namespace dotnet_wms_ef.Services
             };
         }
 
-        public bool CreateRckByPicks(long[] pickIds)
+        public List<Tuple<bool,long,string>> CreateRckByPicks(long[] pickIds)
         {
-            var outPicks = wmsoutbound.TOutPicks.Where(x => pickIds.Contains(x.Id)).ToList();
+            var list= new List<Tuple<bool,long,string>>();
+            var outPicks = wmsoutbound.TOutPicks
+                           .Where(x =>x.Status != Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Finished)
+                                      && pickIds.Contains(x.Id))
+                           .ToList();
+            
+            // 不能操作的直接返回
+            foreach(var pickId in pickIds)
+            {
+                if(!outPicks.Any(x=>x.Id == pickId))
+                {
+                    list.Add(new Tuple<bool, long, string>(false,pickId,""));
+                }
+            }
+            
+            //剩余的可以继续操作
             foreach (var outPick in outPicks)
             {
-                CreateRckByPick(outPick);
+               list.Add(CreateRckByPick(outPick));
             }
-            return true;
+            return list;
         }
 
-        private void CreateRckByPick(TOutPick outPick)
+        private Tuple<bool,long,string> CreateRckByPick(TOutPick outPick)
         {
             var recheck = new TOutCheck
             {
@@ -88,7 +103,9 @@ namespace dotnet_wms_ef.Services
 
             wmsoutbound.TOutChecks.Add(recheck);
 
-            wmsoutbound.SaveChanges();
+            var r1= wmsoutbound.SaveChanges()>0;
+
+            return new Tuple<bool, long, string>(r1,outPick.Id,"");
         }
 
         public VOutScanResponse Scan(long recheckId, VScanRequest request)
@@ -159,17 +176,18 @@ namespace dotnet_wms_ef.Services
             return wmsoutbound.SaveChanges() > 0;
         }
 
-        internal bool Affirms(long[] ids)
+        internal List<Tuple<bool, long, string>> Affirms(long[] ids)
         {
+            var list = new List<Tuple<bool, long, string>>();
             //复核确认扣减库存
             foreach (var id in ids)
             {
-                Affirm(id);
+               list.Add(Affirm(id));
             }
-            return true;
+            return list;
         }
 
-        private bool Affirm(long recheckId)
+        private Tuple<bool, long, string> Affirm(long recheckId)
         {
             //更新单据状态
             var recheck = wmsoutbound.TOutChecks.Where(x => x.Id == recheckId).FirstOrDefault();
@@ -192,7 +210,9 @@ namespace dotnet_wms_ef.Services
             outbound.ActualAt = DateTime.UtcNow;
             outbound.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Finished);
 
-            return wmsoutbound.SaveChanges() > 0;
+            var r1= wmsoutbound.SaveChanges() > 0;
+
+            return new Tuple<bool, long, string>(r1,recheckId,"");
         }
     }
 }

@@ -50,7 +50,6 @@ namespace dotnet_wms_ef
             return this.Query(queryQc).Count();
         }
 
-
         public TInQc Get(long id)
         {
             var o = wmsinbound.TInQcs.Where(x => x.Id == id).FirstOrDefault();
@@ -129,20 +128,25 @@ namespace dotnet_wms_ef
             return wmsinbound.SaveChanges() > 0;
         }
 
-        public bool Confirm(long[] ids)
+        public List<Tuple<bool,long,string>> Confirm(long[] ids)
         {
+            var list = new List<Tuple<bool,long,string>>();
             foreach (var id in ids)
             {
-                Confirm(id);
+                list.Add(this.Confirm(id));
             }
 
-            return true;
+            return list;
         }
 
-        private bool Confirm(long id)
+        private Tuple<bool,long,string> Confirm(long id)
         {
             //更新质检单的状态和入库单的质检状态
             var qc = wmsinbound.TInQcs.Where(x => x.Id == id).FirstOrDefault();
+            if (qc.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Finished))
+            {
+                return new Tuple<bool,long,string>(false,id, "");
+            }
             qc.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Finished);
 
             var inbound = wmsinbound.TInInbounds.Where(x => x.Id == qc.InboundId).FirstOrDefault();
@@ -156,9 +160,9 @@ namespace dotnet_wms_ef
                 wmsinbound.TInPutaways.Add(putAwayService.Create(qc));
             }
 
-            wmsinbound.SaveChanges();
+            var r = wmsinbound.SaveChanges() > 0;
 
-            return true;
+            return new Tuple<bool,long,string>(r,id, "");
         }
     }
 }

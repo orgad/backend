@@ -88,13 +88,18 @@ namespace dotnet_wms_ef
         }
 
         //收货确认,生成库存
-        public List<Tuple<long, bool>> RcvAffirm(long[] ids)
+        public List<Tuple<bool,long,string>> RcvAffirm(long[] ids)
         {
-            var list = new List<Tuple<long, bool>>();
+            var list = new List<Tuple<bool,long,string>>();
             var inbounds = wmsinbound.TInInbounds.Where(x => ids.Contains(x.Id)).ToList();
             var inboundDs = wmsinbound.TInInboundDs.Where(x => ids.Contains(x.HId)).ToList();
             foreach (var inbound in inbounds)
             {
+                if(inbound.Status != Enum.GetName(typeof(EnumStatus),EnumStatus.None))
+                {
+                    list.Add(new Tuple<bool,long,string>(false,inbound.Id,inbound.Code));
+                    continue;
+                }
                 var detailList = inboundDs.Where(x => x.HId == inbound.Id).ToArray();
 
                 //生成库存记录
@@ -126,7 +131,7 @@ namespace dotnet_wms_ef
 
                 var r1 = wmsinbound.SaveChanges() > 0;
 
-                var r = new Tuple<long, bool>(inbound.Id, r1);
+                var r = new Tuple<bool,long,string>(r1,inbound.Id,"");
                 list.Add(r);
             }
             return list;
@@ -173,7 +178,7 @@ namespace dotnet_wms_ef
             return list;
         }
 
-        public Tuple<bool, string> Confirm(long id)
+        public Tuple<bool,long,string> Confirm(long id)
         {
             var pt = wmsinbound.TInPutaways.Where(x => x.InboundId == id).FirstOrDefault();
 

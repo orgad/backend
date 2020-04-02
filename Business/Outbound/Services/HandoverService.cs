@@ -72,8 +72,8 @@ namespace dotnet_wms_ef.Services
         public bool Scan(long handoverId, VScanExpressRequest vExpress)
         {
             //首先查找条码是否存在
-            var express = wmsoutbound.TOutExpresses.Where(x=>x.Code == vExpress.ExpressCode).FirstOrDefault();
-            if(express==null)
+            var express = wmsoutbound.TOutExpresses.Where(x => x.Code == vExpress.ExpressCode).FirstOrDefault();
+            if (express == null)
             {
                 throw new Exception("couriercode is not exists.");
             }
@@ -100,17 +100,31 @@ namespace dotnet_wms_ef.Services
             return wmsoutbound.SaveChanges() > 0;
         }
 
-        internal bool Affirms(long[] ids)
+        internal List<Tuple<bool, long, string>> Affirms(long[] ids)
         {
+            var list = new List<Tuple<bool, long, string>>();
+
+            var handOvers = wmsoutbound.TOutHandovers
+                          .Where(x => x.Status != Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Finished)
+                             && ids.Contains(x.Id)).ToList();
+
+            foreach (var id in ids)
+            {
+                if (!handOvers.Any(x => x.Id == id))
+                {
+                    list.Add(new Tuple<bool, long, string>(false, id, ""));
+                }
+            }
+
             //交接确认.更新交接状态
             foreach (var id in ids)
             {
-                Affirm(id);
+                list.Add(Affirm(id));
             }
-            return true;
+            return list;
         }
 
-        private bool Affirm(long hanoverId)
+        private Tuple<bool, long, string> Affirm(long hanoverId)
         {
             //根据交接单id找到交接单明细
             var handOver = wmsoutbound.TOutHandovers.Where(x => x.Id == hanoverId).FirstOrDefault();
@@ -126,7 +140,16 @@ namespace dotnet_wms_ef.Services
                 outbound.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Finished);
                 outbound.HandoverStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Finished);
             }
-            return wmsoutbound.SaveChanges() > 0;
+            try
+            {
+                var r1 = wmsoutbound.SaveChanges() > 0;
+
+                return new Tuple<bool, long, string>(r1, hanoverId, "");
+            }
+            catch (Exception ex)
+            {
+                return new Tuple<bool, long, string>(false, hanoverId, ex.Message);
+            }
         }
     }
 }

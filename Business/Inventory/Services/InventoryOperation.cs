@@ -9,7 +9,7 @@ namespace dotnet_wms_ef.Services
     public partial class InventoryService
     {
         //收货
-        public void Rcv(int whId, int custId,string rcvCode, TInInboundD[] ts)
+        public void Rcv(int whId, int custId, string rcvCode, TInInboundD[] ts)
         {
             var id = ts.Select(x => x.HId).FirstOrDefault();
             var rs = new List<TInvt>();
@@ -24,11 +24,11 @@ namespace dotnet_wms_ef.Services
                 var h = wmsinventory.TInvts.Where(x => x.WhId == whId && x.SkuId == t.SkuId).FirstOrDefault();
                 if (h != null)
                 {
-                    r = Do1(h, whId, custId,rcvCode, t);
+                    r = Do1(h, whId, custId, rcvCode, t);
                 }
                 else
                 {
-                    r = Do2(whId, custId,rcvCode, t);
+                    r = Do2(whId, custId, rcvCode, t);
                     rs.Add(r);
                 }
             }
@@ -238,14 +238,14 @@ namespace dotnet_wms_ef.Services
             //找到某一个sku 的库存记录
             var o = wmsinventory.TInvts.Where(x => x.SkuId == skuId).FirstOrDefault();
 
-            if(o==null)
+            if (o == null)
             {
                 throw new Exception("inventory is not exists.");
             }
 
             var leaveInvtQty = o.Qty - o.AlotQty - o.LockedQty;
 
-            var totalQty = singleSkuDetails.Sum(x => x.Qty);
+            var totalQty = singleSkuDetails.Sum(x => x.Qty - x.MatchingQty ?? 0);
 
             if (leaveInvtQty == 0)
             {

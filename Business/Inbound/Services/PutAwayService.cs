@@ -158,22 +158,27 @@ namespace dotnet_wms_ef.Services
             return wmsinbound.SaveChanges() > 0;
         }
 
-        public List<Tuple<bool, string>> Confirms(long[] ids)
+        public List<Tuple<bool, long, string>> Confirms(long[] ids)
         {
-            var list = new List<Tuple<bool, string>>();
-            foreach(var id in ids)
+            var list = new List<Tuple<bool, long, string>>();
+            foreach (var id in ids)
             {
                 list.Add(this.Confirm(id));
             }
             return list;
         }
 
-        public Tuple<bool, string> Confirm(long id)
+        public Tuple<bool, long, string> Confirm(long id)
         {
             //更新状态
             var pt = wmsinbound.TInPutaways.Where(x => x.Id == id).FirstOrDefault();
             if (pt == null)
                 throw new Exception("pt is not exists.");
+
+            if (pt.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Finished))
+            {
+                return new Tuple<bool, long, string>(false, id, "");
+            }
             pt.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Finished);
 
             var inbound = wmsinbound.TInInbounds.Where(x => x.Id == pt.InboundId).FirstOrDefault();
@@ -187,7 +192,7 @@ namespace dotnet_wms_ef.Services
 
             //更新库存
             var r = wmsinbound.SaveChanges() > 0;
-            return new Tuple<bool, string>(r, "");
+            return new Tuple<bool,long, string>(r, id,"");
         }
     }
 }

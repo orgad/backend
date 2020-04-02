@@ -124,7 +124,7 @@ namespace dotnet_wms_ef.Services
                 foreach (var outbound in outbounds)
                 {
                     outbound.PickStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init);
-                    pickService.CreatePick(outbound,wave.Id);
+                    pickService.CreatePick(outbound, wave.Id);
                 }
 
                 wmsoutbound.SaveChanges();
@@ -204,24 +204,39 @@ namespace dotnet_wms_ef.Services
             return new VPickAdvice { BinCode = binCode, Barcodes = barcodes };
         }
 
-        public bool Affirms(long[] ids)
+        public List<Tuple<bool, long, string>> Affirms(long[] ids)
         {
+            var list = new List<Tuple<bool, long, string>>();
+
+            //反馈哪些波次不能做确认
+            var waves = wmsoutbound.TOutWaves
+                        .Where(x => x.Status != Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Finished)
+                              && ids.Contains(x.Id))
+                         .ToList();
+
+
             foreach (var id in ids)
             {
-                //批量生成复核单
-                Affirm(id);
+                if (!waves.Any(x => x.Id == id))
+                    list.Add(new Tuple<bool, long, string>(false, id, ""));
+                else
+                    //批量生成复核单
+                    list.Add(Affirm(id));
             }
-            return true;
+
+            return list;
         }
 
-        private void Affirm(long waveId)
+        private Tuple<bool, long, string> Affirm(long waveId)
         {
             //找到波次单对应的拣货单
             var picks = wmsoutbound.TOutPicks.Where(x => x.WaveId == waveId).ToList();
             var pickIds = picks.Select(x => x.Id).ToArray();
 
             //调用拣货单批量全部确认接口
-            recheckService.Affirms(pickIds);
+            var rs = recheckService.Affirms(pickIds);
+
+            return new Tuple<bool, long, string>(rs.All(x => x.Item1), waveId, "");
         }
     }
 }

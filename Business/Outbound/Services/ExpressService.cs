@@ -17,7 +17,8 @@ namespace dotnet_wms_ef.Services
 
         internal IQueryable<TOutExpress> Query()
         {
-            return wmsoutbound.TOutExpresses as IQueryable<TOutExpress>;
+            return wmsoutbound.TOutExpresses.OrderByDescending(x=>x.Id)
+                   as IQueryable<TOutExpress>;
         }
 
         internal int TotalCount()

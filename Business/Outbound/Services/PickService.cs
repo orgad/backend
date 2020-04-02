@@ -24,7 +24,8 @@ namespace dotnet_wms_ef.Services
                 //wmsoutbound.Database.UseTransaction(transaction.GetDbTransaction());
             }
         }
-
+        
+        ///这里不对TOut的状态做任何校验
         public bool CreatePick(TOut tOut, long waveId = 0)
         {
             TOutPick tOutPick = new TOutPick

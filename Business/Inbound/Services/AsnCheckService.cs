@@ -143,7 +143,7 @@ namespace dotnet_wms_ef.Services
             return new VAsnCheckDetails { Asn = o, AsnCheck = d, AsnCheckDs = ds.Any() ? ds.ToArray() : null };
         }
 
-        public List<Tuple<long, bool>> ChecksByAsn(long[] asnIds)
+        public List<Tuple<bool, long, string>> ChecksByAsn(long[] asnIds)
         {
             var asnChecks = wms.TInChecks.Where(x => asnIds.Contains(x.Id)).ToList();
             var asns = wms.TInAsns.Where(x => asnIds.Contains(x.Id)).ToList();
@@ -151,7 +151,7 @@ namespace dotnet_wms_ef.Services
             return this.Check(asnIds, asns, asnChecks);
         }
 
-        public List<Tuple<long, bool>> Checks(long[] ids)
+        public List<Tuple<bool, long, string>> Checks(long[] ids)
         {
             var asnChecks = wms.TInChecks.Where(x => ids.Contains(x.Id)).ToList();
             var asnIds = asnChecks.Select(x => x.HId).ToArray();
@@ -160,24 +160,24 @@ namespace dotnet_wms_ef.Services
             return this.Check(asnIds, asns, asnChecks);
         }
 
-        private List<Tuple<long, bool>> Check(long[] asnIds, List<TInAsn> asns, List<TInCheck> asnChecks)
+        private List<Tuple<bool, long, string>> Check(long[] asnIds, List<TInAsn> asns, List<TInCheck> asnChecks)
         {
-            var list = new List<Tuple<long, bool>>();
+            var list = new List<Tuple<bool, long, string>>();
             foreach (var id in asnIds)
             {
                 var asn = asns.Where(x => x.Id == id).FirstOrDefault();
                 //初始或者已完成的不能做验货确认
-                if (asn.CheckStatus == Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Finished) || 
-                       asn.CheckStatus == Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Init))
+                if (asn.CheckStatus == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Finished) ||
+                       asn.CheckStatus == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init))
                 {
-                    list.Add(new Tuple<long, bool>(asn.Id, false));
+                    list.Add(new Tuple<bool, long, string>(false, asn.Id, asn.Status));
                 }
                 else
                 {
                     var asnCheck = asnChecks.Where(x => x.HId == asn.Id).FirstOrDefault();
                     CheckOne(asn, asnCheck);
                     var result = wms.SaveChanges() > 0;
-                    list.Add(new Tuple<long, bool>(asn.Id, result));
+                    list.Add(new Tuple<bool, long, string>(result, asn.Id, ""));
                 }
             }
             return list;

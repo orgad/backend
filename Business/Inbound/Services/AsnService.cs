@@ -12,23 +12,17 @@ using Microsoft.AspNetCore.Http;
 namespace dotnet_wms_ef.Services
 {
 
-    public class AsnService
+    public class AsnService : BaseService
     {
-        wmsinboundContext wms = new wmsinboundContext();
-
         ExcelIOService ioService = new ExcelIOService();
 
         AsnCheckService asnCheckService = new AsnCheckService();
 
         public string Root { get; set; } //上传文件的路径
 
-        private void setProxy(TInAsn asn)
+        public AsnService()
         {
-            LogHandlerAttribute logHandler = new LogHandlerAttribute(wms);
-            logHandler.OrderId = asn.Id;
-            logHandler.OrderCode = asn.Code;
-            logHandler.Status = asn.Status;
-            logHandler.OrderStatusChange();
+            this.wms = new wmsinboundContext();
         }
 
         public List<TInAsn> PageList(QueryAsn queryAsn)
@@ -185,7 +179,7 @@ namespace dotnet_wms_ef.Services
             try
             {
                 wms.SaveChanges();
-                this.setProxy(o);
+                this.setProxy(this.Mapper(o));
                 return wms.SaveChanges() > 0;
 
             }
@@ -310,8 +304,9 @@ namespace dotnet_wms_ef.Services
                 if (asn.Status == Enum.GetName(typeof(EnumStatus), EnumStatus.None))
                 {
                     asn.Status = Enum.GetName(typeof(EnumStatus), EnumStatus.Audit);
+                    this.setProxy(this.Mapper(asn));
                     asn.CheckStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init);
-                    this.setProxy(asn);
+                    this.setOptProxy(this.OptMapper<TInAsn>(asn,asn.CheckStatus));
                     wms.Add(asnCheckService.Create(asn));
                     i++;
                     var r = wms.SaveChanges() > 0;

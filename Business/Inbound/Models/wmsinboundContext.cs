@@ -59,6 +59,7 @@ namespace dotnet_wms_ef.Models
             modelBuilder.ApplyConfiguration(new TInCheckDMapping());
             modelBuilder.ApplyConfiguration(new TInInboundMapping());
             modelBuilder.ApplyConfiguration(new TInInboundDMapping());
+            modelBuilder.ApplyConfiguration(new TInInboundRcvMapping());
             modelBuilder.ApplyConfiguration(new TInOptLogMapping());
             modelBuilder.ApplyConfiguration(new TInQcMapping());
             modelBuilder.ApplyConfiguration(new TInQcDMapping());

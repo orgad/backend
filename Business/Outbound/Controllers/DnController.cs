@@ -79,6 +79,18 @@ namespace dotnet_wms_ef.Controllers
             return new JsonResult(result);
         }
 
+        [HttpPost]
+        [Route("{id}/create-detail-list")]
+        public JsonResult CreateDnDetail([FromUri]long id, [FromBody] TOutDnD[] dnds)
+        {
+            if (dnds==null)
+            {
+                return new JsonResult("dnds is null.");
+            }
+            var result = dnService.CreateDnDetail(id,dnds);
+            return new JsonResult(result);
+        }
+
         [Route("affirm")]
         [HttpPut]
         public JsonResult Audit([FromBody] long[] ids)

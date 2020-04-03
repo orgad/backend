@@ -39,6 +39,8 @@ namespace dotnet_wms_ef.Models
 
             entity.Property(e => e.Qty).HasColumnName("qty");
 
+            entity.Property(e => e.CreatedBy).HasColumnName("created_by");
+
             entity.Property(e => e.CreatedTime)
             .HasColumnName("created_time")
             .HasColumnType("datetime")

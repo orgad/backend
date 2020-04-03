@@ -31,15 +31,15 @@ namespace dotnet_wms_ef
 
             var inboundDetail = wmsinbound.TInInboundDs.Where(x => x.HId == rcv.HId && x.Barcode == rcv.Barcode).FirstOrDefault();
 
-            if (asnId>0)
+            if (asnId > 0)
             {
                 //查询到货明细
                 var asnDetail = wmsinbound.TInAsnDs.Where(x => x.HId == asnId && x.Barcode == rcv.Barcode)
                 .FirstOrDefault();
-                
-                if(asnDetail==null)
+
+                if (asnDetail == null)
                 {
-                    throw new Exception("barcode" + rcv.Barcode + "not exists." );
+                    throw new Exception("barcode" + rcv.Barcode + "not exists.");
                 }
                 totalQty = asnDetail.Qty;
 
@@ -49,15 +49,17 @@ namespace dotnet_wms_ef
                 //校验数量
                 if (inboundDetail != null)
                 {
-                    inbound.RStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing);
                     scanFinished = DoCheckQty(asnDetail.Qty, inbound.WhId, inbound.CustId, inbound.BrandId, inboundDetail.Qty);
                 }
             }
             else
             {
+                //忙收校验
                 DoCheckBlind(inbound.WhId, inbound.CustId, inbound.BrandId);
             }
-
+            
+            //新增操作
+            inbound.RStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing);
             return Save(prodSku.Id, prodSku.Code, totalQty, inbound.Id, inboundDetail, rcv);
         }
 
@@ -116,7 +118,7 @@ namespace dotnet_wms_ef
 
         private Tuple<bool, string> Save(long skuId, string sku, int totalQty, long inboundId, TInInboundD inboundDetail, TInInboundRcv rcv)
         {
-            if (inboundDetail==null || inboundDetail.Qty + 1 <= totalQty)
+            if (inboundDetail == null || inboundDetail.Qty + 1 <= totalQty)
             {
                 //生成入库记录
                 if (inboundDetail != null)
@@ -141,15 +143,24 @@ namespace dotnet_wms_ef
                 //生成扫描记录
                 rcv.HId = inboundId;
                 rcv.Qty = 1;
+                rcv.Sku = sku;
+                rcv.SkuId = skuId;
                 rcv.CreatedBy = DefaultUser.UserName;
                 rcv.CreatedTime = DateTime.UtcNow;
 
                 wmsinbound.TInInboundRcvs.Add(rcv);
-                wmsinbound.SaveChanges();
-
                 var data = string.Format("{0}/{1}", inboundDetail.Qty, totalQty);
-
-                return new Tuple<bool, string>(false, data);
+                var r2 = false;
+                try
+                {
+                    r2 = wmsinbound.SaveChanges() > 0;
+                }
+                catch (Exception ex)
+                {
+                    data = ex.InnerException.Message;
+                    r2 = false;
+                }
+                return new Tuple<bool, string>(r2, data);
             }
             else
             {

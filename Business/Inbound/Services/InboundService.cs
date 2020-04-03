@@ -135,7 +135,7 @@ namespace dotnet_wms_ef
                     inbound.IsConfirm = true;
                     inbound.ActualInAt = DateTime.UtcNow;
                 }
-
+                 
                 var r1 = wmsinbound.SaveChanges() > 0;
 
                 var r = new Tuple<bool,long,string>(r1,inbound.Id,"");

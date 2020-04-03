@@ -16,17 +16,17 @@ namespace dotnet_wms_ef.Models
                     .HasColumnType("bigint(20)")
                     .HasComment("编号");
 
-                entity.Property(e => e.Barcode)
-                    .HasColumnName("barcode")
-                    .HasColumnType("varchar(30)")
-                    .HasComment("条码")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
+                entity.Property(e => e.OrderId)
+                    .HasColumnName("order_id")
+                    .HasColumnType("bigint(20)")
+                    .HasComment("单据ID");
 
-                entity.Property(e => e.Carton)
-                    .HasColumnName("carton")
+                entity.Property(e => e.OrderCode).HasColumnName("order_code");
+
+                entity.Property(e => e.OptCode)
+                    .HasColumnName("opt_code")
                     .HasColumnType("varchar(30)")
-                    .HasComment("箱号")
+                    .HasComment("操作代码 收货")
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
@@ -59,31 +59,6 @@ namespace dotnet_wms_ef.Models
                     .HasColumnName("last_modified_time")
                     .HasColumnType("datetime")
                     .HasComment("修改时间");
-
-                entity.Property(e => e.OptCode)
-                    .HasColumnName("opt_code")
-                    .HasColumnType("varchar(30)")
-                    .HasComment("操作代码 收货")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
-
-                entity.Property(e => e.OrderId)
-                    .HasColumnName("order_id")
-                    .HasColumnType("bigint(20)")
-                    .HasComment("单据ID");
-
-                entity.Property(e => e.Qty)
-                    .HasColumnName("qty")
-                    .HasColumnType("int(11)")
-                    .HasDefaultValueSql("'1'")
-                    .HasComment("数量");
-
-                entity.Property(e => e.Store)
-                    .HasColumnName("store")
-                    .HasColumnType("varchar(30)")
-                    .HasComment("店铺号")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
         }
     }
 }

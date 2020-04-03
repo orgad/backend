@@ -40,21 +40,12 @@ namespace dotnet_wms_ef.Controllers
         }
 
         [HttpGet]
-        [Route("opt/list")]
+        [Route("rcv/list")]
         [EnableCors("any")]
-        public JsonResult RcvOptList()
+        public JsonResult RcvList()
         {
-            var r= inboundService.OptList();
+            var r= inboundService.RcvList();
             return new JsonResult(new SingleResponse{ TotalCount = 0,Data = r});
-        }
-        
-        [HttpGet]
-        [Route("opt/{id}")]
-        [EnableCors("any")]
-        public JsonResult RcvOpt([FromUri] long id)
-        {
-            var r= inboundService.Opt(id);
-            return new JsonResult(r);
         }
 
         /*收货确认*/

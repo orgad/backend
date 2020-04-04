@@ -1,6 +1,6 @@
 namespace dotnet_wms_ef
 {
-    internal enum EnumOperateStatus
+    public enum EnumOperateStatus
     {
         None,
         Init,

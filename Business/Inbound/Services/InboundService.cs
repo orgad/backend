@@ -71,21 +71,18 @@ namespace dotnet_wms_ef
             return new VInboundDetails { Inbound = o, InboundDs = ds.Any() ? ds.ToArray() : null };
         }
 
-        public List<TInOptlog> OptList()
+        public List<TInInboundRcv> RcvList()
         {
-            return wmsinbound.TInOptlogs.ToList();
+            return wmsinbound.TInInboundRcvs.ToList();
         }
 
-        public int OptTotal()
+        public int RcvTotal()
         {
-            return wmsinbound.TInOptlogs.Count();
+            return wmsinbound.TInInboundRcvs.Count();
         }
 
         /*收货扫描记录*/
-        public List<TInOptlog> Opt(long id)
-        {
-            return wmsinbound.TInOptlogs.Where(x => x.OrderId == id).ToList();
-        }
+        
 
         //收货确认,生成库存
         public List<Tuple<bool,long,string>> RcvAffirm(long[] ids)
@@ -138,7 +135,7 @@ namespace dotnet_wms_ef
                     inbound.IsConfirm = true;
                     inbound.ActualInAt = DateTime.UtcNow;
                 }
-
+                 
                 var r1 = wmsinbound.SaveChanges() > 0;
 
                 var r = new Tuple<bool,long,string>(r1,inbound.Id,"");

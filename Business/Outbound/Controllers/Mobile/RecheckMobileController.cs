@@ -43,7 +43,7 @@ namespace dotnet_wms_ef.Controllers
         }
 
         [Route("{id}/scan")]
-        [HttpPost]
+        [HttpPut]
         public JsonResult Scan([FromUri] long id, [FromBody]VScanRequest vScan)
         {
             var result = recheckService.Scan(id,vScan);

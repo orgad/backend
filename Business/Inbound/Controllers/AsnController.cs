@@ -67,6 +67,15 @@ namespace dotnet_wms_ef.Controllers
             var response = new JsonResult(r);
             return response;
         }
+        
+        [HttpPost]
+        [Route("{id}/create-detail-list")]
+        public JsonResult CreateAsnDetail([FromUri]long id, [FromBody]TInAsnD[] vAsnDs)
+        {
+            var r = asnService.CreateAsnDetail(id,vAsnDs);
+            var response = new JsonResult(r);
+            return response;
+        }
 
         [HttpPut]
         public JsonResult UpdateAsn([FromBody]TInAsn vAsn)

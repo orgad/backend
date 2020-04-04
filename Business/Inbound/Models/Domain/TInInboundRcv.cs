@@ -1,13 +1,15 @@
-﻿using System;
+using System;
 namespace dotnet_wms_ef.Models
 {
-    public partial class TInOptlog
+    public partial class TInInboundRcv
     {
         public long Id { get; set; }
-        public long OrderId { get; set; }
-        public string OrderCode { get; set; }
-        public string OrderStatus { get; set; }
-        public string OptStatus { get; set; }
+        public long HId { get; set; }
+        public string Carton { get; set; }
+        public long SkuId { get; set; }
+        public string Sku { get; set; }
+        public string Barcode { get; set; }
+        public int Qty { get; set; }
         public bool IsDeleted { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreatedTime { get; set; }

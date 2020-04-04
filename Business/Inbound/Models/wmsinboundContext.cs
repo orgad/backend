@@ -21,6 +21,7 @@ namespace dotnet_wms_ef.Models
         public virtual DbSet<TInCheckD> TInCheckDs { get; set; }
         public virtual DbSet<TInInbound> TInInbounds { get; set; }
         public virtual DbSet<TInInboundD> TInInboundDs { get; set; }
+        public virtual DbSet<TInInboundRcv> TInInboundRcvs { get; set; }
         public virtual DbSet<TInOptlog> TInOptlogs { get; set; }
         public virtual DbSet<TInQc> TInQcs { get; set; }
         public virtual DbSet<TInQcD> TInQcDs { get; set; }
@@ -58,6 +59,7 @@ namespace dotnet_wms_ef.Models
             modelBuilder.ApplyConfiguration(new TInCheckDMapping());
             modelBuilder.ApplyConfiguration(new TInInboundMapping());
             modelBuilder.ApplyConfiguration(new TInInboundDMapping());
+            modelBuilder.ApplyConfiguration(new TInInboundRcvMapping());
             modelBuilder.ApplyConfiguration(new TInOptLogMapping());
             modelBuilder.ApplyConfiguration(new TInQcMapping());
             modelBuilder.ApplyConfiguration(new TInQcDMapping());

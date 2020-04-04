@@ -12,23 +12,17 @@ using Microsoft.AspNetCore.Http;
 namespace dotnet_wms_ef.Services
 {
 
-    public class AsnService
+    public class AsnService : BaseService
     {
-        wmsinboundContext wms = new wmsinboundContext();
-
         ExcelIOService ioService = new ExcelIOService();
 
         AsnCheckService asnCheckService = new AsnCheckService();
 
         public string Root { get; set; } //上传文件的路径
 
-        private void setProxy(TInAsn asn)
+        public AsnService()
         {
-            LogHandlerAttribute logHandler = new LogHandlerAttribute(wms);
-            logHandler.OrderId = asn.Id;
-            logHandler.OrderCode = asn.Code;
-            logHandler.Status = asn.Status;
-            logHandler.OrderStatusChange();
+            this.wms = new wmsinboundContext();
         }
 
         public List<TInAsn> PageList(QueryAsn queryAsn)
@@ -157,7 +151,7 @@ namespace dotnet_wms_ef.Services
             return wms.SaveChanges() > 0;
         }
 
-        public bool CreateAsn(TInAsn vAsn)
+        public Tuple<bool,long,string> CreateAsn(TInAsn vAsn)
         {
             var o = new TInAsn
             {
@@ -182,18 +176,21 @@ namespace dotnet_wms_ef.Services
             };
 
             wms.TInAsns.Add(o);
+            var r = false;
             try
             {
                 wms.SaveChanges();
-                this.setProxy(o);
-                return wms.SaveChanges() > 0;
+                this.setProxy(this.Mapper(o));
+                r= wms.SaveChanges() > 0;
 
             }
             catch (Exception ex)
             {
                 var msg = ex.Message;
-                return false;
+                r= false;
             }
+
+            return new Tuple<bool, long, string>(r,o.Id,"");
         }
 
         public bool UpdateAsn(TInAsn vAsn)
@@ -239,7 +236,10 @@ namespace dotnet_wms_ef.Services
         {
             var o = wms.TInAsns.Where(x => x.Id == id).FirstOrDefault();
             if (o == null) return false;
+
             o.PieceQty = details.Sum(x => x.Qty);
+            o.CartonQty = details.Where(x => !string.IsNullOrEmpty(x.Carton)).Distinct().Count();
+
             foreach (var d in details)
             {
                 var n = new TInAsnD
@@ -249,7 +249,7 @@ namespace dotnet_wms_ef.Services
                     Barcode = d.Barcode,
                     Qty = d.Qty,
                     IsDeleted = false,
-                    CreatedBy = "rickli",
+                    CreatedBy = DefaultUser.UserName,
                     CreatedTime = DateTime.UtcNow,
                 };
                 wms.TInAsnDs.Add(n);
@@ -310,8 +310,9 @@ namespace dotnet_wms_ef.Services
                 if (asn.Status == Enum.GetName(typeof(EnumStatus), EnumStatus.None))
                 {
                     asn.Status = Enum.GetName(typeof(EnumStatus), EnumStatus.Audit);
+                    this.setProxy(this.Mapper(asn));
                     asn.CheckStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init);
-                    this.setProxy(asn);
+                    this.setOptProxy(this.OptMapper<TInAsn>(asn, asn.CheckStatus));
                     wms.Add(asnCheckService.Create(asn));
                     i++;
                     var r = wms.SaveChanges() > 0;
@@ -322,7 +323,7 @@ namespace dotnet_wms_ef.Services
             return list;
         }
 
-        public List<Tuple<bool,long,string>> Checks(long[] ids)
+        public List<Tuple<bool, long, string>> Checks(long[] ids)
         {
             return asnCheckService.ChecksByAsn(ids);
         }

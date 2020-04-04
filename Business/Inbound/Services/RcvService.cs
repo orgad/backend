@@ -14,11 +14,11 @@ namespace dotnet_wms_ef
         StrategyService strategyService = new StrategyService();
 
         //创建收货记录
-        public Tuple<bool, string> CreateOpt(TInOptlog opt)
+        public Tuple<bool, string> CreateRcv(TInInboundRcv rcv)
         {
             int scanFinished = 0;
             //从product获取skuid的信息
-            var prodSku = wmsproduct.TProdSkus.Where(x => x.Barcode == opt.Barcode).FirstOrDefault();
+            var prodSku = wmsproduct.TProdSkus.Where(x => x.Barcode == rcv.Barcode).FirstOrDefault();
             if (prodSku == null) throw new Exception("barcode is not exists.");
             var sku = prodSku.Code;
             var skuid = prodSku.Id;
@@ -26,20 +26,20 @@ namespace dotnet_wms_ef
             var totalQty = 0;
 
             //查询入库明细
-            var inbound = wmsinbound.TInInbounds.Where(x => x.Id == opt.OrderId).FirstOrDefault();
+            var inbound = wmsinbound.TInInbounds.Where(x => x.Id == rcv.HId).FirstOrDefault();
             var asnId = inbound.AsnId;
 
-            var inboundDetail = wmsinbound.TInInboundDs.Where(x => x.HId == opt.OrderId && x.Barcode == opt.Barcode).FirstOrDefault();
+            var inboundDetail = wmsinbound.TInInboundDs.Where(x => x.HId == rcv.HId && x.Barcode == rcv.Barcode).FirstOrDefault();
 
             if (asnId > 0)
             {
                 //查询到货明细
-                var asnDetail = wmsinbound.TInAsnDs.Where(x => x.HId == asnId && x.Barcode == opt.Barcode)
+                var asnDetail = wmsinbound.TInAsnDs.Where(x => x.HId == asnId && x.Barcode == rcv.Barcode)
                 .FirstOrDefault();
 
                 if (asnDetail == null)
                 {
-                    throw new Exception("barcode" + opt.Barcode + "not exists.");
+                    throw new Exception("barcode" + rcv.Barcode + "not exists.");
                 }
                 totalQty = asnDetail.Qty;
 
@@ -49,16 +49,18 @@ namespace dotnet_wms_ef
                 //校验数量
                 if (inboundDetail != null)
                 {
-                    inbound.RStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing);
                     scanFinished = DoCheckQty(asnDetail.Qty, inbound.WhId, inbound.CustId, inbound.BrandId, inboundDetail.Qty);
                 }
             }
             else
             {
+                //忙收校验
                 DoCheckBlind(inbound.WhId, inbound.CustId, inbound.BrandId);
             }
-
-            return Save(prodSku.Id, prodSku.Code, totalQty, inbound.Id, inboundDetail, opt);
+            
+            //新增操作
+            inbound.RStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing);
+            return Save(prodSku.Id, prodSku.Code, totalQty, inbound.Id, inboundDetail, rcv);
         }
 
 
@@ -114,7 +116,7 @@ namespace dotnet_wms_ef
             return alertQty;
         }
 
-        private Tuple<bool, string> Save(long skuId, string sku, int totalQty, long inboundId, TInInboundD inboundDetail, TInOptlog opt)
+        private Tuple<bool, string> Save(long skuId, string sku, int totalQty, long inboundId, TInInboundD inboundDetail, TInInboundRcv rcv)
         {
             if (inboundDetail == null || inboundDetail.Qty + 1 <= totalQty)
             {
@@ -130,7 +132,7 @@ namespace dotnet_wms_ef
                         HId = inboundId,
                         SkuId = skuId,
                         Sku = sku,
-                        Barcode = opt.Barcode,
+                        Barcode = rcv.Barcode,
                         Qty = 1,
                         CreatedBy = DefaultUser.UserName,
                         CreatedTime = DateTime.UtcNow
@@ -139,12 +141,14 @@ namespace dotnet_wms_ef
                 }
 
                 //生成扫描记录
-                opt.OptCode = Enum.GetName(typeof(EnumInOperation), EnumInOperation.Receiving);
-                opt.OrderId = inboundId;
-                opt.Qty = 1;
-                opt.CreatedBy = DefaultUser.UserName;
-                opt.CreatedTime = DateTime.UtcNow;
+                rcv.HId = inboundId;
+                rcv.Qty = 1;
+                rcv.Sku = sku;
+                rcv.SkuId = skuId;
+                rcv.CreatedBy = DefaultUser.UserName;
+                rcv.CreatedTime = DateTime.UtcNow;
 
+<<<<<<< .mine
                 wmsinbound.Add(opt);
                 var data = string.Empty;
                 try
@@ -157,8 +161,31 @@ namespace dotnet_wms_ef
                     data = ex.Message;
                 }
 
+=======
+                wmsinbound.TInInboundRcvs.Add(rcv);
 
-                return new Tuple<bool, string>(false, data);
+
+
+
+
+
+
+
+
+
+
+>>>>>>> .theirs
+                var r2 = false;
+                try
+                {
+                    r2 = wmsinbound.SaveChanges() > 0;
+                }
+                catch (Exception ex)
+                {
+                    data = ex.InnerException.Message;
+                    r2 = false;
+                }
+                return new Tuple<bool, string>(r2, data);
             }
             else
             {

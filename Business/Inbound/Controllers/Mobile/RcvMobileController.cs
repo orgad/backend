@@ -33,13 +33,13 @@ namespace dotnet_wms_ef.Controllers
 
         [HttpPost]
         [Route("scan/{id}")]
-        public JsonResult Scan([FromUri]long id, [FromBody] TInOptlog opt)
+        public JsonResult Scan([FromUri]long id, [FromBody] TInInboundRcv vRcv)
         {
             //新增扫描记录,同时增加收货明细
-            opt.OrderId = id;
+            vRcv.HId = id;
             try
             {
-                var result = rcvService.CreateOpt(opt);
+                var result = rcvService.CreateRcv(vRcv);
                 return new JsonResult(new VScanResponse
                 {
                     IsAllFinished = result.Item1,

@@ -35,6 +35,15 @@ namespace dotnet_wms_ef.Controllers
             return new JsonResult(result);
         }
 
+        [HttpGet]
+        [Route("from-inbound/{id}")]
+        [EnableCors("any")]
+        //上架详情
+        public JsonResult FromInboud([FromUri]long id)
+        {
+            var result = putAwayService.GetPutawayByInbound(id);
+            return new JsonResult(result);
+        }
 
         [HttpPut]
         [Route("confirm")]

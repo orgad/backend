@@ -54,6 +54,7 @@ namespace dotnet_wms_ef.Controllers
              var result = putAwayService.Scan(id,d);
             return new JsonResult(new VScanResponse{
                 IsAllFinished = result.Item1,
+                IsFinished = result.Item1,
                 Message = result.Item2
             });
         }

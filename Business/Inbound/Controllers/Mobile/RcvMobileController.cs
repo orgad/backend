@@ -43,7 +43,8 @@ namespace dotnet_wms_ef.Controllers
                 return new JsonResult(new VScanResponse
                 {
                     IsAllFinished = result.Item1,
-                    Message = result.Item2
+                    IsFinished = result.Item2,
+                    Message = result.Item3
                 });
             }
             catch (Exception ex)

@@ -323,9 +323,9 @@ namespace dotnet_wms_ef.Services
             return list;
         }
 
-        public List<Tuple<bool, long, string>> Checks(long[] ids)
+        public List<Tuple<bool, long, string>> Checks(long[] asnIds)
         {
-            return asnCheckService.ChecksByAsn(ids);
+            return asnCheckService.ChecksByAsn(asnIds);
         }
     }
 }

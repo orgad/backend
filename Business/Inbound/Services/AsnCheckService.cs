@@ -46,6 +46,17 @@ namespace dotnet_wms_ef.Services
             return this.Query(queryAsnCheck).Count();
         }
 
+        public VAsnCheck GetByAsnId(long asnId)
+        {
+            var asnCheck = wms.TInChecks.Where(x => x.HId == asnId).FirstOrDefault();
+            var asn = wms.TInAsns.Where(x => x.Id == asnId).FirstOrDefault();
+            return new VAsnCheck {
+                Id = asnCheck.Id,
+                HId= asnCheck.HId,
+                AsnQty = asn.PieceQty
+            };
+        }
+
         public VInCheck Get(long id)
         {
             var asnCheck = wms.TInChecks.Where(x => x.Id == id).FirstOrDefault();
@@ -150,7 +161,7 @@ namespace dotnet_wms_ef.Services
 
         public List<Tuple<bool, long, string>> ChecksByAsn(long[] asnIds)
         {
-            var asnChecks = wms.TInChecks.Where(x => asnIds.Contains(x.Id)).ToList();
+            var asnChecks = wms.TInChecks.Where(x => asnIds.Contains(x.HId)).ToList();
             var asns = wms.TInAsns.Where(x => asnIds.Contains(x.Id)).ToList();
 
             return this.Check(asnIds, asns, asnChecks);

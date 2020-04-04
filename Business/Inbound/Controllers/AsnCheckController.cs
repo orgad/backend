@@ -31,6 +31,14 @@ namespace dotnet_wms_ef.Controllers
         }
 
         [HttpGet]
+        [Route("from-asn/{id}")]
+        public VAsnCheck GetByAsnId([FromUri]long id)
+        {
+            var vAsnCheck = asnCheckService.GetByAsnId(id);
+            return vAsnCheck;
+        }
+
+        [HttpGet]
         [Route("{id}/details")]
         public VAsnCheckDetails Details(long id)
         {

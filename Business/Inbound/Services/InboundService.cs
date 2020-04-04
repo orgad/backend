@@ -71,6 +71,13 @@ namespace dotnet_wms_ef
             return new VInboundDetails { Inbound = o, InboundDs = ds.Any() ? ds.ToArray() : null };
         }
 
+        public TInInbound GetByAsn(long asnId)
+        {
+            var o = wmsinbound.TInInbounds.Where(x => x.AsnId == asnId).FirstOrDefault();
+
+            return o;
+        }
+
         public List<TInInboundRcv> RcvList()
         {
             return wmsinbound.TInInboundRcvs.ToList();

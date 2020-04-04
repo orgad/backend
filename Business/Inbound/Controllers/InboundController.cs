@@ -40,6 +40,15 @@ namespace dotnet_wms_ef.Controllers
         }
 
         [HttpGet]
+        [Route("from-asn/{id}")]
+        [EnableCors("any")]
+        public JsonResult GetByAsn([FromUri]long id)
+        {
+            var vInbound = inboundService.GetByAsn(id);
+            return new JsonResult(vInbound);
+        }
+
+        [HttpGet]
         [Route("rcv/list")]
         [EnableCors("any")]
         public JsonResult RcvList()

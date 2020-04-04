@@ -38,6 +38,9 @@ namespace dotnet_wms_ef.Services
                 WhId = inbound.WhId,
                 InboundId = inbound.Id,
                 InboundCode = inbound.Code,
+                Qty = 0,
+                CartonQty = 0,
+                BinQty = 0,
                 Status = inbound.PStatus,
                 CreatedBy = DefaultUser.UserName,
                 CreatedTime = DateTime.UtcNow,
@@ -97,6 +100,12 @@ namespace dotnet_wms_ef.Services
             return new VPutAwayDetails { PutAway = o, PutAwayDs = detailList };
         }
 
+        public TInPutaway GetPutawayByInbound(long inboundId)
+        {
+            var o = wmsinbound.TInPutaways.Where(x => x.InboundId == inboundId).FirstOrDefault();
+            return o;
+        }
+
         public Tuple<bool, string> Scan(long id, TInPutawayD detail)
         {
             //校验商品
@@ -113,20 +122,20 @@ namespace dotnet_wms_ef.Services
             var zone = zoneService.GetZoneByCode(pt.WhId, bin.ZoneCode);
 
             //校验数量
-            var qty = wmsinbound.TInPutawayDs.Where(x => x.HId == pt.Id && x.SkuId == prodSku.Id).Sum(x => x.Qty);
+            var skuQty = wmsinbound.TInPutawayDs.Where(x => x.HId == pt.Id && x.SkuId == prodSku.Id).Sum(x => x.Qty);
 
-            var inboundQty = wmsinbound.TInInboundDs.Where(x => x.HId == pt.InboundId && x.SkuId == prodSku.Id)
+            var inboundSkuQty = wmsinbound.TInInboundDs.Where(x => x.HId == pt.InboundId && x.SkuId == prodSku.Id)
             .Select(x => x.Qty).FirstOrDefault();
 
             var inbound = wmsinbound.TInInbounds.Where(x => x.Id == pt.InboundId).FirstOrDefault();
 
-            if (qty + 1 <= inboundQty)
+            if (skuQty + 1 <= inboundSkuQty)
             {
                 if (pt.FirstScanAt == null)
                     pt.FirstScanAt = DateTime.UtcNow;
                 pt.LastScanAt = DateTime.UtcNow;
 
-                pt.Qty += qty + 1;
+                pt.Qty += skuQty + 1;
 
                 pt.Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing);
                 detail.SkuId = prodSku.Id;
@@ -143,11 +152,11 @@ namespace dotnet_wms_ef.Services
 
                 wmsinbound.TInPutawayDs.Add(detail);
                 var r = wmsinbound.SaveChanges() > 0;
-                return new Tuple<bool, string>(false, string.Format("{0}/{1}", qty + 1, inboundQty));
+                return new Tuple<bool, string>(false, string.Format("{0}/{1}", skuQty + 1, inboundSkuQty));
             }
             else
             {
-                return new Tuple<bool, string>(true, string.Format("{0}/{1}", inboundQty, inboundQty));
+                return new Tuple<bool, string>(true, string.Format("{0}/{1}", inboundSkuQty, inboundSkuQty));
             }
         }
 
@@ -189,11 +198,11 @@ namespace dotnet_wms_ef.Services
 
             var details = wmsinbound.TInPutawayDs.Where(x => x.HId == id).ToList();
 
-            inventoryService.PutAways(pt.WhId,inbound.CustId,pt.Id,pt.Code, details.ToArray());
+            inventoryService.PutAways(pt.WhId, inbound.CustId, pt.Id, pt.Code, details.ToArray());
 
             //更新库存
             var r = wmsinbound.SaveChanges() > 0;
-            return new Tuple<bool,long, string>(r, id,"");
+            return new Tuple<bool, long, string>(r, id, "");
         }
     }
 }

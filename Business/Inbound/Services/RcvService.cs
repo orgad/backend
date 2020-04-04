@@ -31,15 +31,15 @@ namespace dotnet_wms_ef
 
             var inboundDetail = wmsinbound.TInInboundDs.Where(x => x.HId == opt.OrderId && x.Barcode == opt.Barcode).FirstOrDefault();
 
-            if (asnId>0)
+            if (asnId > 0)
             {
                 //查询到货明细
                 var asnDetail = wmsinbound.TInAsnDs.Where(x => x.HId == asnId && x.Barcode == opt.Barcode)
                 .FirstOrDefault();
-                
-                if(asnDetail==null)
+
+                if (asnDetail == null)
                 {
-                    throw new Exception("barcode" + opt.Barcode + "not exists." );
+                    throw new Exception("barcode" + opt.Barcode + "not exists.");
                 }
                 totalQty = asnDetail.Qty;
 
@@ -116,7 +116,7 @@ namespace dotnet_wms_ef
 
         private Tuple<bool, string> Save(long skuId, string sku, int totalQty, long inboundId, TInInboundD inboundDetail, TInOptlog opt)
         {
-            if (inboundDetail==null || inboundDetail.Qty + 1 <= totalQty)
+            if (inboundDetail == null || inboundDetail.Qty + 1 <= totalQty)
             {
                 //生成入库记录
                 if (inboundDetail != null)
@@ -146,9 +146,17 @@ namespace dotnet_wms_ef
                 opt.CreatedTime = DateTime.UtcNow;
 
                 wmsinbound.Add(opt);
-                wmsinbound.SaveChanges();
+                var data = string.Empty;
+                try
+                {
+                    wmsinbound.SaveChanges();
+                    data = string.Format("{0}/{1}", inboundDetail.Qty, totalQty);
+                }
+                catch (Exception ex)
+                {
+                    data = ex.Message;
+                }
 
-                var data = string.Format("{0}/{1}", inboundDetail.Qty, totalQty);
 
                 return new Tuple<bool, string>(false, data);
             }

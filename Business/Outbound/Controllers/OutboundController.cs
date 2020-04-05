@@ -13,7 +13,7 @@ namespace dotnet_wms_ef.Controllers
         OutboundService outboundService = new OutboundService();
         WaveService waveService = new WaveService();
 
-         [Route("list")]
+        [Route("list")]
         public JsonResult List(QueryOut queryOut)
         {
             return new JsonResult(new SingleResponse
@@ -23,10 +23,17 @@ namespace dotnet_wms_ef.Controllers
             });
         }
 
-         [Route("{id}/details")]
+        [Route("{id}/details")]
         public JsonResult Details([FromUri] long id)
         {
             var r = outboundService.Details(id);
+            return new JsonResult(r);
+        }
+
+        [Route("from-dn/{id}")]
+        public JsonResult GetOutboundByDn([FromUri] long id)
+        {
+            var r = outboundService.GetOutboundByDn(id);
             return new JsonResult(r);
         }
 

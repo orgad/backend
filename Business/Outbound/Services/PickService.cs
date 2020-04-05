@@ -123,6 +123,12 @@ namespace dotnet_wms_ef.Services
             return new VPickDetails { Pick = pick, DetailList = detailList };
         }
 
+        public TOutPick GetPickByOutbound(long outboundId)
+        {
+            var outbound = wmsoutbound.TOutPicks.Where(x=>x.OutboundId==outboundId).FirstOrDefault();
+            return outbound;
+        }
+
         public VPickAdvice Advice(long pickId)
         {
             //找到已经存在的拣货记录

@@ -33,6 +33,13 @@ namespace dotnet_wms_ef.Controllers
             return new JsonResult(result);
         }
 
+        [Route("from-outbound/{id}")]
+        public JsonResult GetPickByOutbound(long id)
+        {
+            var result = pickService.GetPickByOutbound(id);
+            return new JsonResult(result);
+        }
+
         [Route("affirm")]
         [HttpPut]
         public JsonResult Affirm([FromBody]long[] ids)

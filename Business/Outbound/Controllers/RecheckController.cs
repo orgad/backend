@@ -30,6 +30,13 @@ namespace dotnet_wms_ef.Controllers
             return new JsonResult(result);
         }
 
+        [Route("from-outbound/{id}")]
+        public JsonResult GetRecheckByOutbound(long id)
+        {
+            var result = recheckService.GetRecheckByOutbound(id);
+            return new JsonResult(result);
+        }
+
         [Route("affirm")]
         [HttpPut]
         public JsonResult Affirm([FromBody] long[] ids)

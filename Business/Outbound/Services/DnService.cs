@@ -18,7 +18,7 @@ namespace dotnet_wms_ef.Services
 
         public string Root { get; set; } //上传文件的路径
 
-        public Tuple<bool, string> Create(TOutDn dn)
+        public Tuple<bool,long, string> Create(TOutDn dn)
         {
             dn.Code = "DN" + DateTime.Now.ToString(FormatString.DefaultFormat);
             if (string.IsNullOrEmpty(dn.BatchNo))
@@ -37,7 +37,7 @@ namespace dotnet_wms_ef.Services
             wmsoutbound.Add(dn);
 
             var result = wmsoutbound.SaveChanges() > 0;
-            return new Tuple<bool, string>(result, "");
+            return new Tuple<bool,long, string>(result, dn.Id,"");
         }
 
         public Tuple<bool, string> UpdateDn(TOutDn vOutDn)

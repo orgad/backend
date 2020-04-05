@@ -17,5 +17,11 @@ namespace dotnet_wms_ef.Services
         {
             return wmssupplier.TSupCouriers.Count();
         }
+
+        public string GetDefaultCourier()
+        {
+            var r= wmssupplier.TSupCouriers.FirstOrDefault();
+            return r.Code;
+        }
     }
 }

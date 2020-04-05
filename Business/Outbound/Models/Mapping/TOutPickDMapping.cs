@@ -53,7 +53,7 @@ namespace dotnet_wms_ef
 
             entity.Property(e => e.BinId)
                 .HasColumnName("bin_id")
-                .HasColumnType("varchar(45)")
+                .HasColumnType("int(11)")
                 .HasCharSet("utf8mb4")
                 .HasCollation("utf8mb4_0900_ai_ci");
 

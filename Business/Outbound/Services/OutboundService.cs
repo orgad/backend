@@ -80,8 +80,11 @@ namespace dotnet_wms_ef.Services
                 BrandId = dn.BrandId,
                 DnId = dn.Id,
                 DnCode = dn.Code,
+                RefNo = dn.RefNo,
                 BizCode = dn.BizCode,
                 GoodsType = dn.GoodsType,
+                ReceiverCode = dn.ReceiverCode,
+                ShipperCode = dn.ShipperCode,
                 TypeCode = Enum.GetName(typeof(EnumOrderType), EnumOrderType.SHP),
                 TransCode = "Outbound",
                 SrcCode = dn.SrcCode,
@@ -123,6 +126,12 @@ namespace dotnet_wms_ef.Services
             var r = wmsoutbound.SaveChanges() > 0;
 
             return new Tuple<bool, string>(r, "");
+        }
+
+        public TOut GetOutboundByDn(long dnId)
+        {
+            var outbound = wmsoutbound.TOuts.Where(x => x.DnId == dnId).FirstOrDefault();
+            return outbound;
         }
 
         public List<Tuple<bool, long, string>> Alots(long[] ids)
@@ -194,7 +203,7 @@ namespace dotnet_wms_ef.Services
             var list = new List<Tuple<bool, long, string>>();
             //首先排除掉已经做过拣货的
             var outs = wmsoutbound.TOuts
-                      .Where(x => x.AllotStatus > 0 && 
+                      .Where(x => x.AllotStatus > 0 &&
                                  (x.PickStatus == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.None) || string.IsNullOrEmpty(x.PickStatus))
                                    && ids.Contains(x.Id))
                       .ToList();

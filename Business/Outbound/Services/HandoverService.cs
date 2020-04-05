@@ -53,7 +53,7 @@ namespace dotnet_wms_ef.Services
             };
         }
 
-        public bool Create(VHandOverRequest request)
+        public Tuple<bool,long,string> Create(VHandOverRequest request)
         {
             TOutHandover handover = new TOutHandover();
             handover.Code = "HOV" + DateTime.Now.ToString(FormatString.DefaultFormat);
@@ -66,7 +66,8 @@ namespace dotnet_wms_ef.Services
 
             wmsoutbound.TOutHandovers.Add(handover);
 
-            return wmsoutbound.SaveChanges() > 0;
+            var r= wmsoutbound.SaveChanges() > 0;
+            return new Tuple<bool, long, string>(r,handover.Id,"");
         }
 
         public bool Scan(long handoverId, VScanExpressRequest vExpress)

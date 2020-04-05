@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace dotnet_wms_ef.Controllers
 {
-    [Route("/api/out/express")]
+    [Route("/api/out/express/")]
     [EnableCors("any")]
     public class ExpressController : ApiController
     {
@@ -23,6 +23,14 @@ namespace dotnet_wms_ef.Controllers
                 TotalCount = total,
                 Data = result,
             });
+        }
+
+        [Route("default")]
+        [HttpPost]
+        public JsonResult CreateDefault([FromBody]long[] ids)
+        {
+            var result = expressService.CreateByOutboundId(ids);
+            return new JsonResult(result);
         }
 
         [Route("create")]

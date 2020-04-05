@@ -351,15 +351,15 @@ namespace dotnet_wms_ef.Services
             var source = pickDetails.Select(x => new { x.SkuId, x.BinId }).Distinct().ToList();
             var obj = pickDetails.Select(x => new { x.SkuId, x.ActBinId }).Distinct().ToList();
 
-            var skuBin = new List<Tuple<long, long>>();
+            var skuBin = new List<Tuple<long, int>>();
             foreach (var item in source)
             {
-                skuBin.Add(new Tuple<long, long>(item.SkuId, item.BinId));
+                skuBin.Add(new Tuple<long, int>(item.SkuId, item.BinId));
             }
 
             foreach (var item in obj)
             {
-                skuBin.Add(new Tuple<long, long>(item.SkuId, item.ActBinId));
+                skuBin.Add(new Tuple<long, int>(item.SkuId, item.ActBinId.Value));
             }
 
             skuBin = skuBin.Distinct().ToList();
@@ -400,7 +400,7 @@ namespace dotnet_wms_ef.Services
              {
                  SkuId = x.Key.SkuId,
                  Sku = x.Key.Sku,
-                 BinId = x.Key.ActBinId,
+                 BinId = x.Key.ActBinId.Value,
                  BinCode = x.Key.ActBinCode,
                  Qty = x.Count()
              }).ToList(); ;

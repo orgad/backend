@@ -56,6 +56,12 @@ namespace dotnet_wms_ef.Services
             };
         }
 
+        public TOutCheck GetRecheckByOutbound(long outboundId)
+        {
+            var recheck = wmsoutbound.TOutChecks.Where(x=>x.OutboundId==outboundId).FirstOrDefault();
+            return recheck;
+        }
+
         public List<Tuple<bool, long, string>> CreateRckByPicks(long[] pickIds)
         {
             var list = new List<Tuple<bool, long, string>>();

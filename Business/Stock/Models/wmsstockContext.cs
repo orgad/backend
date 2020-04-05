@@ -1,8 +1,7 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
+using dotnet_wms_ef.Models;
 
-namespace dotnet_wms_ef.Models
+namespace dotnet_wms_ef.Stock.Models
 {
     public partial class wmsstockContext : DbContext
     {
@@ -17,8 +16,8 @@ namespace dotnet_wms_ef.Models
 
         public virtual DbSet<TInvtAdj> TInvtAdj { get; set; }
         public virtual DbSet<TInvtAdjD> TInvtAdjD { get; set; }
-        public virtual DbSet<TInvtCheck> TInvtCheck { get; set; }
-        public virtual DbSet<TInvtCheckD> TInvtCheckD { get; set; }
+        public virtual DbSet<TInvtCheck> TInvtChecks { get; set; }
+        public virtual DbSet<TInvtCheckD> TInvtCheckDs { get; set; }
         public virtual DbSet<TInvtCheckLimits> TInvtCheckLimits { get; set; }
         public virtual DbSet<TInvtDown> TInvtDown { get; set; }
         public virtual DbSet<TInvtFreeze> TInvtFreeze { get; set; }
@@ -32,7 +31,7 @@ namespace dotnet_wms_ef.Models
         public virtual DbSet<TInvtReplenishPlanD> TInvtReplenishPlanD { get; set; }
         public virtual DbSet<TInvtUnfreeze> TInvtUnfreeze { get; set; }
         public virtual DbSet<TInvtUp> TInvtUp { get; set; }
-        public virtual DbSet<TSt> TSt { get; set; }
+        public virtual DbSet<TInvtSt> TSt { get; set; }
         public virtual DbSet<TStRep> TStRep { get; set; }
         public virtual DbSet<TStRepD> TStRepD { get; set; }
 

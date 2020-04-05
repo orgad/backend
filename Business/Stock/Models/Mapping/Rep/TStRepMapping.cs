@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace dotnet_wms_ef.Models
+namespace dotnet_wms_ef.Stock.Models
 {
-     public class TStRepMapping:IEntityTypeConfiguration<TStRep>
+    public class TStRepMapping:IEntityTypeConfiguration<TStRep>
     {
         public void Configure(EntityTypeBuilder<TStRep> entity)
         {

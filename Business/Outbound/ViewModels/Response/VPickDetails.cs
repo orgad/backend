@@ -1,6 +1,6 @@
-using dotnet_wms_ef.Models;
+using dotnet_wms_ef.Outbound.Models;
 
-namespace dotnet_wms_ef.Controllers
+namespace dotnet_wms_ef.Outbound.ViewModels
 {
     public class VPickDetails{
         public TOutPick Pick{get;set;}

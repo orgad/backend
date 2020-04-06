@@ -1,8 +1,7 @@
-using dotnet_wms_ef.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace dotnet_wms_ef.Models
+namespace dotnet_wms_ef.Outbound.Models
 {
     public class TOutStAlotMapping : IEntityTypeConfiguration<TStAllot>
     {

@@ -1,10 +1,11 @@
 using System.Web.Http;
-using dotnet_wms_ef.Services;
+using dotnet_wms_ef.Outbound.Services;
+using dotnet_wms_ef.Outbound.ViewModels;
 using dotnet_wms_ef.ViewModels;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
-namespace dotnet_wms_ef.Controllers
+namespace dotnet_wms_ef.Outbound.Controllers
 {
     [Route("/api/out/outbound/")]
     [EnableCors("any")]

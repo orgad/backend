@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace dotnet_wms_ef.Models
+namespace dotnet_wms_ef.Outbound.Models
 {
     public partial class TOutD
     {

@@ -1,11 +1,11 @@
 using System.Web.Http;
-using dotnet_wms_ef.Models;
-using dotnet_wms_ef.Services;
+using dotnet_wms_ef.Outbound.Services;
+using dotnet_wms_ef.Outbound.ViewModels;
 using dotnet_wms_ef.ViewModels;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
-namespace dotnet_wms_ef.Mobile.Controllers
+namespace dotnet_wms_ef.Mobile.Outbound.Controllers
 {
     [Route("/api/mobile/out/pck/")]
     [EnableCors("any")]

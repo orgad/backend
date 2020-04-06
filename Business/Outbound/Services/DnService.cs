@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using dotnet_wms_ef.Models;
-using dotnet_wms_ef.ViewModels;
 using Microsoft.AspNetCore.Http;
+using dotnet_wms_ef.Outbound.Models;
+using dotnet_wms_ef.Outbound.ViewModels;
+using dotnet_wms_ef.Services;
 
-namespace dotnet_wms_ef.Services
+namespace dotnet_wms_ef.Outbound.Services
 {
     public class DnService
     {

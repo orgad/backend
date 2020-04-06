@@ -1,7 +1,7 @@
-using dotnet_wms_ef.Models;
+using dotnet_wms_ef.Outbound.Models;
 using System.Linq;
 
-namespace dotnet_wms_ef.Services
+namespace dotnet_wms_ef.Outbound.Services
 {
     public class OutStrategyService
     {

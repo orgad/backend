@@ -1,14 +1,14 @@
 using System.Web.Http;
-using dotnet_wms_ef.Inbound.ViewModels;
-using dotnet_wms_ef.Models;
-using dotnet_wms_ef.Services;
+using dotnet_wms_ef.Outbound.Models;
+using dotnet_wms_ef.Outbound.Services;
+using dotnet_wms_ef.Outbound.ViewModels;
 using dotnet_wms_ef.ViewModels;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace dotnet_wms_ef.Controllers
+namespace dotnet_wms_ef.Outbound.Controllers
 {
     [Route("/api/out/dn/")]
     [EnableCors("any")]

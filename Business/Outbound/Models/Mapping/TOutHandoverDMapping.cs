@@ -1,8 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using dotnet_wms_ef.Models;
 
-namespace dotnet_wms_ef
+namespace dotnet_wms_ef.Outbound.Models
 {
     public class TOutHandoverDMapping : IEntityTypeConfiguration<TOutHandoverD>
     {

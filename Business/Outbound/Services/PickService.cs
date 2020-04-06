@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using dotnet_wms_ef.Controllers;
 using dotnet_wms_ef.Models;
-using dotnet_wms_ef.ViewModels;
-using Microsoft.EntityFrameworkCore;
+using dotnet_wms_ef.Outbound.Models;
+using dotnet_wms_ef.Outbound.ViewModels;
+using dotnet_wms_ef.Services;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace dotnet_wms_ef.Services
+namespace dotnet_wms_ef.Outbound.Services
 {
     public class PickService
     {

@@ -1,8 +1,9 @@
 using System.Web.Http;
-using dotnet_wms_ef.ViewModels;
+using dotnet_wms_ef.Outbound.Services;
+using dotnet_wms_ef.Outbound.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
-namespace dotnet_wms_ef.Services
+namespace dotnet_wms_ef.Mobile.Outbound.Controllers
 {
     public class WaveMobileController : ApiController
     {

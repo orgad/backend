@@ -1,10 +1,10 @@
 using System.Web.Http;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using dotnet_wms_ef.Services;
 using dotnet_wms_ef.ViewModels;
+using dotnet_wms_ef.Outbound.Services;
 
-namespace dotnet_wms_ef.Controllers
+namespace dotnet_wms_ef.Outbound.Controllers
 {
     [Route("/api/out/alot/")]
     [EnableCors("any")]

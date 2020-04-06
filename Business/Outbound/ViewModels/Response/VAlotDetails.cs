@@ -1,6 +1,6 @@
-using dotnet_wms_ef.Models;
+using dotnet_wms_ef.Outbound.Models;
 
-namespace dotnet_wms_ef.ViewModels
+namespace dotnet_wms_ef.Outbound.ViewModels
 {
     public class VAlotDetails
     {

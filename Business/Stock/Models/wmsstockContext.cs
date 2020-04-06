@@ -14,26 +14,28 @@ namespace dotnet_wms_ef.Stock.Models
         {
         }
 
-        public virtual DbSet<TInvtAdj> TInvtAdj { get; set; }
-        public virtual DbSet<TInvtAdjD> TInvtAdjD { get; set; }
-        public virtual DbSet<TInvtCheck> TInvtChecks { get; set; }
-        public virtual DbSet<TInvtCheckD> TInvtCheckDs { get; set; }
-        public virtual DbSet<TInvtCheckLimits> TInvtCheckLimits { get; set; }
-        public virtual DbSet<TInvtDown> TInvtDown { get; set; }
-        public virtual DbSet<TInvtFreeze> TInvtFreeze { get; set; }
-        public virtual DbSet<TInvtFreezeD> TInvtFreezeD { get; set; }
-        public virtual DbSet<TInvtFreezeLimits> TInvtFreezeLimits { get; set; }
-        public virtual DbSet<TInvtMove> TInvtMove { get; set; }
-        public virtual DbSet<TInvtMovePlan> TInvtMovePlan { get; set; }
-        public virtual DbSet<TInvtReplenish> TInvtReplenish { get; set; }
-        public virtual DbSet<TInvtReplenishD> TInvtReplenishD { get; set; }
-        public virtual DbSet<TInvtReplenishPlan> TInvtReplenishPlan { get; set; }
-        public virtual DbSet<TInvtReplenishPlanD> TInvtReplenishPlanD { get; set; }
-        public virtual DbSet<TInvtUnfreeze> TInvtUnfreeze { get; set; }
+        public virtual DbSet<TInvtMovePlan> TInvtMovePlans { get; set; }
+        public virtual DbSet<TInvtMove> TInvtMoves { get; set; }
+
+
         public virtual DbSet<TInvtUp> TInvtUp { get; set; }
+        public virtual DbSet<TInvtDown> TInvtDown { get; set; }
         public virtual DbSet<TInvtSt> TSt { get; set; }
         public virtual DbSet<TStRep> TStRep { get; set; }
         public virtual DbSet<TStRepD> TStRepD { get; set; }
+        public virtual DbSet<TInvtReplenishPlan> TInvtReplenishPlans { get; set; }
+        public virtual DbSet<TInvtReplenishPlanD> TInvtReplenishPlanDs { get; set; }
+        public virtual DbSet<TInvtReplenish> TInvtReplenishs { get; set; }
+        public virtual DbSet<TInvtReplenishD> TInvtReplenishDs { get; set; }
+        public virtual DbSet<TInvtCheck> TInvtChecks { get; set; }
+        public virtual DbSet<TInvtCheckLimits> TInvtCheckLimits { get; set; }
+        public virtual DbSet<TInvtCheckD> TInvtCheckDs { get; set; }
+        public virtual DbSet<TInvtAdj> TInvtAdjs { get; set; }
+        public virtual DbSet<TInvtAdjD> TInvtAdjDs { get; set; }
+        public virtual DbSet<TInvtFreeze> TInvtFreezes { get; set; }
+        public virtual DbSet<TInvtFreezeD> TInvtFreezeDs { get; set; }
+        public virtual DbSet<TInvtFreezeLimits> TInvtFreezeLimits { get; set; }
+        public virtual DbSet<TInvtUnfreeze> TInvtUnfreezes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

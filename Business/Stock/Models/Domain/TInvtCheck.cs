@@ -11,6 +11,8 @@ namespace dotnet_wms_ef.Stock.Models
         public string TypeCode { get; set; }
         public string GoodsType { get; set; }
         public string TypeMode { get; set; }
+        public string Status{get;set;}
+        public string ScanStatus{get;set;}
         public string CreatedBy { get; set; }
         public DateTime CreatedTime { get; set; }
         public DateTime? LastModifiedTime { get; set; }

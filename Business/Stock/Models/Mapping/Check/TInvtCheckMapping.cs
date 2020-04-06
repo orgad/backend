@@ -59,6 +59,10 @@ namespace dotnet_wms_ef.Stock.Models
                     .HasComment("盘点类型 盲盘/明盘")
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
+                
+                entity.Property(e =>e.Status).HasColumnName("status");
+
+                entity.Property(e =>e.ScanStatus).HasColumnName("scan_status");
 
                 entity.Property(e => e.TypeMode)
                     .HasColumnName("type_mode")

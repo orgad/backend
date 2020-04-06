@@ -6,7 +6,7 @@ namespace dotnet_wms_ef.Stock.Models
     {
         public long Id { get; set; }
         public long? PlanId { get; set; }
-        public int? WhId { get; set; }
+        public int WhId { get; set; }
         public string Code { get; set; }
         public string Status { get; set; }
         public string DownStatus { get; set; }

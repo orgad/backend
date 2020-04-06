@@ -5,8 +5,12 @@ namespace dotnet_wms_ef.Stock.Models
 {
     public partial class TInvtCheck
     {
+        public TInvtCheck()
+        {
+            this.Limits = new HashSet<TInvtCheckLimits>();
+        }
         public long Id { get; set; }
-        public int? WhId { get; set; }
+        public int WhId { get; set; }
         public string Code { get; set; }
         public string TypeCode { get; set; }
         public string GoodsType { get; set; }
@@ -17,5 +21,7 @@ namespace dotnet_wms_ef.Stock.Models
         public DateTime CreatedTime { get; set; }
         public DateTime? LastModifiedTime { get; set; }
         public string LastModifiedBy { get; set; }
+
+        public virtual ICollection<TInvtCheckLimits> Limits{get;set;}
     }
 }

@@ -1,10 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using dotnet_wms_ef.Services;
 using dotnet_wms_ef.Stock.Models;
-using dotnet_wms_ef.Stock.ViewModels;
-using dotnet_wms_ef.ViewModels;
 
 namespace dotnet_wms_ef.Stock.Services
 {

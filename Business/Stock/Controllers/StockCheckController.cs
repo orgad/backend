@@ -1,6 +1,7 @@
 using System.Web.Http;
 using dotnet_wms_ef.Stock.Models;
 using dotnet_wms_ef.Stock.Services;
+using dotnet_wms_ef.Stock.ViewModels;
 using dotnet_wms_ef.ViewModels;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -35,7 +36,7 @@ namespace dotnet_wms_ef.Stock.Controllers
 
         [Route("create")]
         [HttpPost]
-        public JsonResult Create([FromBody]TInvtCheck vCheck)
+        public JsonResult Create([FromBody]VCheckAddForm vCheck)
         {
             var result = service.Create(vCheck);
             return new JsonResult(result);

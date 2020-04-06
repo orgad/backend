@@ -5,6 +5,8 @@ namespace dotnet_wms_ef.Stock.Models
     public partial class TInvtUp
     {
         public long Id { get; set; }
+
+        public long HId { get; set; }
         public string Code { get; set; }
         public string TypeCode { get; set; }
         public int? ToZoneId { get; set; }
@@ -12,7 +14,7 @@ namespace dotnet_wms_ef.Stock.Models
         public int? ToBinId { get; set; }
         public string ToBinCode { get; set; }
         public string Carton { get; set; }
-        public int? SkuId { get; set; }
+        public long SkuId { get; set; }
         public string Sku { get; set; }
         public string Barcode { get; set; }
         public decimal? Qty { get; set; }

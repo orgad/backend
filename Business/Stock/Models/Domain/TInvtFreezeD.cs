@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace dotnet_wms_ef.Stock.Models
 {

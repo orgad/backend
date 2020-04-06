@@ -14,6 +14,28 @@ namespace dotnet_wms_ef.Stock.Models
                     .HasColumnType("bigint(20)")
                     .HasComment("编号");
 
+                entity.Property(e => e.HId)
+                    .HasColumnName("h_id")
+                    .HasColumnType("bigint(20)")
+                    .HasComment("冻结单ID 冻结单ID");
+                
+                entity.Property(e => e.TypeCode)
+                    .HasColumnName("type_code")
+                    .HasColumnType("varchar(30)")
+                    .HasComment("类型");
+                
+                entity.Property(e => e.ItemId)
+                    .HasColumnName("item_id")
+                    .HasColumnType("bigint(20)")
+                    .HasComment("具体的ID sku_id,bin_id,duty_id,cust_id");
+
+                entity.Property(e => e.ItemCode).HasColumnName("item_code");
+                
+                entity.Property(e => e.IsDeleted)
+                    .HasColumnName("is_deleted")
+                    .HasColumnType("bit(1)")
+                    .HasComment("是否删除");
+
                 entity.Property(e => e.CreatedBy)
                     .IsRequired()
                     .HasColumnName("created_by")
@@ -27,21 +49,6 @@ namespace dotnet_wms_ef.Stock.Models
                     .HasColumnType("datetime")
                     .HasComment("创建时间");
 
-                entity.Property(e => e.HId)
-                    .HasColumnName("h_id")
-                    .HasColumnType("bigint(20)")
-                    .HasComment("冻结单ID 冻结单ID");
-
-                entity.Property(e => e.IsDeleted)
-                    .HasColumnName("is_deleted")
-                    .HasColumnType("bit(1)")
-                    .HasComment("是否删除");
-
-                entity.Property(e => e.ItemId)
-                    .HasColumnName("item_id")
-                    .HasColumnType("bigint(20)")
-                    .HasComment("具体的ID sku_id,bin_id,duty_id,cust_id");
-
                 entity.Property(e => e.LastModifiedBy)
                     .HasColumnName("last_modified_by")
                     .HasColumnType("varchar(30)")
@@ -53,11 +60,10 @@ namespace dotnet_wms_ef.Stock.Models
                     .HasColumnName("last_modified_time")
                     .HasColumnType("datetime")
                     .HasComment("修改时间");
-
-                entity.Property(e => e.TypeCode)
-                    .HasColumnName("type_code")
-                    .HasColumnType("int(30)")
-                    .HasComment("类型");
+                
+                entity.HasOne(d => d.TInvtFreeze)
+                   .WithMany(p => p.Limits)
+                   .HasForeignKey(d => d.HId);
         }
     }
 }

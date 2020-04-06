@@ -10,7 +10,7 @@ namespace dotnet_wms_ef
     public class RcvService
     {
         wmsinboundContext wmsinbound = new wmsinboundContext();
-        wmsproductContext wmsproduct = new wmsproductContext();
+        SkuService skuService = new SkuService();
 
         StrategyService strategyService = new StrategyService();
 
@@ -20,7 +20,7 @@ namespace dotnet_wms_ef
             //由于有超收的情况存在,无法判断是否全部收货完毕
 
             //从product获取skuid的信息
-            var prodSku = wmsproduct.TProdSkus.Where(x => x.Barcode == rcv.Barcode).FirstOrDefault();
+            var prodSku = skuService.GetSkuByBarcode(rcv.Barcode);
             if (prodSku == null) throw new Exception("barcode is not exists.");
             var sku = prodSku.Code;
             var skuid = prodSku.Id;

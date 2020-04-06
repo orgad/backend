@@ -1,9 +1,7 @@
-namespace dotnet_wms_ef
+using dotnet_wms_ef.ViewModels;
+namespace dotnet_wms_ef.Inbound.ViewModels
 {
-    public class QueryQc
+    public class QueryQc : PagedParams
     {
-        public int pageIndex {get;set;}
-
-        public int pageSize{get;set;}
     }
 }

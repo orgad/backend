@@ -1,9 +1,10 @@
 using System.Web.Http;
+using dotnet_wms_ef.Inbound.Services;
 using dotnet_wms_ef.ViewModels;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
-namespace dotnet_wms_ef.Controllers
+namespace dotnet_wms_ef.Inbound.Controllers
 {
     //用来在移动端查询入库单
     [Route("/api/mobile/in/inbound/")]

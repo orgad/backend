@@ -4,15 +4,14 @@ using Microsoft.AspNetCore.Cors;
 
 using dotnet_wms_ef.ViewModels;
 using dotnet_wms_ef.Services;
+using dotnet_wms_ef.Inbound.Services;
 
-
-namespace dotnet_wms_ef.Controllers
+namespace dotnet_wms_ef.Inbound.Controllers
 {
     [Route("/api/in/inbound/logs/")]
     [EnableCors("any")]
     public class InboundLogController : ApiController
     {
-        
         InboundLogService inboundLogService = new InboundLogService();
 
         [Route("opt/list")]

@@ -1,9 +1,8 @@
-using System;
-using dotnet_wms_ef.Aop;
-using dotnet_wms_ef.Models;
+using dotnet_wms_ef.Inbound.Aop;
+using dotnet_wms_ef.Inbound.Models;
 using dotnet_wms_ef.ViewModels;
 
-namespace dotnet_wms_ef.Services
+namespace dotnet_wms_ef.Inbound.Services
 {
     public class BaseService
     {

@@ -1,8 +1,8 @@
 using System.Web.Http;
+using dotnet_wms_ef.Inbound.ViewModels;
 using dotnet_wms_ef.Models;
 using dotnet_wms_ef.Services;
 using dotnet_wms_ef.ViewModels;
-using dotnet_wms_ef.Views;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;

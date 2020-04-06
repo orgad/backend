@@ -1,9 +1,3 @@
-using dotnet_wms_ef.Models;
-using dotnet_wms_ef.Services;
-using dotnet_wms_ef.Views;
-using dotnet_wms_ef.Views.ViewModels;
-using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Web.Http;
 

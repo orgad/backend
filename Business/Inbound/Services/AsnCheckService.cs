@@ -4,12 +4,13 @@ using System.Data;
 using System.Linq;
 
 using Microsoft.AspNetCore.Http;
-
 using dotnet_wms_ef.Models;
+using dotnet_wms_ef.Inbound.Models;
 using dotnet_wms_ef.ViewModels;
+using dotnet_wms_ef.Services;
+using dotnet_wms_ef.Inbound.ViewModels;
 
-
-namespace dotnet_wms_ef.Services
+namespace dotnet_wms_ef.Inbound.Services
 {
     public class AsnCheckService
     {

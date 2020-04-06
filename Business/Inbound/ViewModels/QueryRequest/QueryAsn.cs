@@ -1,4 +1,6 @@
-namespace dotnet_wms_ef.ViewModels
+using dotnet_wms_ef.ViewModels;
+
+namespace dotnet_wms_ef.Inbound.ViewModels
 {
     public class QueryAsn : PagedParams
     {

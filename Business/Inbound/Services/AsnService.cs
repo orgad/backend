@@ -1,15 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Linq;
-using dotnet_wms_ef.Aop;
-using dotnet_wms_ef.Models;
-using dotnet_wms_ef.ViewModels;
-using dotnet_wms_ef.Views.ViewModels;
+using dotnet_wms_ef.Inbound.Models;
+using dotnet_wms_ef.Inbound.ViewModels;
+using dotnet_wms_ef.Services;
 using Microsoft.AspNetCore.Http;
 
-namespace dotnet_wms_ef.Services
+namespace dotnet_wms_ef.Inbound.Services
 {
 
     public class AsnService : BaseService

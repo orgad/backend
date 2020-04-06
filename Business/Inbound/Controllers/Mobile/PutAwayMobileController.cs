@@ -1,11 +1,13 @@
 using System.Web.Http;
-using dotnet_wms_ef.Models;
-using dotnet_wms_ef.Services;
-using dotnet_wms_ef.ViewModels;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
-namespace dotnet_wms_ef.Controllers
+using dotnet_wms_ef.Inbound.Models;
+using dotnet_wms_ef.Inbound.Services;
+using dotnet_wms_ef.Inbound.ViewModels;
+using dotnet_wms_ef.ViewModels;
+
+namespace dotnet_wms_ef.Inbound.Controllers
 {
     [Route("/api/mobile/in/putaway/")]
     public class PutAwayMobileController : ApiController

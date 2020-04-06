@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 
-namespace dotnet_wms_ef.Models
+namespace dotnet_wms_ef.Inbound.Models
 {
     public partial class TInAsnD
     {

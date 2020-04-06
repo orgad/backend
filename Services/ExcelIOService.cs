@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.AspNetCore.Http;
 using OfficeOpenXml;
 
-namespace dotnet_wms_ef
+namespace dotnet_wms_ef.Services
 {
     public class ExcelIOService
     {

@@ -3,14 +3,13 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-using dotnet_wms_ef.Models;
-using dotnet_wms_ef.Services;
-using dotnet_wms_ef.Views;
-using dotnet_wms_ef.Views.ViewModels;
+using dotnet_wms_ef.Inbound.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using dotnet_wms_ef.ViewModels;
+using dotnet_wms_ef.Inbound.Services;
+using dotnet_wms_ef.Inbound.Models;
 
-namespace dotnet_wms_ef.Controllers
+namespace dotnet_wms_ef.Inbound.Controllers
 {
     [Route("/api/in/asn/")]
     [EnableCors("any")]

@@ -1,7 +1,8 @@
 ﻿using System;
+using dotnet_wms_ef.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace dotnet_wms_ef.Models
+namespace dotnet_wms_ef.Inbound.Models
 {
     public partial class wmsinboundContext : DbContext
     {

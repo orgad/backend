@@ -1,8 +1,8 @@
 using System;
-using dotnet_wms_ef.Models;
+using dotnet_wms_ef.Inbound.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace dotnet_wms_ef.Aop
+namespace dotnet_wms_ef.Inbound.Aop
 {
     public class LogHandlerAttribute
     {

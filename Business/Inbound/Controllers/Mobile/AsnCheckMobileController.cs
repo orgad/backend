@@ -2,13 +2,14 @@ using System.Web.Http;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
-using dotnet_wms_ef.Models;
-using dotnet_wms_ef.Services;
 using Microsoft.AspNetCore.Hosting;
-using dotnet_wms_ef.ViewModels;
 
-namespace dotnet_wms_ef.Controllers
+using dotnet_wms_ef.Inbound.Models;
+using dotnet_wms_ef.Inbound.Services;
+using dotnet_wms_ef.ViewModels;
+using dotnet_wms_ef.Inbound.ViewModels;
+
+namespace dotnet_wms_ef.Inbound.Controllers
 {
     [Route("/api/mobile/in/asn/check/")]
     public class AsnCheckMobileController : ApiController

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace dotnet_wms_ef.Models
+namespace dotnet_wms_ef.Inbound.Models
 {
     public partial class TInAsn
     {   

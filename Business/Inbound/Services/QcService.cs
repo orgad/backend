@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using dotnet_wms_ef.Models;
+using dotnet_wms_ef.Inbound.Models;
+using dotnet_wms_ef.Inbound.ViewModels;
 using dotnet_wms_ef.Services;
 
-namespace dotnet_wms_ef
+namespace dotnet_wms_ef.Inbound.Services
 {
     internal class QcService
     {
@@ -23,9 +24,9 @@ namespace dotnet_wms_ef
 
         public List<TInQc> PageList(QueryQc queryQc)
         {
-            if (queryQc.pageSize == 0) queryQc.pageSize = 20;
+            if (queryQc.PageSize == 0) queryQc.PageSize = 20;
             return this.Query(queryQc).
-            OrderByDescending(x => x.Id).Skip(queryQc.pageIndex).Take(queryQc.pageSize).ToList();
+            OrderByDescending(x => x.Id).Skip(queryQc.PageIndex).Take(queryQc.PageSize).ToList();
         }
 
         public int TaskTotalCount(QueryQc queryQc)
@@ -38,11 +39,11 @@ namespace dotnet_wms_ef
 
         public List<TInQc> TaskPageList(QueryQc queryQc)
         {
-            if (queryQc.pageSize == 0) queryQc.pageSize = 20;
+            if (queryQc.PageSize == 0) queryQc.PageSize = 20;
             return this.Query(queryQc)
                        .Where(x => x.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing) ||
                                  x.Status == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init))
-                       .OrderByDescending(x => x.Id).Skip(queryQc.pageIndex).Take(queryQc.pageSize).ToList();
+                       .OrderByDescending(x => x.Id).Skip(queryQc.PageIndex).Take(queryQc.PageSize).ToList();
         }
 
         public int TotalCount(QueryQc queryQc)

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using dotnet_wms_ef.Models;
-using dotnet_wms_ef.ViewModels;
+using dotnet_wms_ef.Inbound.Models;
+using dotnet_wms_ef.Inbound.ViewModels;
 
-namespace dotnet_wms_ef.Services
+namespace dotnet_wms_ef.Inbound.Services
 {
     public partial class StService
     {

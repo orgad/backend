@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Http;
 
-namespace dotnet_wms_ef.Views
+namespace dotnet_wms_ef.ViewModels
 {
     public class TakePhotoRequest
     {

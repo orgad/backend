@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using dotnet_wms_ef.Models;
+using dotnet_wms_ef.Inbound.Models;
 
-namespace dotnet_wms_ef.ViewModels
+namespace dotnet_wms_ef.Inbound.ViewModels
 {
     public class VInStDetails
     {

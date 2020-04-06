@@ -2,10 +2,11 @@ using System.Web.Http;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
-using dotnet_wms_ef.Services;
+using dotnet_wms_ef.Inbound.Services;
 using dotnet_wms_ef.ViewModels;
+using dotnet_wms_ef.Inbound.ViewModels;
 
-namespace dotnet_wms_ef.Controllers
+namespace dotnet_wms_ef.Inbound.Controllers
 {
     [Route("/api/in/asn/check/")]
     [EnableCors("any")]

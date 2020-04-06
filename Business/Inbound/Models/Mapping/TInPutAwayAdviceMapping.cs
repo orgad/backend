@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace dotnet_wms_ef.Models
+namespace dotnet_wms_ef.Inbound.Models
 {
      public class TInPutAwayAdviceMapping : IEntityTypeConfiguration<TInPutawayAdvice>
     {

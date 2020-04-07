@@ -12,6 +12,7 @@ namespace dotnet_wms_ef.Stock.Services
     {
         wmsstockContext wmsstock = new wmsstockContext();
         SkuService skuService = new SkuService();
+        BinService binService = new BinService();
         public List<TInvtReplenish> TaskPageList()
         {
             return this.Query()
@@ -38,20 +39,24 @@ namespace dotnet_wms_ef.Stock.Services
             as IQueryable<TInvtReplenish>;
         }
 
-        public VScanResponse MoveDown(long id, string code, VMoveScan request)
+        public VScanResponse MoveDown(long id, VMoveScan request)
         {
             var prodSku = skuService.GetSkuByBarcode(request.Barcode);
 
+            var move = wmsstock.TInvtMoves.Where(x => x.Id == id).FirstOrDefault();
+
+            var zoneBin = binService.GetBinByCode(move.WhId, request.ToBinCode);
+
             TInvtDown down = new TInvtDown();
             down.HId = id;
-            down.Code = code;
+            down.Code = move.Code;
             down.TypeCode = "RepDown";
             down.Carton = request.Carton;
             down.Barcode = request.Barcode;
-            down.FromZoneId = request.FromZoneId;
-            down.FromZoneCode = request.FromZoneCode;
-            down.FromBinId = request.FromBinId;
-            down.FromBinCode = request.FromBinCode;
+            down.ToZoneId = zoneBin.ZoneId;
+            //down.ToZoneCode = zoneBin.ZoneCode;
+            down.ToBinId = zoneBin.Id;
+            //down.ToBinCode = request.FromBinCode;
             down.Carton = request.Carton;
             down.SkuId = prodSku.Id;
             down.Sku = prodSku.Code;
@@ -69,6 +74,8 @@ namespace dotnet_wms_ef.Stock.Services
         public VScanResponse MoveUp(long id, string code, VMoveScan request)
         {
             var prodSku = skuService.GetSkuByBarcode(request.Barcode);
+            var move = wmsstock.TInvtMoves.Where(x => x.Id == id).FirstOrDefault();
+            var zoneBin = binService.GetBinByCode(move.WhId, request.ToBinCode);
 
             TInvtUp up = new TInvtUp();
             up.HId = id;
@@ -76,9 +83,9 @@ namespace dotnet_wms_ef.Stock.Services
             up.TypeCode = "RepUp";
             up.Carton = request.Carton;
             up.Barcode = request.Barcode;
-            up.ToZoneId = request.ToZoneId;
-            up.ToZoneCode = request.ToZoneCode;
-            up.ToBinId = request.ToBinId;
+            up.ToZoneId = zoneBin.ZoneId;
+            up.ToZoneCode = zoneBin.ZoneCode;
+            up.ToBinId = zoneBin.Id;
             up.ToBinCode = request.ToBinCode;
             up.Carton = request.Carton;
             up.SkuId = prodSku.Id;

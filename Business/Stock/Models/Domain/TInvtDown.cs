@@ -8,8 +8,8 @@ namespace dotnet_wms_ef.Stock.Models
         public long HId { get; set; }
         public string Code { get; set; }
         public string TypeCode { get; set; }
-        public int? ToZoneId { get; set; }
-        public int? ToBinId { get; set; }
+        public int ToZoneId { get; set; }
+        public int ToBinId { get; set; }
         public string Carton { get; set; }
         public long SkuId { get; set; }
         public string Sku { get; set; }

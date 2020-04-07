@@ -12,7 +12,7 @@ namespace dotnet_wms_ef.Models
 
         private static string password = "8888";
 
-        private static string pre = "wms_";
+        private static string pre = "db_";
 
         private static string formatString = "server={0};port={1};database={2};user={3};password={4}";
 

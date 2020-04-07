@@ -47,12 +47,14 @@ namespace dotnet_wms_ef.Stock.Services
         public VStockCheckDetails Details(long stockCheckId)
         {
             var o = wmsstock.TInvtChecks.Where(x => x.Id == stockCheckId).FirstOrDefault();
-            var detailList = wmsstock.TInvtCheckDs.Where(x => x.Id == stockCheckId).ToList();
+            var limits = wmsstock.TInvtCheckLimits.Where(x => x.HId == stockCheckId).ToList();
+            var detailList = wmsstock.TInvtCheckDs.Where(x => x.HId == stockCheckId).ToList();
 
             return new VStockCheckDetails
             {
                 StockCheck = o,
-                Details = detailList
+                CheckLimits = limits,
+                DetailList = detailList
             };
         }
 

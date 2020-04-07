@@ -12,6 +12,7 @@ namespace dotnet_wms_ef.Stock.Services
     {
         wmsstockContext wmsstock = new wmsstockContext();
         SkuService skuService = new SkuService();
+        BinService binService = new BinService();
         public List<TInvtCheck> PageList()
         {
             return this.Query().ToList();
@@ -106,8 +107,12 @@ namespace dotnet_wms_ef.Stock.Services
             //将库存数据加入到盘点明细中(仅物料时使用)
         }
 
-        public VScanResponse Scan(long id, VScanRequest request)
+        public VScanResponse Scan(long id,VCheckScan request)
         {
+
+            var check = wmsstock.TInvtChecks.Where(x=>x.Id == id).FirstOrDefault();
+
+
             var response = new VScanResponse();
             var prodSku = skuService.GetSkuByBarcode(request.Barcode);
             if (prodSku == null)
@@ -115,16 +120,28 @@ namespace dotnet_wms_ef.Stock.Services
                 throw new Exception("barcode is not exits");
             }
 
+            var zoneBin = binService.GetBinByCode(check.WhId,request.BinCode);
+
             //扫描货位和条码
-            TInvtCheckD detail = new TInvtCheckD
+            TInvtCheckLog detail = new TInvtCheckLog
             {
                 HId = id,
+                WhId = check.WhId,
+                Code = check.Code,
                 Barcode = request.Barcode,
                 Carton = request.Carton,
-                Qty = 1
+                SkuId = prodSku.Id,
+                Sku = prodSku.Code,
+                ZoneId = zoneBin.ZoneId,
+                ZoneCode = zoneBin.ZoneCode,
+                BinId = zoneBin.Id,
+                BinCode = request.BinCode,
+                Qty = 1,
+                CreatedBy = DefaultUser.UserName,
+                CreatedTime = DateTime.UtcNow,
             };
 
-            wmsstock.TInvtCheckDs.Add(detail);
+            wmsstock.TInvtCheckLogs.Add(detail);
 
             wmsstock.SaveChanges();
 

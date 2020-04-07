@@ -30,6 +30,7 @@ namespace dotnet_wms_ef.Stock.Models
         public virtual DbSet<TInvtCheck> TInvtChecks { get; set; }
         public virtual DbSet<TInvtCheckLimits> TInvtCheckLimits { get; set; }
         public virtual DbSet<TInvtCheckD> TInvtCheckDs { get; set; }
+        public virtual DbSet<TInvtCheckLog> TInvtCheckLogs { get; set; }
         public virtual DbSet<TInvtAdj> TInvtAdjs { get; set; }
         public virtual DbSet<TInvtAdjD> TInvtAdjDs { get; set; }
         public virtual DbSet<TInvtFreeze> TInvtFreezes { get; set; }
@@ -65,6 +66,7 @@ namespace dotnet_wms_ef.Stock.Models
             modelBuilder.ApplyConfiguration(new TInvtCheckMapping());
             modelBuilder.ApplyConfiguration(new TInvtCheckLimitsMapping());
             modelBuilder.ApplyConfiguration(new TInvtCheckDMapping());
+            modelBuilder.ApplyConfiguration(new TInvtCheckLogMapping());
             modelBuilder.ApplyConfiguration(new TInvtAdjMapping());
             modelBuilder.ApplyConfiguration(new TInvtAdjDMapping());
 

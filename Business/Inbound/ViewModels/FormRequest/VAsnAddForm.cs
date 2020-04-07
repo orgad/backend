@@ -1,6 +1,6 @@
 namespace dotnet_wms_ef.Inbound.ViewModels
 {
-    public class AsnAddForm
+    public class VAsnAddForm
     {
         
     }

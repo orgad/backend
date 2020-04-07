@@ -230,7 +230,26 @@ namespace dotnet_wms_ef.Inbound.Services
             return CreateAsnDetail(id, details.ToArray());
         }
 
-        public bool CreateAsnDetail(long id, TInAsnD[] details)
+        public bool CreateAsnDetailList(long id,VAsnDetailAddForm[] detailList)
+        {
+            var details = new List<TInAsnD>();
+
+            foreach(var detail in detailList)
+            {
+                TInAsnD d = new TInAsnD();
+                d.HId = id;
+                d.Carton = detail.Carton;
+                d.Sku = detail.Sku;
+                d.Barcode = detail.Barcode;
+                d.Qty = detail.Qty;
+                 d.CreatedBy = DefaultUser.UserName;
+                d.CreatedTime = DateTime.UtcNow;
+                details.Add(d);
+            }
+            return this.CreateAsnDetail(id,details.ToArray());
+        }
+
+        private bool CreateAsnDetail(long id, TInAsnD[] details)
         {
             var o = wms.TInAsns.Where(x => x.Id == id).FirstOrDefault();
             if (o == null) return false;

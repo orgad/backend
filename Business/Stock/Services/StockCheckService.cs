@@ -56,37 +56,39 @@ namespace dotnet_wms_ef.Stock.Services
             };
         }
 
-        public Tuple<bool,long,string> Create(VCheckAddForm vCheck)
+        public Tuple<bool, long, string> Create(VCheckAddForm vCheck)
         {
             TInvtCheck tCheck = new TInvtCheck();
-            tCheck.Code = "STC"+ DateTime.Now.ToString(FormatString.DefaultFormat);
+            tCheck.Code = "STC" + DateTime.Now.ToString(FormatString.DefaultFormat);
             tCheck.WhId = vCheck.WhId;
-            tCheck.TypeCode = vCheck.TypeCode; 
+            tCheck.TypeCode = vCheck.TypeCode;
             tCheck.TypeMode = vCheck.TypeMode;
             tCheck.GoodsType = vCheck.GoodsType;
             tCheck.CreatedBy = DefaultUser.UserName;
-            tCheck.Status = Enum.GetName(typeof(EnumStatus),EnumStatus.None);
-            tCheck.ScanStatus = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Init);
+            tCheck.Status = Enum.GetName(typeof(EnumStatus), EnumStatus.None);
+            tCheck.ScanStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init);
             tCheck.CreatedTime = DateTime.UtcNow;
-            
+
             List<TInvtCheckLimits> limits = new List<TInvtCheckLimits>();
-            foreach(var limit in vCheck.CheckLimits)
+            if (vCheck.CheckLimits != null)
             {
-                limits.Add(new TInvtCheckLimits{
-                    ItemId = limit.ItemId,
-                    ItemCode = limit.ItemCode,
-                    CreatedBy = DefaultUser.UserName,
-                    TypeCode = tCheck.TypeMode,
-                    CreatedTime = DateTime.UtcNow
-                });
+                foreach (var limit in vCheck.CheckLimits)
+                {
+                    limits.Add(new TInvtCheckLimits
+                    {
+                        ItemId = limit.ItemId,
+                        ItemCode = limit.ItemCode,
+                        CreatedBy = DefaultUser.UserName,
+                        TypeCode = tCheck.TypeMode,
+                        CreatedTime = DateTime.UtcNow
+                    });
+                }
+                tCheck.Limits = limits;
             }
-
-            tCheck.Limits = limits;
-
             wmsstock.TInvtChecks.Add(tCheck);
-            var r = wmsstock.SaveChanges()>0;
+            var r = wmsstock.SaveChanges() > 0;
 
-            return new Tuple<bool, long, string>(r,tCheck.Id,"");
+            return new Tuple<bool, long, string>(r, tCheck.Id, "");
         }
 
         public void Audits(long[] ids)

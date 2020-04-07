@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using dotnet_wms_ef.ViewModels;
 using dotnet_wms_ef.Inbound.Services;
 using dotnet_wms_ef.Inbound.Models;
+using System;
 
 namespace dotnet_wms_ef.Inbound.Controllers
 {
@@ -69,9 +70,11 @@ namespace dotnet_wms_ef.Inbound.Controllers
         
         [HttpPost]
         [Route("{id}/create-detail-list")]
-        public JsonResult CreateAsnDetail([FromUri]long id, [FromBody]TInAsnD[] vAsnDs)
+        public JsonResult CreateAsnDetail([FromUri]long id, [FromBody]VAsnDetailAddForm[] vAsnDs)
         {
-            var r = asnService.CreateAsnDetail(id,vAsnDs);
+            if(vAsnDs==null) 
+                throw new Exception("vAsnDs is null.");
+            var r = asnService.CreateAsnDetailList(id,vAsnDs);
             var response = new JsonResult(r);
             return response;
         }

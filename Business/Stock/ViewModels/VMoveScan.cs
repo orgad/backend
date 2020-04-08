@@ -4,6 +4,6 @@ namespace dotnet_wms_ef.Stock.ViewModels
 {
     public class VMoveScan : VScanRequest
     {
-        public string ToBinCode { get; set; }
+        public string BinCode { get; set; }
     }
 }

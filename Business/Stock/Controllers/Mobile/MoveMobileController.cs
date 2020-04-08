@@ -26,7 +26,7 @@ namespace dotnet_wms_ef.Stock.Controllers
         }
 
         [Route("{id}/move-down")]
-        [HttpGet]
+        [HttpPost]
         public JsonResult MoveDown([FromUri]long id,[FromBody]VMoveScan request)
         {
             var result = mobileService.MoveDown(id,request);
@@ -35,7 +35,7 @@ namespace dotnet_wms_ef.Stock.Controllers
 
         
         [Route("{id}/move-up")]
-        [HttpGet]
+        [HttpPost]
         public JsonResult MoveUp([FromUri]long id,[FromBody]VMoveScan request)
         {
             var result = mobileService.MoveUp(id,request);

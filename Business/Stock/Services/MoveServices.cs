@@ -52,6 +52,7 @@ namespace dotnet_wms_ef.Stock.Services
             tMove.Barcode = vMove.Barcode;
             tMove.Qty = vMove.Qty;
             tMove.Status = Enum.GetName(typeof(EnumStatus),EnumStatus.None);
+            tMove.DownStatus = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Init);
             tMove.CreatedBy = DefaultUser.UserName;
             tMove.CreatedTime = DateTime.UtcNow;
 

@@ -45,7 +45,7 @@ namespace dotnet_wms_ef.Stock.Services
 
             var move = wmsstock.TInvtMoves.Where(x => x.Id == id).FirstOrDefault();
 
-            var zoneBin = binService.GetBinByCode(move.WhId, request.ToBinCode);
+            var zoneBin = binService.GetBinByCode(move.WhId, request.BinCode);
 
             TInvtDown down = new TInvtDown();
             down.HId = id;
@@ -53,10 +53,10 @@ namespace dotnet_wms_ef.Stock.Services
             down.TypeCode = "RepDown";
             down.Carton = request.Carton;
             down.Barcode = request.Barcode;
-            down.ToZoneId = zoneBin.ZoneId;
-            //down.ToZoneCode = zoneBin.ZoneCode;
-            down.ToBinId = zoneBin.Id;
-            //down.ToBinCode = request.FromBinCode;
+            down.FromZoneId = zoneBin.ZoneId;
+            down.FromZoneCode = zoneBin.ZoneCode;
+            down.FromBinId = zoneBin.Id;
+            down.FromBinCode = request.BinCode;
             down.Carton = request.Carton;
             down.SkuId = prodSku.Id;
             down.Sku = prodSku.Code;
@@ -64,7 +64,7 @@ namespace dotnet_wms_ef.Stock.Services
             down.CreatedBy = DefaultUser.UserName;
             down.CreatedTime = DateTime.UtcNow;
 
-            wmsstock.TInvtDown.Add(down);
+            wmsstock.TInvtDowns.Add(down);
 
             wmsstock.SaveChanges();
 
@@ -75,7 +75,7 @@ namespace dotnet_wms_ef.Stock.Services
         {
             var prodSku = skuService.GetSkuByBarcode(request.Barcode);
             var move = wmsstock.TInvtMoves.Where(x => x.Id == id).FirstOrDefault();
-            var zoneBin = binService.GetBinByCode(move.WhId, request.ToBinCode);
+            var zoneBin = binService.GetBinByCode(move.WhId, request.BinCode);
 
             TInvtUp up = new TInvtUp();
             up.HId = id;
@@ -86,14 +86,14 @@ namespace dotnet_wms_ef.Stock.Services
             up.ToZoneId = zoneBin.ZoneId;
             up.ToZoneCode = zoneBin.ZoneCode;
             up.ToBinId = zoneBin.Id;
-            up.ToBinCode = request.ToBinCode;
+            up.ToBinCode = request.BinCode;
             up.Carton = request.Carton;
             up.SkuId = prodSku.Id;
             up.Sku = prodSku.Code;
             up.Qty = 1;
             up.CreatedBy = DefaultUser.UserName;
             up.CreatedTime = DateTime.UtcNow;
-            wmsstock.TInvtUp.Add(up);
+            wmsstock.TInvtUps.Add(up);
 
             wmsstock.SaveChanges();
             return new VScanResponse();

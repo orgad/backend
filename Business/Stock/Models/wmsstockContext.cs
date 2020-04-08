@@ -18,8 +18,8 @@ namespace dotnet_wms_ef.Stock.Models
         public virtual DbSet<TInvtMove> TInvtMoves { get; set; }
 
 
-        public virtual DbSet<TInvtUp> TInvtUp { get; set; }
-        public virtual DbSet<TInvtDown> TInvtDown { get; set; }
+        public virtual DbSet<TInvtUp> TInvtUps { get; set; }
+        public virtual DbSet<TInvtDown> TInvtDowns { get; set; }
         public virtual DbSet<TInvtSt> TSt { get; set; }
         public virtual DbSet<TStRep> TStRep { get; set; }
         public virtual DbSet<TStRepD> TStRepD { get; set; }

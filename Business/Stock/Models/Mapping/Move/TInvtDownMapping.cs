@@ -14,7 +14,7 @@ namespace dotnet_wms_ef.Stock.Models
                     .HasColumnType("bigint(20)")
                     .HasComment("主键");
                 
-                entity.Property(e=>e.Id).HasColumnName("h_id");
+                entity.Property(e=>e.HId).HasColumnName("h_id");
 
                 entity.Property(e => e.Barcode)
                     .HasColumnName("barcode")

@@ -10,9 +10,9 @@ namespace dotnet_wms_ef.Stock.Models
         public string CheckNo { get; set; }
         public string ReasonCode { get; set; }
         public string Status { get; set; }
-        public ulong? IsCancel { get; set; }
-        public ulong? IsConfirm { get; set; }
-        public ulong? IsDeleted { get; set; }
+        public bool IsCancel { get; set; }
+        public bool IsConfirm { get; set; }
+        public bool IsDeleted { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreatedTime { get; set; }
         public DateTime? LastModifiedTime { get; set; }

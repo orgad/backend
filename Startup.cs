@@ -1,11 +1,16 @@
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using dotnet_wms_ef.Auth;
 
 namespace dotnet_wms_ef
 {
@@ -22,8 +27,7 @@ namespace dotnet_wms_ef
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews()
-            .AddNewtonsoftJson();
+            services.AddControllersWithViews().AddNewtonsoftJson();
             services.AddCors(options =>
             {
                 options.AddPolicy(MyAllowSpecificOrigins,
@@ -34,20 +38,48 @@ namespace dotnet_wms_ef
                                  .AllowAnyMethod();
                 });
             });
+            
+            //提供授权策略AuthorizationPolicy：验证Bearer的内容
+            services.AddAuthorization(auth =>
+              {
+                  auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
+                      .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme‌​)
+                      .RequireAuthenticatedUser().Build());
+              }
+            );
+
+            services.AddAuthentication(options =>
+            {
+                //认证middleware配置
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(o =>
+            {
+                //主要是jwt  token参数设置
+                o.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                {
+                    //Token颁发机构
+                    ValidIssuer = TokenAuthOption.Issuer,
+                    //颁发给谁
+                    ValidAudience = TokenAuthOption.Audience,
+                    //这里的key要进行加密，需要引用Microsoft.IdentityModel.Tokens
+                    IssuerSigningKey = TokenAuthOption.Key
+                    //ValidateIssuerSigningKey=true,
+                    ////是否验证Token有效期，使用当前时间与Token的Claims中的NotBefore和Expires对比
+                    //ValidateLifetime=true,
+                    ////允许的服务器时间偏移量
+                    //ClockSkew=TimeSpan.Zero
+
+                };
+            });
+
             services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            /*
-            app.UseForwardHeaders(new ForwardedHeadersOperations
-            {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor |
-                ForwardedHeaders.XForwardedProto
-            });
-            */
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -65,14 +97,32 @@ namespace dotnet_wms_ef
                 }
             });
 
-            /*
-            else
+            app.UseExceptionHandler(appBuilder =>
             {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
-            */
+                appBuilder.Use(async (context, next) =>
+                {
+                    var error = context.Features[typeof(IExceptionHandlerFeature)] as IExceptionHandlerFeature;
+                    //when authorization has failed, should retrun a json message to client
+                    if (error != null && error.Error is SecurityTokenExpiredException)
+                    {
+                        context.Response.StatusCode = 401;
+                        context.Response.ContentType = "application/json";
+                        await context.Response.WriteAsync(JsonConvert.SerializeObject(
+                        new { authenticated = false, tokenExpired = true }
+                         ));
+                    }
+                    //when orther error, retrun a error message json to client
+                    else if (error != null && error.Error != null)
+                    {
+                        context.Response.StatusCode = 500;
+                        context.Response.ContentType = "application/json";
+                        await context.Response.WriteAsync(JsonConvert.SerializeObject(
+                           new { success = false, error = error.Error.Message }));
+                    }
+                    //when no error, do next.
+                    else await next();
+                });
+            });
 
             app.UseHttpsRedirection();
             app.UseDefaultFiles();

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using dotnet_wms_ef.Mobile.Invt.ViewModels;
 using dotnet_wms_ef.Models;
 using dotnet_wms_ef.ViewModels;
 
@@ -39,6 +40,32 @@ namespace dotnet_wms_ef.Services
             }
 
             return query;
+        }
+
+        public VSkuBarcodeBin[] GetInvtByBarcode(string barcode)
+        {
+            var list = wmsinventory.TInvtDs.Where(x=>x.Barcode==barcode)
+            .GroupBy(y=>new{y.Barcode,y.BinCode})
+            .Select(x=>new VSkuBarcodeBin{
+                Barcode = x.Key.Barcode,
+                BinCode = x.Key.BinCode,
+                Qty = x.Sum(y=>y.Qty)
+            });
+            
+            return list.ToList().ToArray();
+        }
+
+        public VSkuBarcodeBin[] GetInvtByBinCode(string binCode)
+        {
+            var list = wmsinventory.TInvtDs.Where(x=>x.BinCode==binCode)
+            .GroupBy(y=>new{y.Barcode,y.BinCode})
+            .Select(x=>new VSkuBarcodeBin{
+                Barcode = x.Key.Barcode,
+                BinCode = x.Key.BinCode,
+                Qty = x.Sum(y=>y.Qty)
+            });
+            
+            return list.ToList().ToArray();
         }
     }
 }

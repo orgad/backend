@@ -1,5 +1,6 @@
 using System.Web.Http;
 using dotnet_wms_ef.Stock.Services;
+using dotnet_wms_ef.Stock.ViewModels;
 using dotnet_wms_ef.ViewModels;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -30,6 +31,14 @@ namespace dotnet_wms_ef.Stock.Controllers
         public JsonResult Details([FromUri] long id)
         {
             var result = adjService.Details(id);
+            return new JsonResult(result);
+        }
+
+        [Route("create")]
+        [HttpPost]
+        public JsonResult CreateAdj([FromBody] VAdjAddForm request)
+        {
+            var result = adjService.Create(request);
             return new JsonResult(result);
         }
     }

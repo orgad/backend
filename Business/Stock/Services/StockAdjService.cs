@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using dotnet_wms_ef.Services;
@@ -25,6 +26,22 @@ namespace dotnet_wms_ef.Stock.Services
         {
             return wmsstock.TInvtAdjs.OrderByDescending(x => x.Id)
             as IQueryable<TInvtAdj>;
+        }
+
+        public bool Create(VAdjAddForm request)
+        {
+            var adj = new TInvtAdj();
+
+            adj.Code = "RET"+ DateTime.Now.ToString(FormatString.DefaultFormat);
+            adj.WhId = request.WhId;
+            adj.ReasonCode = request.ReasonCode;
+            adj.CreatedBy = DefaultUser.UserName;
+            adj.CreatedTime = DateTime.UtcNow;
+            adj.Status =Enum.GetName(typeof(EnumStatus),EnumStatus.None);
+
+            wmsstock.TInvtAdjs.Add(adj);
+
+            return wmsstock.SaveChanges()>0;
         }
 
         public VStockAdjDetails Details(long id)

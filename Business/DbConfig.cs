@@ -16,6 +16,11 @@ namespace dotnet_wms_ef.Models
 
         private static string formatString = "server={0};port={1};database={2};user={3};password={4}";
 
+        public static string AuthDb
+        {
+            get { return string.Format(formatString, server, port, pre + "auth", user, password); }
+        }
+        
         public static string InboundDb
         {
             get { return string.Format(formatString, server, port, pre + "inbound", user, password); }

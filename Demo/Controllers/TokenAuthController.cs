@@ -19,9 +19,7 @@ namespace dotnet_wms_ef.Auth
 
             ClaimsIdentity identity = new ClaimsIdentity(
                 new GenericIdentity(user.Username, "TokenAuth"),
-                new[] {
-            new Claim("ID", user.ID.ToString())
-                }
+                new[] { new Claim("ID", user.ID.ToString()) }
             );
 
             var securityToken = handler.CreateToken(new SecurityTokenDescriptor

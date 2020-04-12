@@ -2,14 +2,15 @@ using System.Linq;
 using System.Security.Claims;
 using System.Web.Http;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
+// authorization
+// 授权
 namespace dotnet_wms_ef.Auth.Controllers
 {
     //用户
     [Route("api/get")]
-    public class UserController : ApiController
+    public class TestController : ApiController
     {
         [HttpGet]
         [Authorize("Bearer")]

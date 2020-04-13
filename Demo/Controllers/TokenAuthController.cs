@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 
-namespace dotnet_wms_ef.Auth
+namespace dotnet_wms_ef.Demo
 {
 
     [Route("api/token")]

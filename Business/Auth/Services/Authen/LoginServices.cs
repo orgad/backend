@@ -7,7 +7,6 @@ using System.Linq;
 using dotnet_wms_ef.Auth.Models;
 using dotnet_wms_ef.Auth.ViewModels;
 using System.Text;
-using System.Security.Cryptography;
 
 namespace dotnet_wms_ef.Auth.Services
 {
@@ -42,16 +41,14 @@ namespace dotnet_wms_ef.Auth.Services
             var isExists = false;
             // 密文 Pwd
             var loginUser = auth.TPermUsers.Where(x => x.LoginName == user.Username).FirstOrDefault();
+            if (loginUser == null)
+            {
+                return false;
+            }
             // 明文 user.Password
             var bytes = Encoding.Default.GetBytes(loginUser.Pwd);
-            // 解密
-            using (var RSA = new RSACryptoServiceProvider())
-            {
-                var p = RSA.ExportParameters(false);
-                var pwd2 = RSACSPService.RSADecrypt(bytes, p, false);
-                //if (pwd2 == user.Password)
-                    isExists = true;
-            }
+            // 校验
+            isExists = MD5Service.VerifyMd5Hash(MD5Service.MD5Hash, user.Password, loginUser.Pwd);
 
             return isExists;
         }

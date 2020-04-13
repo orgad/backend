@@ -1,6 +1,6 @@
 using System;
 
-namespace dotnet_wms_ef.Auth
+namespace dotnet_wms_ef.Demo
 {
     public class User
     {

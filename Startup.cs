@@ -10,7 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using dotnet_wms_ef.Auth;
+using dotnet_wms_ef.Auth.Models;
 
 namespace dotnet_wms_ef
 {

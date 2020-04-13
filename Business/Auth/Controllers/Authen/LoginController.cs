@@ -7,7 +7,7 @@ using System.Web.Http;
 // authorization 授权
 namespace dotnet_wms_ef.Auth.Controllers
 {
-    [Route("api/login")]
+    [Route("api/auth/login")]
     public class LoginController : ApiController
     {
          //用户登录,成功返回token,失败返回授权错误

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace dotnet_wms_ef.Auth
+namespace dotnet_wms_ef.Demo
 {
     public static class UserStorage
     {

@@ -16,14 +16,7 @@ namespace dotnet_wms_ef.Auth.Services
 
             TPermUser tUser = new TPermUser();
             tUser.LoginName = user.Username;
-            using (var RSA = new RSACryptoServiceProvider())
-            {
-                var p = RSA.ExportParameters(false);
-                
-                tUser.Pwd = Convert.ToBase64String(
-                    RSACSPService.RSAEncrypt(dataToEncrypt, p, false)
-                );
-            }
+            tUser.Pwd = MD5Service.GetMd5Hash(MD5Service.MD5Hash, user.Password);
             tUser.ExpireAt = DateTime.UtcNow.AddYears(1);
             tUser.CreatedBy = DefaultUser.UserName;
             tUser.CreatedTime = DateTime.UtcNow;

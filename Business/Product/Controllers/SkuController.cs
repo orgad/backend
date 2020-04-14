@@ -1,4 +1,5 @@
 using System.Web.Http;
+using dotnet_wms_ef.Product.Services;
 using dotnet_wms_ef.Services;
 using dotnet_wms_ef.ViewModels;
 using Microsoft.AspNetCore.Cors;
@@ -11,6 +12,7 @@ namespace dotnet_wms_ef.Controllers
     public class SkuController : ApiController
     {
         SkuService skuService = new SkuService();
+
         [HttpGet]
         [Route("list")]
         public JsonResult List(int page)
@@ -26,6 +28,14 @@ namespace dotnet_wms_ef.Controllers
                 );
 
             return response;
+        }
+
+        [Route("create")]
+        [HttpPost]
+        public JsonResult Create(VSkuAddForm sku)
+        {
+            var result = skuService.Create(sku);
+            return new JsonResult(result);
         }
     }
 }

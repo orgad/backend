@@ -15,9 +15,9 @@ namespace dotnet_wms_ef.Models
         public string Gender { get; set; }
         public string Color { get; set; }
         public string Size { get; set; }
-        public ulong? IsLot { get; set; }
-        public ulong? IsSerial { get; set; }
-        public ulong? IsDeleted { get; set; }
+        public bool IsLot { get; set; }
+        public bool IsSerial { get; set; }
+        public bool IsDeleted { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreatedTime { get; set; }
         public string LastModifiedBy { get; set; }

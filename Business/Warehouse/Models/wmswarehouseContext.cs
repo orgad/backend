@@ -22,7 +22,7 @@ namespace dotnet_wms_ef.Models
 
         public virtual DbSet<TWhZone> TWhZones { get; set; }
 
-        public virtual DbSet<TWhDutyracking> TWhDutyracking { get; set; }
+        public virtual DbSet<TWhDutyracking> TWhDutyrackings { get; set; }
 
         public virtual DbSet<TWhBin> TWhBins { get; set; }
 

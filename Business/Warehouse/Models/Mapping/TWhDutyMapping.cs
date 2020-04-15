@@ -14,6 +14,8 @@ namespace dotnet_wms_ef.Models
                     .HasColumnType("int(11)")
                     .HasComment("主键ID");
 
+                entity.Property(e =>e.WhId).HasColumnName("wh_id");
+
                 entity.Property(e => e.Code)
                     .HasColumnName("code")
                     .HasColumnType("varchar(30)")

@@ -6,6 +6,7 @@ namespace dotnet_wms_ef.Models
     public partial class TWhDutyracking
     {
         public int Id { get; set; }
+        public int WhId { get; set; }
         public int? ZoneId { get; set; }
         public string Code { get; set; }
         public ulong IsDeleted { get; set; }

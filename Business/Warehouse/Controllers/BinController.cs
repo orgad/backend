@@ -1,6 +1,7 @@
 using System.Web.Http;
 using dotnet_wms_ef.Services;
 using dotnet_wms_ef.ViewModels;
+using dotnet_wms_ef.Warehouse.ViewModels;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,6 +29,15 @@ namespace dotnet_wms_ef.Controllers
                 );
 
             return response;
+        }
+
+        [HttpPost]
+        [Route("create")]
+        public JsonResult Create([FromBody]  VWhBin vBin)
+        {
+            var response = binService.Create(vBin);
+
+            return new JsonResult(response);
         }
     }
 }

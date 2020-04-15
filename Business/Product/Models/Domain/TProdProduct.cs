@@ -5,7 +5,7 @@ namespace dotnet_wms_ef.Models
 {
     public partial class TProdProduct
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
         public int? BrandId { get; set; }

@@ -32,7 +32,7 @@ namespace dotnet_wms_ef.Controllers
 
         [Route("create")]
         [HttpPost]
-        public JsonResult Create(VSkuAddForm sku)
+        public JsonResult Create([FromBody]VSkuAddForm sku)
         {
             var result = skuService.Create(sku);
             return new JsonResult(result);

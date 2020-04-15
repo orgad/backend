@@ -71,7 +71,7 @@ namespace dotnet_wms_ef.Models
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.NameLc)
+                entity.Property(e => e.NameCn)
                     .HasColumnName("name_cn")
                     .HasColumnType("varchar(200)")
                     .HasComment("品牌中文名称")

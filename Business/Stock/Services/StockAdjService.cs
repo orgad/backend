@@ -32,7 +32,7 @@ namespace dotnet_wms_ef.Stock.Services
         {
             var adj = new TInvtAdj();
 
-            adj.Code = "RET"+ DateTime.Now.ToString(FormatString.DefaultFormat);
+            adj.Code = "ADJ"+ DateTime.Now.ToString(FormatString.DefaultFormat);
             adj.WhId = request.WhId;
             adj.ReasonCode = request.ReasonCode;
             adj.CreatedBy = DefaultUser.UserName;

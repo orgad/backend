@@ -9,7 +9,7 @@ namespace dotnet_wms_ef.Models
         public string Code { get; set; }
         public int CustId { get; set; }
         public string NameEn { get; set; }
-        public string NameLc { get; set; }
+        public string NameCn { get; set; }
         public string Contact { get; set; }
         public string Tel { get; set; }
         public string Mobile { get; set; }

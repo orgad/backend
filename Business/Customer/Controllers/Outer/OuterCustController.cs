@@ -60,7 +60,7 @@ namespace dotnet_wms_ef.Controllers
             var response = new JsonResult(
                 new SingleResponse
                 {
-                    Data = list.Select(x => new VBasicData { id = x.Id, code = x.Code, name = x.Code + x.NameLc }).ToList(),
+                    Data = list.Select(x => new VBasicData { id = x.Id, code = x.Code, name = x.Code + x.NameCn }).ToList(),
                     TotalCount = totalCount
                 }
                 );

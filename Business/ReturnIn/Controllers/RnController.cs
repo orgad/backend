@@ -51,5 +51,23 @@ namespace dotnet_wms_ef.Inbound.Controllers
 
             return new JsonResult(result);
         }
+
+        [HttpPost]
+        [Route("{id}/create-detail")]
+        public JsonResult CreateDetail([FromUri]long id,[FromBody]VRnDetailAddForm[] list)
+        {
+            var result = rnService.CreateDetail(id,list);
+
+            return new JsonResult(result);
+        }
+
+        [HttpPost]
+        [EnableCors("any")]
+        [Route("importdetail")]
+        public JsonResult Upload(IFormFile file, [FromUri]ImportRequest importRequest)
+        {
+            var r = rnService.Import(file, importRequest.id, importRequest.code);
+            return new JsonResult(r);
+        }
     }
 }

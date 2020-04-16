@@ -149,7 +149,7 @@ namespace dotnet_wms_ef.Inbound.Services
             return wms.SaveChanges() > 0;
         }
 
-        public Tuple<bool,long,string> CreateAsn(TInAsn vAsn)
+        public Tuple<bool, long, string> CreateAsn(TInAsn vAsn)
         {
             var o = new TInAsn
             {
@@ -179,16 +179,16 @@ namespace dotnet_wms_ef.Inbound.Services
             {
                 wms.SaveChanges();
                 this.setProxy(this.Mapper(o));
-                r= wms.SaveChanges() > 0;
+                r = wms.SaveChanges() > 0;
 
             }
             catch (Exception ex)
             {
                 var msg = ex.Message;
-                r= false;
+                r = false;
             }
 
-            return new Tuple<bool, long, string>(r,o.Id,"");
+            return new Tuple<bool, long, string>(r, o.Id, "");
         }
 
         public bool UpdateAsn(TInAsn vAsn)
@@ -230,11 +230,11 @@ namespace dotnet_wms_ef.Inbound.Services
             return CreateAsnDetail(id, details.ToArray());
         }
 
-        public bool CreateAsnDetailList(long id,VAsnDetailAddForm[] detailList)
+        public bool CreateAsnDetailList(long id, VAsnDetailAddForm[] detailList)
         {
             var details = new List<TInAsnD>();
 
-            foreach(var detail in detailList)
+            foreach (var detail in detailList)
             {
                 TInAsnD d = new TInAsnD();
                 d.HId = id;
@@ -242,11 +242,11 @@ namespace dotnet_wms_ef.Inbound.Services
                 d.Sku = detail.Sku;
                 d.Barcode = detail.Barcode;
                 d.Qty = detail.Qty;
-                 d.CreatedBy = DefaultUser.UserName;
+                d.CreatedBy = DefaultUser.UserName;
                 d.CreatedTime = DateTime.UtcNow;
                 details.Add(d);
             }
-            return this.CreateAsnDetail(id,details.ToArray());
+            return this.CreateAsnDetail(id, details.ToArray());
         }
 
         private bool CreateAsnDetail(long id, TInAsnD[] details)

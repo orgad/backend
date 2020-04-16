@@ -15,6 +15,14 @@ namespace dotnet_wms_ef.Inbound.Models
         {
         }
 
+
+        public virtual DbSet<TSt> TSts { get; set; }
+        public virtual DbSet<TStD> TStDs { get; set; }
+        public virtual DbSet<TStOpt> TStOpts { get; set; }
+        public virtual DbSet<TStRcv> TStRcvs { get; set; }
+        public virtual DbSet<TStPutaway> TStPutaways { get; set; }
+        public virtual DbSet<TStPutawayD> TStPutawayDs { get; set; }
+
         public virtual DbSet<TInAsn> TInAsns { get; set; }
         public virtual DbSet<TInAsnCiq> TInAsnCiq { get; set; }
         public virtual DbSet<TInAsnD> TInAsnDs { get; set; }
@@ -31,12 +39,8 @@ namespace dotnet_wms_ef.Inbound.Models
         public virtual DbSet<TInPutawayD> TInPutawayDs { get; set; }
         public virtual DbSet<TInValue> TInValue { get; set; }
         public virtual DbSet<TInLog> TInLogs { get; set; }
-        public virtual DbSet<TSt> TSts { get; set; }
-        public virtual DbSet<TStD> TStDs { get; set; }
-        public virtual DbSet<TStOpt> TStOpts { get; set; }
-        public virtual DbSet<TStRcv> TStRcvs { get; set; }
-        public virtual DbSet<TStPutaway> TStPutaways{get;set;}
-        public virtual DbSet<TStPutawayD> TStPutawayDs{get;set;}
+        public virtual DbSet<TInRn> TInRns { get; set; }
+        public virtual DbSet<TInRnD> TInRnDs { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -53,6 +57,13 @@ namespace dotnet_wms_ef.Inbound.Models
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.ApplyConfiguration(new TInStMapping());
+            modelBuilder.ApplyConfiguration(new TInStOptMapping());
+            modelBuilder.ApplyConfiguration(new TInStDMapping());
+            modelBuilder.ApplyConfiguration(new TInStRcvMapping());
+            modelBuilder.ApplyConfiguration(new TInStPutawayMapping());
+            modelBuilder.ApplyConfiguration(new TInStPutawayDMapping());
+
             modelBuilder.ApplyConfiguration(new TInAsnMapping());
             modelBuilder.ApplyConfiguration(new TInAsnCiqMapping());
             modelBuilder.ApplyConfiguration(new TInAsnDMapping());
@@ -68,15 +79,10 @@ namespace dotnet_wms_ef.Inbound.Models
             modelBuilder.ApplyConfiguration(new TInPutAwayDMapping());
 
             modelBuilder.ApplyConfiguration(new TInLogMapping());
-
             modelBuilder.ApplyConfiguration(new TInValueMapping());
 
-            modelBuilder.ApplyConfiguration(new TInStMapping());
-            modelBuilder.ApplyConfiguration(new TInStOptMapping());
-            modelBuilder.ApplyConfiguration(new TInStDMapping());
-            modelBuilder.ApplyConfiguration(new TInStRcvMapping());
-            modelBuilder.ApplyConfiguration(new TInStPutawayMapping());
-            modelBuilder.ApplyConfiguration(new TInStPutawayDMapping());
+            modelBuilder.ApplyConfiguration(new TInRtnMapping());
+            modelBuilder.ApplyConfiguration(new TInRtnDMapping());
 
             OnModelCreatingPartial(modelBuilder);
         }

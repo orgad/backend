@@ -39,8 +39,6 @@ namespace dotnet_wms_ef.Inbound.Models
         public virtual DbSet<TInPutawayD> TInPutawayDs { get; set; }
         public virtual DbSet<TInValue> TInValue { get; set; }
         public virtual DbSet<TInLog> TInLogs { get; set; }
-        public virtual DbSet<TInRn> TInRns { get; set; }
-        public virtual DbSet<TInRnD> TInRnDs { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -83,7 +81,7 @@ namespace dotnet_wms_ef.Inbound.Models
 
             modelBuilder.ApplyConfiguration(new TInRtnMapping());
             modelBuilder.ApplyConfiguration(new TInRtnDMapping());
-
+            modelBuilder.ApplyConfiguration(new TInRtnPkgMapping());
             OnModelCreatingPartial(modelBuilder);
         }
 

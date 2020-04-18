@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace dotnet_wms_ef.Inbound.Models
 {
@@ -9,7 +8,8 @@ namespace dotnet_wms_ef.Inbound.Models
         public string Code { get; set; }
         public int WhId { get; set; }
         public long InboundId { get; set; }
-        public string InboundCode{get;set;}
+        public string InboundCode { get; set; }
+        public string TransCode { get; set; }
         public DateTime? FirstScanAt { get; set; }
         public DateTime? LastScanAt { get; set; }
         public string Status { get; set; }

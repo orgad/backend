@@ -34,6 +34,8 @@ namespace dotnet_wms_ef.Inbound.Models
                 .HasComment("主表编号")
                 .HasCharSet("utf8")
                 .HasCollation("utf8_general_ci");
+                
+            entity.Property(e => e.TransCode).HasColumnName("trans_code");
 
             entity.Property(e => e.Comment)
                 .HasColumnName("comment")

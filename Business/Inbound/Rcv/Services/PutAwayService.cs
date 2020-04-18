@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using dotnet_wms_ef.Inbound.Models;
 using dotnet_wms_ef.Inbound.ViewModels;
-using dotnet_wms_ef.Models;
 using dotnet_wms_ef.Services;
-using dotnet_wms_ef.ViewModels;
 
 namespace dotnet_wms_ef.Inbound.Services
 {
@@ -39,6 +37,7 @@ namespace dotnet_wms_ef.Inbound.Services
             {
                 Code = inbound.Code.Replace("RCV", "PTA"),
                 WhId = inbound.WhId,
+                TransCode = inbound.TransCode,
                 InboundId = inbound.Id,
                 InboundCode = inbound.Code,
                 Qty = 0,
@@ -57,9 +56,13 @@ namespace dotnet_wms_ef.Inbound.Services
                 queryPutAway.PageSize = 20;
 
             var query = wmsinbound.TInPutaways as IQueryable<TInPutaway>;
-            if (!string.IsNullOrEmpty(queryPutAway.status))
+            if (!string.IsNullOrEmpty(queryPutAway.Status))
             {
-                query = query.Where(x => x.Status == queryPutAway.status);
+                query = query.Where(x => x.Status == queryPutAway.Status);
+            }
+            if (!string.IsNullOrEmpty(queryPutAway.TransCode))
+            {
+                query = query.Where(x => x.TransCode == queryPutAway.TransCode);
             }
             return query;
         }

@@ -9,6 +9,10 @@ namespace dotnet_wms_ef.Inbound.Models
         {
             entity.ToTable("t_in_pre_qc");
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.WhId).HasColumnName("wh_id");
+            entity.Property(e => e.CustId).HasColumnName("cust_id");
+            entity.Property(e => e.BrandId).HasColumnName("brand_id");
+            entity.Property(e => e.SrcCode).HasColumnName("src_code");
             entity.Property(e => e.TrackingNo).HasColumnName("tracking_no");
             entity.Property(e => e.Code).HasColumnName("code");
             entity.Property(e => e.CartonQty).HasColumnName("carton_qty");

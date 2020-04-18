@@ -68,6 +68,29 @@ namespace dotnet_wms_ef.Inbound.Services
             return wmsinbound.SaveChanges() > 0;
         }
 
+        public string CreateByPreQc(string transCode, TInPreQc[] qcs)
+        {
+            var qc = qcs.FirstOrDefault();
+            TInInbound inbound = new TInInbound
+            {
+                WhId = qc.WhId,
+                CustId = qc.CustId,
+                BrandId = qc.BrandId,
+                BatchNo = DateTime.Now.ToString("yyyyMMdd"),
+                Code = "RCV" + DateTime.Now.ToString(FormatString.DefaultFormat),
+                BizCode = "ECom",
+                GoodsType = "Prod",
+                SrcCode = qc.SrcCode,
+                TransCode = transCode,
+                TypeCode = "RCV",
+                CreatedBy = DefaultUser.UserName,
+                CreatedTime = DateTime.UtcNow,
+            };
+            wmsinbound.TInInbounds.Add(inbound);
+            wmsinbound.SaveChanges();
+            return inbound.Code;
+        }
+
         //分页查询
         public List<TInInbound> PageList(QueryInbound query)
         {

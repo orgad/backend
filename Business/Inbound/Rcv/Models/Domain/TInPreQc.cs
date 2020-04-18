@@ -5,6 +5,10 @@ namespace dotnet_wms_ef.Inbound.Models
     public class TInPreQc
     {
         public long Id { get; set; }
+        public int WhId { get; set; }
+        public int CustId { get; set; }
+        public int BrandId { get; set; }
+        public string SrcCode { get; set; }
         public string TrackingNo { get; set; }
         public string Code { get; set; }
         public int CartonQty { get; set; }
@@ -15,6 +19,6 @@ namespace dotnet_wms_ef.Inbound.Models
         public string CreatedBy { get; set; }
         public DateTime CreatedTime { get; set; }
         public string LastModifiedBy { get; set; }
-        public DateTime LastModifiedTime { get; set; }
+        public DateTime? LastModifiedTime { get; set; }
     }
 }

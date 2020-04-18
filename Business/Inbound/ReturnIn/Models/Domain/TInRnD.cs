@@ -13,6 +13,6 @@ namespace dotnet_wms_ef.Inbound.Models
         public string CreatedBy { get; set; } //创建人
         public DateTime CreatedTime { get; set; } //创建时间
         public string LastModifiedBy { get; set; } //修改人
-        public DateTime LastModifiedTime { get; set; } //修改时间
+        public DateTime? LastModifiedTime { get; set; } //修改时间
     }
 }

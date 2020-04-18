@@ -11,7 +11,8 @@ namespace dotnet_wms_ef.Inbound.Models
         public string Carton { get; set; }
         public long SkuId { get; set; }
         public string Sku { get; set; }
-        public string Barcode { get; set; }
+        public string Barcode { get; set;}
+        public string QcCode { get; set; }
         public int Qty { get; set; }
         public string Comment { get; set; }
         public bool IsDeleted { get; set; }

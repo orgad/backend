@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using dotnet_wms_ef.Inbound.Models;
+using dotnet_wms_ef.Inbound.ViewModels;
 using dotnet_wms_ef.Models;
 using dotnet_wms_ef.Services;
 using dotnet_wms_ef.ViewModels;
@@ -16,7 +17,7 @@ namespace dotnet_wms_ef.Inbound.Services
         StrategyService strategyService = new StrategyService();
 
         //创建收货记录
-        public Tuple<bool, bool, string> CreateRcv(TInInboundRcv rcv)
+        public Tuple<bool, bool, string> CreateRcv(long id, VRcvScan rcv)
         {
             //由于有超收的情况存在,无法判断是否全部收货完毕
 
@@ -28,12 +29,38 @@ namespace dotnet_wms_ef.Inbound.Services
 
             var skuTotalQty = 0;
 
-            //查询入库明细
-            var inbound = wmsinbound.TInInbounds.Where(x => x.Id == rcv.HId).FirstOrDefault();
+            //查询入库单
+            var inbound = wmsinbound.TInInbounds.Where(x => x.Id == id).FirstOrDefault();
+
+            //生成收货记录
+            var inboundRcv = new TInInboundRcv
+            {
+                HId = inbound.Id,
+                Barcode = rcv.Barcode,
+                QcCode = rcv.QcCode
+            };
+
+            if (inbound.TransCode == "ReturnIn")
+            {
+                //对preQcDetail进行匹配
+                var qcIds = wmsinbound.TInPreQcs
+                            .Where(x => x.InBatchCode == inbound.Code)
+                            .Select(x => new { x.Id, x.Code })
+                            .ToList();
+                var qcDetail = wmsinbound.TInPreQcDs
+                               .Where(x => x.Barcode == rcv.Barcode && x.QcCode == x.QcCode && qcIds.Any(y => y.Id == x.HId))
+                               .FirstOrDefault();
+
+                var qc = qcIds.Where(x => x.Id == qcDetail.HId).FirstOrDefault();
+                inboundRcv.NoticeId = qcDetail.HId;
+                inboundRcv.NoticeDId = qcDetail.Id;
+                inboundRcv.NoticeCode = qc.Code;
+            }
+
             var asnId = inbound.AsnId;
             var totalQty = inbound.Qty;
 
-            var inboundDetail = wmsinbound.TInInboundDs.Where(x => x.HId == rcv.HId && x.Barcode == rcv.Barcode).FirstOrDefault();
+            var inboundDetail = wmsinbound.TInInboundDs.Where(x => x.HId == id && x.Barcode == rcv.Barcode).FirstOrDefault();
 
             if (asnId > 0)
             {
@@ -65,7 +92,10 @@ namespace dotnet_wms_ef.Inbound.Services
 
             //新增操作
             inbound.RStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing);
-            var r = SaveSku(prodSku.Id, prodSku.Code, skuTotalQty, inbound.Id, inboundDetail, rcv);
+
+
+
+            var r = SaveSku(prodSku.Id, prodSku.Code, skuTotalQty, inbound.Id, inboundDetail, inboundRcv);
             return new Tuple<bool, bool, string>(false, r.Item1, r.Item2);
         }
 

@@ -130,5 +130,29 @@ namespace dotnet_wms_ef.Inbound.Services
 
             return wms.SaveChanges() > 0;
         }
+
+        public List<TInRnD> DetailListByExpressNo(string expressNo)
+        {
+            var ids = wms.TInRns.Where(x => x.TrackingNo == expressNo).Select(x => x.Id).ToList();
+            var result = new List<TInRnD>();
+            if (ids.Any())
+            {
+                var tmp = wms.TInRnDs.Where(x => ids.Contains(x.Id)).ToList();
+                foreach (var item in tmp)
+                {
+                    for (int i = 0; i < item.Qty; i++)
+                    {
+                        result.Add(item);
+                    }
+                }
+            }
+
+            foreach (var item in result)
+            {
+                item.Qty = 1;
+            }
+
+            return result;
+        }
     }
 }

@@ -7,8 +7,6 @@ using dotnet_wms_ef.Inbound.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using dotnet_wms_ef.ViewModels;
 using dotnet_wms_ef.Inbound.Services;
-using dotnet_wms_ef.Inbound.Models;
-using System;
 
 namespace dotnet_wms_ef.Inbound.Controllers
 {
@@ -67,6 +65,14 @@ namespace dotnet_wms_ef.Inbound.Controllers
         public JsonResult Upload(IFormFile file, [FromUri]ImportRequest importRequest)
         {
             var r = rnService.Import(file, importRequest.id, importRequest.code);
+            return new JsonResult(r);
+        }
+
+        [HttpGet]
+        [Route("from-express-no")]
+        public JsonResult DetailList(string expressNo)
+        {
+            var r = rnService.DetailListByExpressNo(expressNo);
             return new JsonResult(r);
         }
     }

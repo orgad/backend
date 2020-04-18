@@ -2,6 +2,7 @@ using System;
 using System.Web.Http;
 using dotnet_wms_ef.Inbound.Models;
 using dotnet_wms_ef.Inbound.Services;
+using dotnet_wms_ef.Inbound.ViewModels;
 using dotnet_wms_ef.Models;
 using dotnet_wms_ef.ViewModels;
 using Microsoft.AspNetCore.Cors;
@@ -35,13 +36,12 @@ namespace dotnet_wms_ef.Inbound.Controllers
 
         [HttpPost]
         [Route("scan/{id}")]
-        public JsonResult Scan([FromUri]long id, [FromBody] TInInboundRcv vRcv)
+        public JsonResult Scan([FromUri]long id, [FromBody] VRcvScan vRcv)
         {
             //新增扫描记录,同时增加收货明细
-            vRcv.HId = id;
             try
             {
-                var result = rcvService.CreateRcv(vRcv);
+                var result = rcvService.CreateRcv(id,vRcv);
                 return new JsonResult(new VScanResponse
                 {
                     IsAllFinished = result.Item1,

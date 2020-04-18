@@ -55,6 +55,7 @@ namespace dotnet_wms_ef.Inbound.Services
             tRn.TypeCode = "RN";
             tRn.Courier = rnAddForm.Courier;
             tRn.TrackingNo = rnAddForm.TrackingNo;
+            tRn.RefCode = rnAddForm.RefCode;
             tRn.SrcCode = "Import";
             tRn.CreatedBy = DefaultUser.UserName;
             tRn.CreatedTime = DateTime.UtcNow;

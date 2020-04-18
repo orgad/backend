@@ -7,7 +7,7 @@ namespace dotnet_wms_ef.Inbound.Models
         public long Id { get; set; } //编号
         public string Code { get; set; } //单据编号 RN-yyyy-MM-dd-0000
         public string RefCode { get; set; } //客户方单号 来源于客户系统的单据编号
-        public string RefPo { get; set; } //客户的采购单号
+        public string RefSo { get; set; } //客户的采购单号
         public int WhId { get; set; } //仓库ID
         public int CustId { get; set; } //客户ID
         public int BrandId { get; set; } //品牌ID yyyyMMdd

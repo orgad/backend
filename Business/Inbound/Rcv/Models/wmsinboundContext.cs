@@ -23,11 +23,6 @@ namespace dotnet_wms_ef.Inbound.Models
         public virtual DbSet<TStPutaway> TStPutaways { get; set; }
         public virtual DbSet<TStPutawayD> TStPutawayDs { get; set; }
 
-        public virtual DbSet<TInAsn> TInAsns { get; set; }
-        public virtual DbSet<TInAsnCiq> TInAsnCiq { get; set; }
-        public virtual DbSet<TInAsnD> TInAsnDs { get; set; }
-        public virtual DbSet<TInCheck> TInChecks { get; set; }
-        public virtual DbSet<TInCheckD> TInCheckDs { get; set; }
         public virtual DbSet<TInInbound> TInInbounds { get; set; }
         public virtual DbSet<TInInboundD> TInInboundDs { get; set; }
         public virtual DbSet<TInInboundRcv> TInInboundRcvs { get; set; }

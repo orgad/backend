@@ -46,20 +46,44 @@ namespace dotnet_wms_ef.Inbound.Services
             return r;
         }
 
+        public bool Create(VInboundAddForm vInbound)
+        {
+            TInInbound inbound = new TInInbound
+            {
+                WhId = vInbound.WhId,
+                CustId = vInbound.CustId,
+                BrandId = vInbound.BrandId,
+                BatchNo = DateTime.Now.ToString("yyyyMMdd"),
+                Code = "RCV" + DateTime.Now.ToString(FormatString.DefaultFormat),
+                BizCode = vInbound.BizCode,
+                GoodsType = vInbound.GoodsType,
+                SrcCode = "Import",
+                TransCode = "Inbound",
+                TypeCode = "RCV",
+                CreatedBy = DefaultUser.UserName,
+                CreatedTime = DateTime.UtcNow,
+            };
+            wmsinbound.TInInbounds.Add(inbound);
+
+            return wmsinbound.SaveChanges() > 0;
+        }
+
         //分页查询
-        public List<TInInbound> PageList()
+        public List<TInInbound> PageList(QueryInbound query)
         {
-            return this.Query().OrderByDescending(x => x.Id).ToList();
+            return this.Query(query).OrderByDescending(x => x.Id).ToList();
         }
 
-        private IQueryable<TInInbound> Query()
+        private IQueryable<TInInbound> Query(QueryInbound query)
         {
-            return wmsinbound.TInInbounds;
+            var q = wmsinbound.TInInbounds as IQueryable<TInInbound>;
+            q = q.Where(x => x.TransCode == query.TransCode);
+            return q;
         }
 
-        public int TotalCount()
+        public int TotalCount(QueryInbound query)
         {
-            return this.Query().Count();
+            return this.Query(query).Count();
         }
 
         public VInboundDetails Details(long id)
@@ -89,38 +113,38 @@ namespace dotnet_wms_ef.Inbound.Services
         }
 
         /*收货扫描记录*/
-        
+
 
         //收货确认,生成库存
-        public List<Tuple<bool,long,string>> RcvAffirm(long[] ids)
+        public List<Tuple<bool, long, string>> RcvAffirm(long[] ids)
         {
-            var list = new List<Tuple<bool,long,string>>();
+            var list = new List<Tuple<bool, long, string>>();
             var inbounds = wmsinbound.TInInbounds.Where(x => ids.Contains(x.Id)).ToList();
             var inboundDs = wmsinbound.TInInboundDs.Where(x => ids.Contains(x.HId)).ToList();
             foreach (var inbound in inbounds)
             {
-                if(inbound.Status != Enum.GetName(typeof(EnumStatus),EnumStatus.None))
-                {   
+                if (inbound.Status != Enum.GetName(typeof(EnumStatus), EnumStatus.None))
+                {
                     //表示已经确认过了
-                    list.Add(new Tuple<bool,long,string>(false,inbound.Id,inbound.Code));
+                    list.Add(new Tuple<bool, long, string>(false, inbound.Id, inbound.Code));
                     continue;
                 }
-                if(inbound.RStatus == Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Init))
-                {   
+                if (inbound.RStatus == Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init))
+                {
                     //表示还没做收货扫描
-                    list.Add(new Tuple<bool,long,string>(false,inbound.Id,inbound.Code));
+                    list.Add(new Tuple<bool, long, string>(false, inbound.Id, inbound.Code));
                     continue;
                 }
 
                 var detailList = inboundDs.Where(x => x.HId == inbound.Id).ToArray();
 
                 //生成库存记录
-                inventoryService.Rcv(inbound.WhId, inbound.CustId,inbound.Code, detailList);
+                inventoryService.Rcv(inbound.WhId, inbound.CustId, inbound.Code, detailList);
 
                 inbound.Status = Enum.GetName(typeof(EnumStatus), EnumStatus.Audit);
 
                 //修改单据状态
-                inbound.RStatus = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Finished);
+                inbound.RStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Finished);
 
                 //调用策略
                 if (strategyService.NextFlow(inbound.WhId, inbound.CustId, inbound.BrandId,
@@ -142,10 +166,10 @@ namespace dotnet_wms_ef.Inbound.Services
                     inbound.IsConfirm = true;
                     inbound.ActualInAt = DateTime.UtcNow;
                 }
-                 
+
                 var r1 = wmsinbound.SaveChanges() > 0;
 
-                var r = new Tuple<bool,long,string>(r1,inbound.Id,"");
+                var r = new Tuple<bool, long, string>(r1, inbound.Id, "");
                 list.Add(r);
             }
             return list;
@@ -192,7 +216,7 @@ namespace dotnet_wms_ef.Inbound.Services
             return list;
         }
 
-        public Tuple<bool,long,string> Confirm(long id)
+        public Tuple<bool, long, string> Confirm(long id)
         {
             var pt = wmsinbound.TInPutaways.Where(x => x.InboundId == id).FirstOrDefault();
 

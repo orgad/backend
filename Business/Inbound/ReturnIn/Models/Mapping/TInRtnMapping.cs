@@ -11,7 +11,7 @@ namespace dotnet_wms_ef.Inbound.Models
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Code).HasColumnName("code");
             entity.Property(e => e.RefCode).HasColumnName("ref_code");
-            entity.Property(e => e.RefPo).HasColumnName("ref_po");
+            entity.Property(e => e.RefSo).HasColumnName("ref_so");
             entity.Property(e => e.WhId).HasColumnName("wh_id");
             entity.Property(e => e.CustId).HasColumnName("cust_id");
             entity.Property(e => e.BrandId).HasColumnName("brand_id");

@@ -1,5 +1,6 @@
 using System.Web.Http;
 using dotnet_wms_ef.Inbound.Services;
+using dotnet_wms_ef.Inbound.ViewModels;
 using dotnet_wms_ef.ViewModels;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -16,10 +17,10 @@ namespace dotnet_wms_ef.Inbound.Controllers
         [Route("list")]
         [EnableCors("any")]
 
-        public JsonResult List()
+        public JsonResult List(QueryInbound query)
         {
-            var list = inboundService.PageList();
-            var totalCount = inboundService.TotalCount();
+            var list = inboundService.PageList(query);
+            var totalCount = inboundService.TotalCount(query);
             var response = new JsonResult(
                 new SingleResponse
                 {

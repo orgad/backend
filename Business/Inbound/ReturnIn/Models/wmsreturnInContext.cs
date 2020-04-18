@@ -9,5 +9,7 @@ namespace dotnet_wms_ef.Inbound.Models
         public virtual DbSet<TInRn> TInRns { get; set; }
         public virtual DbSet<TInRnD> TInRnDs { get; set; }
         public virtual DbSet<TInRnPkg> TInRnPkgs { get; set; }
+        public virtual DbSet<TInPreQc> TInPreQcs { get; set; }
+        public virtual DbSet<TInPreQcD> TInPreQcDs { get; set; }
     }
 }

@@ -11,7 +11,6 @@ namespace dotnet_wms_ef.Models
         }
         public long Id { get; set; }
         public int WhId { get; set; }
-        public string Carton { get; set; }
         public long SkuId { get; set; }
         public string Sku { get; set; }
         public string Barcode { get; set; }

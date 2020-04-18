@@ -26,13 +26,6 @@ namespace dotnet_wms_ef.Models
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.Carton)
-                    .HasColumnName("carton")
-                    .HasColumnType("varchar(30)")
-                    .HasComment("箱号")
-                    .HasCharSet("utf8mb4")
-                    .HasCollation("utf8mb4_0900_ai_ci");
-
                 entity.Property(e => e.CreatedBy)
                     .IsRequired()
                     .HasColumnName("created_by")

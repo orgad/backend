@@ -131,6 +131,14 @@ namespace dotnet_wms_ef.Inbound.Services
             return wms.SaveChanges() > 0;
         }
 
+        public VRnDetails Details(long id)
+        {
+            var o = wms.TInRns.Where(x=>x.Id == id).FirstOrDefault();
+            var s = wms.TInRnDs.Where(x=>x.HId == id).ToList();
+
+            return new VRnDetails{ Rn = o,DetailList = s};
+        }
+
         public List<TInRnD> DetailListByExpressNo(string expressNo)
         {
             var ids = wms.TInRns.Where(x => x.TrackingNo == expressNo).Select(x => x.Id).ToList();

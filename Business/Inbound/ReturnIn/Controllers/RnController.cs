@@ -40,6 +40,14 @@ namespace dotnet_wms_ef.Inbound.Controllers
 
             return response;
         }
+        
+        [Route("{id}/details")]
+        [HttpGet]
+        public JsonResult Details([FromUri] long id)
+        {
+            var result = rnService.Details(id);
+            return new JsonResult(result);
+        }
 
         [HttpPost]
         [Route("create")]

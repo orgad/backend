@@ -36,7 +36,7 @@ namespace dotnet_wms_ef.Inbound.Services
 
             var ds = wmsinbound.TInPreQcDs.Where(x => x.HId == id).ToList();
 
-            return new VPreQcDetails { PreQc = o, Details = ds.Any() ? ds.ToArray() : null };
+            return new VPreQcDetails { PreQc = o, DetailList = ds.Any() ? ds.ToArray() : null };
         }
 
         public bool CreateDetailList(long id, VPreQcDetail[] list)

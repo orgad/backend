@@ -37,9 +37,9 @@ namespace dotnet_wms_ef.Stock.Services
 
             return new VFreezeDetails
             {
-                StockFreeze = o,
-                Limits = l,
-                Details = d
+                Freeze = o,
+                FreezeLimits = l,
+                DetailList = d
             };
         }
 

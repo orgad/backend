@@ -1,4 +1,5 @@
 using System.Web.Http;
+using dotnet_wms_ef.Product.ViewModels;
 using dotnet_wms_ef.Services;
 using dotnet_wms_ef.ViewModels;
 using Microsoft.AspNetCore.Cors;
@@ -10,9 +11,9 @@ namespace dotnet_wms_ef.Controllers
     [EnableCors("any")]
     public class ProductController : ApiController
     {
-       ProductService productService = new ProductService();
+        ProductService productService = new ProductService();
 
-       [HttpGet]
+        [HttpGet]
         [Route("list")]
         public JsonResult List(int page)
         {
@@ -27,6 +28,14 @@ namespace dotnet_wms_ef.Controllers
                 );
 
             return response;
+        }
+
+        [HttpPost]
+        [Route("add")]
+        public JsonResult Create([FromBody]VProdAddForm prod)
+        {
+            var result = productService.Create(prod);
+            return new JsonResult(result);
         }
     }
 }

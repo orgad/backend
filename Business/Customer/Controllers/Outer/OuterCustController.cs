@@ -39,7 +39,24 @@ namespace dotnet_wms_ef.Controllers
         public JsonResult BrandList(int Id)
         {
             var list = brandService.PageListByCustId(Id);
-            var totalCount = custService.TotalCount();
+            var totalCount = brandService.TotalCount();
+            var response = new JsonResult(
+                new SingleResponse
+                {
+                    Data = list.Select(x => new VBasicData { id = x.Id, code = x.Code, name = x.Code + x.NameLc }).ToList(),
+                    TotalCount = totalCount
+                }
+                );
+
+            return response;
+        }
+
+        [HttpGet]
+        [Route("brand/list")]
+        public JsonResult BrandAll(int Id)
+        {
+            var list = brandService.PageList(0);
+            var totalCount = brandService.TotalCount();
             var response = new JsonResult(
                 new SingleResponse
                 {

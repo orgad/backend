@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using dotnet_wms_ef.Models;
+using dotnet_wms_ef.Product.ViewModels;
 using dotnet_wms_ef.ViewModels;
 
 namespace dotnet_wms_ef.Services
@@ -20,7 +22,25 @@ namespace dotnet_wms_ef.Services
 
         public List<VBasicData> OuterList()
         {
-            return wms.TProdProducts.Select(x=>new VBasicData{id = x.Id,code = x.Code,name = x.Name}).ToList();
+            return wms.TProdProducts.Select(x => new VBasicData { id = x.Id, code = x.Code, name = x.Name }).ToList();
+        }
+
+        public bool Create(VProdAddForm prod)
+        {
+            TProdProduct t = new TProdProduct
+            {
+                Code = prod.Code,
+                Name = prod.Name,
+                 BrandId = prod.BrandId,
+                 BrandCode = prod.BrandCode
+            };
+
+            t.CreatedBy = DefaultUser.UserName;
+            t.CreatedTime = DateTime.UtcNow;
+
+            wms.TProdProducts.Add(t);
+
+            return wms.SaveChanges() > 0;
         }
     }
 }

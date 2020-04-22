@@ -49,6 +49,7 @@ namespace dotnet_wms_ef.Stock.Services
             freeze.Code = "HLD" + DateTime.Now.ToString(FormatString.DefaultFormat);
             freeze.TypeMode = vFreeze.TypeMode;
             freeze.ReasonCode = vFreeze.ReasonCode;
+            freeze.Status = Enum.GetName(typeof(EnumStatus), EnumStatus.None);
             freeze.CreatedBy = DefaultUser.UserName;
             freeze.CreatedTime = DateTime.UtcNow;
 

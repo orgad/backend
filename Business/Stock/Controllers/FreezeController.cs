@@ -1,5 +1,6 @@
 using System.Web.Http;
 using dotnet_wms_ef.Stock.Services;
+using dotnet_wms_ef.Stock.ViewModels;
 using dotnet_wms_ef.ViewModels;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +30,14 @@ namespace dotnet_wms_ef.Stock.Controllers
         public JsonResult Details([FromUri] long id)
         {
              var result = freezeService.Details(id);
+            return new JsonResult(result);
+        }
+        
+        [Route("add")]
+        [HttpPost]
+        public JsonResult Create([FromBody]VFreezeAddForm vCheck)
+        {
+            var result = freezeService.Create(vCheck);
             return new JsonResult(result);
         }
     }

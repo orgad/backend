@@ -67,5 +67,31 @@ namespace dotnet_wms_ef.Services
             
             return list.ToList().ToArray();
         }
+
+        public VSkuBarcodeBin[] GetGroupBySkus(long[] ids)
+        {
+             var list = wmsinventory.TInvtDs.Where(x=>ids.Contains(x.SkuId))
+            .GroupBy(y=>new{y.Barcode,y.BinCode})
+            .Select(x=>new VSkuBarcodeBin{
+                Barcode = x.Key.Barcode,
+                BinCode = x.Key.BinCode,
+                Qty = x.Sum(y=>y.Qty)
+            });
+            
+            return list.ToList().ToArray();
+        }
+
+        public VSkuBarcodeBin[] GetGroupByBinIds(int[] ids)
+        {
+             var list = wmsinventory.TInvtDs.Where(x=>ids.Contains(x.BinId))
+            .GroupBy(y=>new{y.Barcode,y.BinCode})
+            .Select(x=>new VSkuBarcodeBin{
+                Barcode = x.Key.Barcode,
+                BinCode = x.Key.BinCode,
+                Qty = x.Sum(y=>y.Qty)
+            });
+            
+            return list.ToList().ToArray();
+        }
     }
 }

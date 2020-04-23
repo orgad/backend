@@ -11,7 +11,7 @@ namespace dotnet_wms_ef.Services
         wmsproductContext wmsproduct = new wmsproductContext();
         public TProdSku GetSkuByBarcode(string barcode)
         {
-           return wmsproduct.TProdSkus.Where(x=>x.Barcode == barcode).FirstOrDefault();
+            return wmsproduct.TProdSkus.Where(x => x.Barcode == barcode).FirstOrDefault();
         }
 
         public List<TProdSku> PageList(int page)
@@ -27,8 +27,10 @@ namespace dotnet_wms_ef.Services
         public bool Create(VSkuAddForm sku)
         {
             TProdSku tSku = new TProdSku();
-
-            tSku.Code = sku.Code;
+            if (sku.Code == null)
+                tSku.Code = sku.Barcode;
+            else
+                tSku.Code = sku.Code;
             tSku.Barcode = sku.Barcode;
             tSku.ProductId = sku.ProductId;
             tSku.ProductCode = sku.ProductCode;
@@ -42,7 +44,7 @@ namespace dotnet_wms_ef.Services
             tSku.CreatedTime = DateTime.UtcNow;
 
             wmsproduct.TProdSkus.Add(tSku);
-            return wmsproduct.SaveChanges()>0;
+            return wmsproduct.SaveChanges() > 0;
         }
     }
 }

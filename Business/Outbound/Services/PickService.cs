@@ -24,7 +24,7 @@ namespace dotnet_wms_ef.Outbound.Services
                 //wmsoutbound.Database.UseTransaction(transaction.GetDbTransaction());
             }
         }
-        
+
         ///这里不对TOut的状态做任何校验
         public bool CreatePick(TOut tOut, long waveId = 0)
         {
@@ -125,7 +125,7 @@ namespace dotnet_wms_ef.Outbound.Services
 
         public TOutPick GetPickByOutbound(long outboundId)
         {
-            var outbound = wmsoutbound.TOutPicks.Where(x=>x.OutboundId==outboundId).FirstOrDefault();
+            var outbound = wmsoutbound.TOutPicks.Where(x => x.OutboundId == outboundId).FirstOrDefault();
             return outbound;
         }
 
@@ -232,6 +232,20 @@ namespace dotnet_wms_ef.Outbound.Services
             outbound.PickStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing);
 
             wmsoutbound.SaveChanges();
+        }
+
+        public VPickDataSource PrintDataSource(long id)
+        {
+            var o = wmsoutbound.TOutPicks.Where(x => x.Id == id).FirstOrDefault();
+            var d = wmsoutbound.TOutPickDs.Where(x => x.HId == id).GroupBy(x => new { x.Barcode, x.BinCode })
+            .Select(x => new VPickDetail
+            {
+                BinCode = x.Key.BinCode,
+                Barcode = x.Key.Barcode,
+                Qty = x.Sum(x => x.Qty)
+            }).ToList();
+
+            return new VPickDataSource { Code = o.Code, DetailList = d };
         }
 
     }

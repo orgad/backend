@@ -48,5 +48,13 @@ namespace dotnet_wms_ef.Outbound.Controllers
             var result = recheckService.CreateRckByPicks(ids);
             return new JsonResult(result);
         }
+
+        [Route("{id}/print")]
+        [HttpGet]
+        public JsonResult Print([FromUri] long id)
+        {
+            var result = pickService.PrintDataSource(id);
+            return new JsonResult(result);
+        }
     }
 }

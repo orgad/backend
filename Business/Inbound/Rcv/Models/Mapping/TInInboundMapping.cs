@@ -73,20 +73,6 @@ namespace dotnet_wms_ef.Inbound.Models
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
-                entity.Property(e => e.CreatedBy)
-                    .IsRequired()
-                    .HasColumnName("created_by")
-                    .HasColumnType("varchar(50)")
-                    .HasComment("创建人")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
-
-                entity.Property(e => e.CreatedTime)
-                    .HasColumnName("created_time")
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                    .HasComment("创建时间");
-
                 entity.Property(e => e.CustId)
                     .HasColumnName("cust_id")
                     .HasColumnType("int(11)")
@@ -121,6 +107,21 @@ namespace dotnet_wms_ef.Inbound.Models
                     .HasColumnName("is_deleted")
                     .HasColumnType("bit(1)")
                     .HasDefaultValueSql("b'0'");
+
+                entity.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasColumnName("created_by")
+                    .HasColumnType("varchar(50)")
+                    .HasComment("创建人")
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
+
+                entity.Property(e => e.CreatedTime)
+                    .HasColumnName("created_time")
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                    .HasComment("创建时间");
+    
 
                 entity.Property(e => e.LastModifiedBy)
                     .HasColumnName("last_modified_by")

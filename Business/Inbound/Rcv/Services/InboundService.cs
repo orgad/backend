@@ -60,6 +60,8 @@ namespace dotnet_wms_ef.Inbound.Services
                 SrcCode = "Import",
                 TransCode = "Inbound",
                 TypeCode = "RCV",
+                Status = Enum.GetName(typeof(EnumStatus),EnumStatus.None),
+                RStatus = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Init),
                 CreatedBy = DefaultUser.UserName,
                 CreatedTime = DateTime.UtcNow,
             };

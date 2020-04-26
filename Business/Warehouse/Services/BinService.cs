@@ -27,22 +27,28 @@ namespace dotnet_wms_ef.Services
 
         public bool Create(VWhBin whBin)
         {
-            TWhBin tBin = new TWhBin();
-            tBin.Code = whBin.Code;
-            tBin.WhId = whBin.WhId;
-            tBin.ZoneId = whBin.ZoneId;
-            tBin.ZoneCode = whBin.ZoneCode;
-            tBin.DutyId = whBin.DutyId;
-            tBin.DutyCode = whBin.DutyCode;
-            tBin.X = "";
-            tBin.Y = "";
-            tBin.Z = "";
-            tBin.CreatedBy = DefaultUser.UserName;
-            tBin.CreatedTime = DateTime.UtcNow;
+            var oldBin = wms.TWhBins.Where(x => x.Code == whBin.Code).FirstOrDefault();
+            if (oldBin == null)
+            {
+                TWhBin tBin = new TWhBin();
+                tBin.Code = whBin.Code;
+                tBin.WhId = whBin.WhId;
+                tBin.ZoneId = whBin.ZoneId;
+                tBin.ZoneCode = whBin.ZoneCode;
+                tBin.DutyId = whBin.DutyId;
+                tBin.DutyCode = whBin.DutyCode;
+                tBin.X = "";
+                tBin.Y = "";
+                tBin.Z = "";
+                tBin.CreatedBy = DefaultUser.UserName;
+                tBin.CreatedTime = DateTime.UtcNow;
 
-            wms.TWhBins.Add(tBin);
+                wms.TWhBins.Add(tBin);
 
-            return wms.SaveChanges() > 0;
+                return wms.SaveChanges() > 0;
+            }
+            else
+                return false;
         }
     }
 }

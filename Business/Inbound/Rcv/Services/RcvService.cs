@@ -20,6 +20,10 @@ namespace dotnet_wms_ef.Inbound.Services
         public Tuple<bool, bool, string> CreateRcv(long id, VRcvScan rcv)
         {
             //由于有超收的情况存在,无法判断是否全部收货完毕
+            if(string.IsNullOrEmpty(rcv.Barcode))
+            {
+                return new Tuple<bool, bool, string>(false,false,"barcode not allow null.");
+            }
 
             //从product获取skuid的信息
             var prodSku = skuService.GetSkuByBarcode(rcv.Barcode);
@@ -36,6 +40,7 @@ namespace dotnet_wms_ef.Inbound.Services
             var inboundRcv = new TInInboundRcv
             {
                 HId = inbound.Id,
+                Carton = rcv.Carton,
                 Barcode = rcv.Barcode,
                 QcCode = rcv.QcCode
             };
@@ -60,7 +65,11 @@ namespace dotnet_wms_ef.Inbound.Services
             var asnId = inbound.AsnId;
             var totalQty = inbound.Qty;
 
-            var inboundDetail = wmsinbound.TInInboundDs.Where(x => x.HId == id && x.Barcode == rcv.Barcode).FirstOrDefault();
+            TInInboundD inboundDetail = null;
+            if (string.IsNullOrEmpty(rcv.Carton))
+                inboundDetail = wmsinbound.TInInboundDs.Where(x => x.HId == id && x.Barcode == rcv.Barcode).FirstOrDefault();
+            else
+                inboundDetail = wmsinbound.TInInboundDs.Where(x => x.HId == id && x.Carton == rcv.Carton && x.Barcode == rcv.Barcode).FirstOrDefault();
 
             if (asnId > 0)
             {
@@ -93,12 +102,9 @@ namespace dotnet_wms_ef.Inbound.Services
             //新增操作
             inbound.RStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Doing);
 
-
-
             var r = SaveSku(prodSku.Id, prodSku.Code, skuTotalQty, inbound.Id, inboundDetail, inboundRcv);
             return new Tuple<bool, bool, string>(false, r.Item1, r.Item2);
         }
-
 
         public List<TInInbound> PageList()
         {
@@ -125,7 +131,7 @@ namespace dotnet_wms_ef.Inbound.Services
             if (!strategyService.CheckAllBlind(whId, custId, brandId))
             {
                 //不允许盲收
-                throw new Exception("asnDetail is null");
+                throw new Exception("not allow blind,asnDetail is null");
             }
         }
         private int DoCheckQty(int asnQty, int whId, int custId, int brandId, int inboundQty)
@@ -155,7 +161,9 @@ namespace dotnet_wms_ef.Inbound.Services
         {
             var r = false;
 
-            if (inboundDetail == null || inboundDetail.Qty + 1 <= totalQty)
+            var data = string.Empty;
+
+            if (inboundDetail == null || (totalQty > 0 && inboundDetail.Qty + 1 <= totalQty) || totalQty == 0)
             {
                 //生成入库记录
                 if (inboundDetail != null)
@@ -171,6 +179,7 @@ namespace dotnet_wms_ef.Inbound.Services
                     inboundDetail = new TInInboundD
                     {
                         HId = inboundId,
+                        Carton = rcv.Carton,
                         SkuId = skuId,
                         Sku = sku,
                         Barcode = rcv.Barcode,
@@ -183,19 +192,21 @@ namespace dotnet_wms_ef.Inbound.Services
 
                 //生成扫描记录
                 rcv.HId = inboundId;
-                rcv.Qty = 1;
                 rcv.Sku = sku;
                 rcv.SkuId = skuId;
+                rcv.Qty = 1;
                 rcv.CreatedBy = DefaultUser.UserName;
                 rcv.CreatedTime = DateTime.UtcNow;
 
-                var data = string.Empty;
                 wmsinbound.TInInboundRcvs.Add(rcv);
 
                 try
                 {
                     wmsinbound.SaveChanges();
-                    data = string.Format("{0}/{1}", inboundDetail.Qty, totalQty);
+                    if (totalQty > 0)
+                        data = string.Format("{0}/{1}", inboundDetail.Qty, totalQty);
+                    else
+                        data = string.Format("{0}/{1}", inboundDetail.Qty, "盲收");
                 }
                 catch (Exception ex)
                 {
@@ -205,7 +216,10 @@ namespace dotnet_wms_ef.Inbound.Services
             }
             else
             {
-                var data = string.Format("{0}/{1}", totalQty, totalQty);
+                if (totalQty > 0)
+                    data = string.Format("{0}/{1}", totalQty, totalQty);
+                else
+                    data = string.Format("{0}/{1}", inboundDetail.Qty, "盲收");
                 return new Tuple<bool, string>(true, data);
             }
         }

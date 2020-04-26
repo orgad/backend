@@ -27,20 +27,24 @@ namespace dotnet_wms_ef.Services
 
         public bool Create(VProdAddForm prod)
         {
-            TProdProduct t = new TProdProduct
+            var oldProd = wms.TProdProducts.Where(x => x.Code == prod.Code).FirstOrDefault();
+            if (oldProd == null)
             {
-                Code = prod.Code,
-                Name = prod.Name,
-                 BrandId = prod.BrandId,
-                 BrandCode = prod.BrandCode
-            };
+                TProdProduct t = new TProdProduct
+                {
+                    Code = prod.Code,
+                    Name = prod.Name,
+                    BrandId = prod.BrandId,
+                    BrandCode = prod.BrandCode
+                };
 
-            t.CreatedBy = DefaultUser.UserName;
-            t.CreatedTime = DateTime.UtcNow;
-
-            wms.TProdProducts.Add(t);
-
-            return wms.SaveChanges() > 0;
+                t.CreatedBy = DefaultUser.UserName;
+                t.CreatedTime = DateTime.UtcNow;
+                wms.TProdProducts.Add(t);
+                return wms.SaveChanges() > 0;
+            }
+            else
+                return false;
         }
     }
 }

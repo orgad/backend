@@ -38,6 +38,10 @@ namespace dotnet_wms_ef.Inbound.Models
                    .HasCollation("utf8_general_ci");
 
             entity.Property(e => e.Qty).HasColumnName("qty");
+            entity.Property(e => e.NoticeId).HasColumnName("notice_id");
+            entity.Property(e => e.NoticeCode).HasColumnName("notice_code");
+            entity.Property(e => e.NoticeDId).HasColumnName("notice_d_id");
+            entity.Property(e => e.QcCode).HasColumnName("qc_code");
 
             entity.Property(e => e.CreatedBy).HasColumnName("created_by");
 

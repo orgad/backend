@@ -30,66 +30,16 @@ namespace dotnet_wms_ef.Outbound.Models
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
-                entity.Property(e => e.Comment)
-                    .HasColumnName("comment")
-                    .HasColumnType("varchar(30)")
-                    .HasComment("备注")
-                    .HasCharSet("utf8mb4")
-                    .HasCollation("utf8mb4_0900_ai_ci");
-
-                entity.Property(e => e.CreatedBy)
-                    .IsRequired()
-                    .HasColumnName("created_by")
-                    .HasColumnType("varchar(30)")
-                    .HasComment("创建人")
-                    .HasCharSet("utf8mb4")
-                    .HasCollation("utf8mb4_0900_ai_ci");
-
-                entity.Property(e => e.CreatedTime)
-                    .HasColumnName("created_time")
-                    .HasColumnType("datetime")
-                    .HasComment("创建时间");
-
-                entity.Property(e => e.FirstScanAt)
-                    .HasColumnName("first_scan_at")
-                    .HasColumnType("datetime")
-                    .HasComment("首次扫描时间");
-
-                entity.Property(e => e.IsCancel)
-                    .HasColumnName("is_cancel")
-                    .HasColumnType("bit(1)")
-                    .HasDefaultValueSql("b'0'")
-                    .HasComment("是否取消");
-
-                entity.Property(e => e.IsConfirm)
-                    .HasColumnName("is_confirm")
-                    .HasColumnType("bit(1)")
-                    .HasDefaultValueSql("b'0'")
-                    .HasComment("是否确认");
-
-                entity.Property(e => e.LastModifiedBy)
-                    .HasColumnName("last_modified_by")
-                    .HasColumnType("varchar(30)")
-                    .HasComment("修改人")
-                    .HasCharSet("utf8mb4")
-                    .HasCollation("utf8mb4_0900_ai_ci");
-
-                entity.Property(e => e.LastModifiedTime)
-                    .HasColumnName("last_modified_time")
-                    .HasColumnType("datetime")
-                    .HasComment("修改时间");
-
-                entity.Property(e => e.LastScanAt)
-                    .HasColumnName("last_scan_at")
-                    .HasColumnType("datetime")
-                    .HasComment("最后扫描时间");
-
                 entity.Property(e => e.OutboundId)
                     .HasColumnName("outbound_id")
                     .HasColumnType("bigint(20)")
                     .HasComment("出库单号");
 
                 entity.Property(e =>e.OutboundCode).HasColumnName("outbound_code");
+
+                entity.Property(e =>e.PickId).HasColumnName("pick_id");
+
+                entity.Property(e =>e.PickCode).HasColumnName("pick_code");
 
                 entity.Property(e => e.Qty)
                     .HasColumnName("qty")
@@ -106,6 +56,60 @@ namespace dotnet_wms_ef.Outbound.Models
                     .HasColumnName("store")
                     .HasColumnType("varchar(30)")
                     .HasComment("店铺");
+
+                entity.Property(e => e.FirstScanAt)
+                    .HasColumnName("first_scan_at")
+                    .HasColumnType("datetime")
+                    .HasComment("首次扫描时间");
+                    
+                entity.Property(e => e.LastScanAt)
+                    .HasColumnName("last_scan_at")
+                    .HasColumnType("datetime")
+                    .HasComment("最后扫描时间");
+
+                entity.Property(e => e.Comment)
+                    .HasColumnName("comment")
+                    .HasColumnType("varchar(30)")
+                    .HasComment("备注")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.IsCancel)
+                    .HasColumnName("is_cancel")
+                    .HasColumnType("bit(1)")
+                    .HasDefaultValueSql("b'0'")
+                    .HasComment("是否取消");
+
+                entity.Property(e => e.IsConfirm)
+                    .HasColumnName("is_confirm")
+                    .HasColumnType("bit(1)")
+                    .HasDefaultValueSql("b'0'")
+                    .HasComment("是否确认");
+                
+                entity.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasColumnName("created_by")
+                    .HasColumnType("varchar(30)")
+                    .HasComment("创建人")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.CreatedTime)
+                    .HasColumnName("created_time")
+                    .HasColumnType("datetime")
+                    .HasComment("创建时间");
+
+                entity.Property(e => e.LastModifiedBy)
+                    .HasColumnName("last_modified_by")
+                    .HasColumnType("varchar(30)")
+                    .HasComment("修改人")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.LastModifiedTime)
+                    .HasColumnName("last_modified_time")
+                    .HasColumnType("datetime")
+                    .HasComment("修改时间");
          }
     }
 }

@@ -9,6 +9,8 @@ namespace dotnet_wms_ef.Outbound.Models
         public int WhId { get; set; }
         public long OutboundId { get; set; }
         public string OutboundCode { get; set; }
+        public long PickId { get; set; }
+        public string PickCode { get; set; }
         public string Store { get; set; }
         public int Qty { get; set; }
         public int CartonQty { get; set; }

@@ -11,11 +11,11 @@ namespace dotnet_wms_ef.Outbound.Controllers
     [EnableCors("any")]
     public class PickController : ApiController
     {
-         PickService pickService = new PickService();
+        PickService pickService = new PickService();
 
-         RecheckService recheckService = new RecheckService();
+        RecheckService recheckService = new RecheckService();
 
-         [Route("list")]
+        [Route("list")]
         [HttpGet]
         public JsonResult List(QueryPick queryPick)
         {

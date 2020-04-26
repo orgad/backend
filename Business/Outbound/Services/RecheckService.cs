@@ -60,7 +60,7 @@ namespace dotnet_wms_ef.Outbound.Services
 
         public TOutCheck GetRecheckByOutbound(long outboundId)
         {
-            var recheck = wmsoutbound.TOutChecks.Where(x=>x.OutboundId==outboundId).FirstOrDefault();
+            var recheck = wmsoutbound.TOutChecks.Where(x => x.OutboundId == outboundId).FirstOrDefault();
             return recheck;
         }
 
@@ -97,6 +97,8 @@ namespace dotnet_wms_ef.Outbound.Services
                 WhId = outPick.WhId,
                 OutboundId = outPick.OutboundId,
                 OutboundCode = outPick.OutboundCode,
+                PickId = outPick.Id,
+                PickCode = outPick.Code,
                 Status = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init),
                 Store = outPick.Store,
                 CreatedBy = DefaultUser.UserName,

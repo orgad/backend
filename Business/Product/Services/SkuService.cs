@@ -26,25 +26,32 @@ namespace dotnet_wms_ef.Services
 
         public bool Create(VSkuAddForm sku)
         {
+
             TProdSku tSku = new TProdSku();
             if (sku.Code == null)
                 tSku.Code = sku.Barcode;
             else
                 tSku.Code = sku.Code;
-            tSku.Barcode = sku.Barcode;
-            tSku.ProductId = sku.ProductId;
-            tSku.ProductCode = sku.ProductCode;
-            tSku.Season = sku.Season;
-            tSku.Style = sku.Style;
-            tSku.Color = sku.Color;
-            tSku.Size = sku.Size;
-            tSku.IsLot = sku.IsLot;
-            tSku.IsSerial = sku.IsSerial;
-            tSku.CreatedBy = DefaultUser.UserName;
-            tSku.CreatedTime = DateTime.UtcNow;
+            var oldSku = wmsproduct.TProdSkus.Where(x => x.Barcode == sku.Barcode).FirstOrDefault();
+            if (oldSku == null)
+            {
+                tSku.Barcode = sku.Barcode;
+                tSku.ProductId = sku.ProductId;
+                tSku.ProductCode = sku.ProductCode;
+                tSku.Season = sku.Season;
+                tSku.Style = sku.Style;
+                tSku.Color = sku.Color;
+                tSku.Size = sku.Size;
+                tSku.IsLot = sku.IsLot;
+                tSku.IsSerial = sku.IsSerial;
+                tSku.CreatedBy = DefaultUser.UserName;
+                tSku.CreatedTime = DateTime.UtcNow;
 
-            wmsproduct.TProdSkus.Add(tSku);
-            return wmsproduct.SaveChanges() > 0;
+                wmsproduct.TProdSkus.Add(tSku);
+                return wmsproduct.SaveChanges() > 0;
+            }
+            else
+                return false;
         }
     }
 }

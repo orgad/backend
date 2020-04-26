@@ -139,7 +139,7 @@ namespace dotnet_wms_ef.Outbound.Services
             //查询当前货位的barcode列表
             var binCode = binCodes.FirstOrDefault();
 
-            var barcodes = detailList.Select(x => x.Barcode).Distinct().ToArray();
+            var barcodes = detailList.Select(x => x.Barcode + "," + x.Qty).Distinct().ToArray();
 
             return new VPickAdvice { BinCode = binCode, Barcodes = barcodes };
         }

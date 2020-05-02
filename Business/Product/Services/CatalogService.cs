@@ -9,12 +9,19 @@ namespace dotnet_wms_ef.Services
         wmsproductContext wms = new wmsproductContext();
         public List<TProdCatalog> PageList(int page)
         {
-            return wms.TProdCatalogs.ToList();
+            return this.Query().ToList();
         }
 
         public int TotalCount()
         {
-            return wms.TProdCatalogs.Count();
+            return this.Query().Count();
+        }
+
+        private IQueryable<TProdCatalog> Query()
+        {
+            return wms.TProdCatalogs
+                   .OrderBy(x => x.CatLvl1).ThenBy(x => x.CatLvl2).ThenBy(x => x.CatLvl3)
+            as IQueryable<TProdCatalog>;
         }
     }
 }

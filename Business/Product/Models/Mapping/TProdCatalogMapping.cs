@@ -21,31 +21,6 @@ namespace dotnet_wms_ef.Models
                 .HasCharSet("utf8mb4")
                 .HasCollation("utf8mb4_0900_ai_ci");
 
-            entity.Property(e => e.CreatedBy)
-                .IsRequired()
-                .HasColumnName("created_by")
-                .HasColumnType("varchar(30)")
-                .HasComment("创建人 ")
-                .HasCharSet("utf8mb4")
-                .HasCollation("utf8mb4_0900_ai_ci");
-
-            entity.Property(e => e.CreatedTime)
-                .HasColumnName("created_time")
-                .HasColumnType("datetime")
-                .HasComment("创建时间 ");
-
-            entity.Property(e => e.LastModifiedBy)
-                .HasColumnName("last_modified_by")
-                .HasColumnType("varchar(30)")
-                .HasComment("修改人 ")
-                .HasCharSet("utf8mb4")
-                .HasCollation("utf8mb4_0900_ai_ci");
-
-            entity.Property(e => e.LastModifiedTime)
-                .HasColumnName("last_modified_time")
-                .HasColumnType("datetime")
-                .HasComment("修改时间 ");
-
             entity.Property(e => e.Name)
                 .HasColumnName("name")
                 .HasColumnType("varchar(50)")
@@ -63,6 +38,35 @@ namespace dotnet_wms_ef.Models
             entity.Property(e => e.PId)
                 .HasColumnName("p_id")
                 .HasComment("上级分类 ");
+
+            entity.Property(e =>e.CatLvl1).HasColumnName("cat_lvl_1");
+            entity.Property(e =>e.CatLvl2).HasColumnName("cat_lvl_2");
+            entity.Property(e =>e.CatLvl3).HasColumnName("cat_lvl_3");
+
+            entity.Property(e => e.CreatedBy)
+            .IsRequired()
+            .HasColumnName("created_by")
+            .HasColumnType("varchar(30)")
+            .HasComment("创建人 ")
+            .HasCharSet("utf8mb4")
+            .HasCollation("utf8mb4_0900_ai_ci");
+
+            entity.Property(e => e.CreatedTime)
+                .HasColumnName("created_time")
+                .HasColumnType("datetime")
+                .HasComment("创建时间 ");
+
+            entity.Property(e => e.LastModifiedBy)
+                .HasColumnName("last_modified_by")
+                .HasColumnType("varchar(30)")
+                .HasComment("修改人 ")
+                .HasCharSet("utf8mb4")
+                .HasCollation("utf8mb4_0900_ai_ci");
+
+            entity.Property(e => e.LastModifiedTime)
+                .HasColumnName("last_modified_time")
+                .HasColumnType("datetime")
+                .HasComment("修改时间 ");
         }
     }
 }

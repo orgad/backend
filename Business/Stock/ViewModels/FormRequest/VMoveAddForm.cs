@@ -16,7 +16,7 @@ namespace dotnet_wms_ef.Stock.ViewModels
         public long SkuId { get; set; }
         public string Sku { get; set; }
         public string Barcode { get; set; }
-        public decimal Qty { get; set; }
+        public int Qty { get; set; }
 
     }
 }

@@ -13,6 +13,8 @@ namespace dotnet_wms_ef.Stock.Services
         wmsstockContext wmsstock = new wmsstockContext();
         SkuService skuService = new SkuService();
         BinService binService = new BinService();
+
+        InventoryService inventoryService = new InventoryService();
         public List<TInvtMove> TaskPageList()
         {
             return this.Query()
@@ -41,6 +43,7 @@ namespace dotnet_wms_ef.Stock.Services
 
         public VScanResponse MoveDown(long id, VMoveScan request)
         {
+            //移货下架的时候锁定库存
             var result = new VScanResponse();
             var prodSku = skuService.GetSkuByBarcode(request.Barcode);
             var move = wmsstock.TInvtMoves.Where(x => x.Id == id).FirstOrDefault();
@@ -75,6 +78,18 @@ namespace dotnet_wms_ef.Stock.Services
                     result.Message = string.Format("{0}/{1}", downs + 1, move.Qty);
                     move.DownStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Done);
                     move.UpStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init);
+                    //更新冻结数量
+                    inventoryService.Locked(new VInvtData
+                    {
+                        ZoneId = move.FromZoneId,
+                        ZoneCode = move.FromZoneCode,
+                        BinId = move.FromBinId,
+                        BinCode = move.FromBinCode,
+                        SkuId = move.SkuId,
+                        Sku = move.Sku,
+                        Barcode = move.Barcode,
+                        Qty = move.Qty
+                    });
                 }
             }
             else
@@ -87,6 +102,7 @@ namespace dotnet_wms_ef.Stock.Services
 
         public VScanResponse MoveUp(long id, VMoveScan request)
         {
+            //移货上架会释放锁定数
             var result = new VScanResponse();
             var prodSku = skuService.GetSkuByBarcode(request.Barcode);
             var move = wmsstock.TInvtMoves.Where(x => x.Id == id).FirstOrDefault();
@@ -121,6 +137,32 @@ namespace dotnet_wms_ef.Stock.Services
                     result.IsAllFinished = true;
                     result.Message = string.Format("{0}/{1}", ups + 1, move.Qty);
                     move.UpStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Done);
+
+                    //更新上架数量
+                    inventoryService.UnlockAndMove(move.Id, move.Code, move.WhId, 0,
+                        new VInvtData
+                        {
+                            ZoneId = move.FromZoneId,
+                            ZoneCode = move.FromZoneCode,
+                            BinId = move.FromBinId,
+                            BinCode = move.FromBinCode,
+                            SkuId = move.SkuId,
+                            Sku = move.Sku,
+                            Barcode = move.Barcode,
+                            Qty = move.Qty
+                        },
+                    new VInvtData
+                    {
+                        ZoneId = move.ToZoneId,
+                        ZoneCode = move.ToZoneCode,
+                        BinId = move.ToBinId,
+                        BinCode = move.ToBinCode,
+                        SkuId = move.SkuId,
+                        Sku = move.Sku,
+                        Barcode = move.Barcode,
+                        Qty = move.Qty
+                    }
+                    );
                 }
             }
             else

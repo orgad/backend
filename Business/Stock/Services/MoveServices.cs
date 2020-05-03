@@ -32,7 +32,6 @@ namespace dotnet_wms_ef.Stock.Services
         public bool Create(VMoveAddForm vMove)
         {
             var prodSku = skuService.GetSkuByBarcode(vMove.Barcode);
-            
 
             TInvtMove tMove = new TInvtMove();
             tMove.WhId = vMove.WhId;
@@ -51,13 +50,21 @@ namespace dotnet_wms_ef.Stock.Services
             tMove.Sku = vMove.Sku;
             tMove.Barcode = vMove.Barcode;
             tMove.Qty = vMove.Qty;
-            tMove.Status = Enum.GetName(typeof(EnumStatus),EnumStatus.None);
-            tMove.DownStatus = Enum.GetName(typeof(EnumOperateStatus),EnumOperateStatus.Init);
+            tMove.Status = Enum.GetName(typeof(EnumStatus), EnumStatus.None);
+            tMove.DownStatus = Enum.GetName(typeof(EnumOperateStatus), EnumOperateStatus.Init);
             tMove.CreatedBy = DefaultUser.UserName;
             tMove.CreatedTime = DateTime.UtcNow;
 
             wmsstock.TInvtMoves.Add(tMove);
 
+            return wmsstock.SaveChanges() > 0;
+        }
+
+        public bool Confirm(long id)
+        {
+            //将单据状态置为已完成
+            var move = wmsstock.TInvtMoves.Where(x => x.Id == id).FirstOrDefault();
+            move.Status = Enum.GetName(typeof(EnumStatus), EnumStatus.Finished);
             return wmsstock.SaveChanges() > 0;
         }
     }

@@ -10,16 +10,16 @@ namespace dotnet_wms_ef.Stock.Models
         public string Code { get; set; }
         public string Status { get; set; }
         public string TypeCode { get; set; }
-        public int? ToZoneId { get; set; }
+        public int ToZoneId { get; set; }
         public string ToZoneCode { get; set; }
-        public int? ToBinId { get; set; }
+        public int ToBinId { get; set; }
         public string ToBinCode { get; set; }
         public string Carton { get; set; }
         public long SkuId { get; set; }
         public string Sku { get; set; }
         public string Barcode { get; set; }
-        public decimal? Qty { get; set; }
-        public int? FromZoneId { get; set; }
+        public int Qty { get; set; }
+        public int FromZoneId { get; set; }
         public string FromZoneCode { get; set; }
         public int FromBinId { get; set; }
         public string FromBinCode { get; set; }

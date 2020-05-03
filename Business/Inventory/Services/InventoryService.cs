@@ -46,5 +46,28 @@ namespace dotnet_wms_ef.Services
             return query;
         }
 
-       }
+        private void ReduceQty(int totalQty, TInvt invt, List<TInvtD> invtds)
+        {
+            foreach (var invtd in invtds)
+            {
+                var canQty = invtd.Qty - invtd.AlotQty - invtd.LockedQty;
+
+                if (totalQty > 0 && canQty > 0)
+                {
+                    if (invtd.Qty >= totalQty)
+                    {
+                        if (invt != null) invt.Qty -= totalQty;
+                        invtd.Qty -= totalQty;
+                        break;
+                    }
+                    else
+                    {
+                        if (invt != null) invt.Qty = 0;
+                        totalQty -= invtd.Qty;
+                        invtd.Qty = 0;
+                    }
+                }
+            }
+        }
+    }
 }

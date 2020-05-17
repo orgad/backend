@@ -4,6 +4,7 @@ using System.Linq;
 using dotnet_wms_ef.Inbound.Models;
 using dotnet_wms_ef.Inbound.ViewModels;
 using dotnet_wms_ef.Services;
+using dotnet_wms_ef.ViewModels;
 
 namespace dotnet_wms_ef.Inbound.Services
 {
@@ -209,6 +210,27 @@ namespace dotnet_wms_ef.Inbound.Services
             //更新库存
             var r = wmsinbound.SaveChanges() > 0;
             return new Tuple<bool, long, string>(r, id, "");
+        }
+
+        public VPutAwayPrintSource PrintList(long inboundId)
+        {
+            var o = new VPutAwayPrintSource();
+            var list = new List<SkuBinCodeQty>();
+
+            var pt = wmsinbound.TInPutaways.Where(x => x.InboundId == inboundId).FirstOrDefault();
+            var query = wmsinbound.TInPutawayDs.Where(x => x.HId == pt.Id).ToList();
+            list = query.GroupBy(x => new { x.SkuId, x.Barcode, x.BinCode })
+                   .Select(y => new SkuBinCodeQty
+                   {
+                       SkuId = y.Key.SkuId,
+                       Sku = y.Key.Barcode,
+                       BinCode = y.Key.BinCode,
+                       Qty = y.Sum(x => x.Qty)
+                   }).ToList();
+
+            o.Code = pt.Code;
+            o.details = list;
+            return o;
         }
     }
 }

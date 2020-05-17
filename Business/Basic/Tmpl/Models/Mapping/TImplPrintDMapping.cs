@@ -1,0 +1,57 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace dotnet_wms_ef.Basic.Models
+{
+    public class TTmplPrintDMapping : IEntityTypeConfiguration<TTmplPrintD>
+    {
+        public void Configure(EntityTypeBuilder<TTmplPrintD> entity)
+        {
+            entity.ToTable("t_tmpl_print_d");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.TmplId).HasColumnName("tmpl_id");
+                entity.Property(e => e.TmplTitle).HasColumnName("tmpl_title");
+
+                entity.Property(e => e.IsChild)
+                    .HasColumnName("is_child")
+                    .HasColumnType("bit(1)")
+                    .HasDefaultValueSql("b'0'");
+
+                entity.Property(e => e.IsDeleted)
+                    .HasColumnName("is_deleted")
+                    .HasColumnType("bit(1)")
+                    .HasDefaultValueSql("b'0'");
+
+                entity.Property(e => e.Seq)
+                    .HasColumnName("seq")
+                    .HasDefaultValueSql("'1'");
+
+                entity.Property(e => e.TmplData)
+                    .HasColumnName("tmpl_data")
+                    .HasColumnType("varchar(1000)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.CreatedBy)
+                    .HasColumnName("created_by")
+                    .HasColumnType("varchar(30)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.CreatedTime)
+                    .HasColumnName("created_time")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.LastModifiedBy)
+                    .HasColumnName("last_modified_by")
+                    .HasColumnType("varchar(30)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_0900_ai_ci");
+
+                entity.Property(e => e.LastModifiedTime)
+                    .HasColumnName("last_modified_time")
+                    .HasColumnType("datetime");
+        }
+    }
+}

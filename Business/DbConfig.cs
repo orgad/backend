@@ -20,6 +20,11 @@ namespace dotnet_wms_ef.Models
         {
             get { return string.Format(formatString, server, port, pre + "auth", user, password); }
         }
+
+        public static string BasicDb
+        {
+            get { return string.Format(formatString, server, port, pre + "basic", user, password); }
+        }
         
         public static string InboundDb
         {

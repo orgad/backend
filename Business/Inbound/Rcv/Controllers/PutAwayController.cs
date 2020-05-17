@@ -18,7 +18,7 @@ namespace dotnet_wms_ef.Inbound.Controllers
         [HttpGet]
         [Route("list")]
         [EnableCors("any")]
-        public JsonResult List([FromUri]QueryPutAway queryPutAway)
+        public JsonResult List([FromUri] QueryPutAway queryPutAway)
         {
             return new JsonResult(new SingleResponse
             {
@@ -31,7 +31,7 @@ namespace dotnet_wms_ef.Inbound.Controllers
         [Route("{id}/details")]
         [EnableCors("any")]
         //上架详情
-        public JsonResult Details([FromUri]long id)
+        public JsonResult Details([FromUri] long id)
         {
             var result = putAwayService.Details(id);
             return new JsonResult(result);
@@ -41,7 +41,7 @@ namespace dotnet_wms_ef.Inbound.Controllers
         [Route("from-inbound/{id}")]
         [EnableCors("any")]
         //上架详情
-        public JsonResult FromInboud([FromUri]long id)
+        public JsonResult FromInboud([FromUri] long id)
         {
             var result = putAwayService.GetPutawayByInbound(id);
             return new JsonResult(result);
@@ -51,7 +51,7 @@ namespace dotnet_wms_ef.Inbound.Controllers
         [Route("confirm")]
         [EnableCors("any")]
         //上架确认
-        public JsonResult Confirm([FromBody]long[] ids)
+        public JsonResult Confirm([FromBody] long[] ids)
         {
             var result = putAwayService.Confirms(ids);
             return new JsonResult(result);
@@ -67,6 +67,24 @@ namespace dotnet_wms_ef.Inbound.Controllers
                 Data = putAwayAdvice.PageList(),
                 TotalCount = putAwayAdvice.TotalCount(),
             });
+        }
+
+        [HttpGet]
+        [Route("{id}/advice-print-list")]
+        [EnableCors("any")]
+        public JsonResult AdvicePrintList([FromUri] long id)
+        {
+            var result = putAwayAdvice.PrintList(id);
+            return new JsonResult(result);
+        }
+
+        [HttpGet]
+        [Route("{id}/print-list")]
+        [EnableCors("any")]
+        public JsonResult PrintList([FromUri] long id)
+        {
+            var result = putAwayService.PrintList(id);
+            return new JsonResult(result);
         }
     }
 }

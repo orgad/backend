@@ -8,9 +8,9 @@ namespace dotnet_wms_ef.Inbound.Models
         public int Id { get; set; }
         public int? InboundId { get; set; }
         public string Carton { get; set; }
-        public long? SkuId { get; set; }
+        public long SkuId { get; set; }
         public string Barcode { get; set; }
-        public int? Qty { get; set; }
+        public int Qty { get; set; }
         public string AdvZoneCode { get; set; }
         public string AdvBinCode { get; set; }
         public string ZoneCode { get; set; }

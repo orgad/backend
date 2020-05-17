@@ -1,4 +1,4 @@
-namespace dotnet_wms_ef.Outbound.ViewModels
+namespace dotnet_wms_ef.ViewModels
 {
     public class SkuBinCodeQty
     {

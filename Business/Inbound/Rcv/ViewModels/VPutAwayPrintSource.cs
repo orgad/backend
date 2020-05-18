@@ -7,6 +7,6 @@ namespace dotnet_wms_ef.Inbound.ViewModels
     {
         public string Code{get;set;}
 
-        public ICollection<SkuBinCodeQty> details{get;set;}
+        public ICollection<SkuBinCodeQty> DetailList{get;set;}
     }
 }

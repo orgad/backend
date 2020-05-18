@@ -5,6 +5,7 @@ using dotnet_wms_ef.Models;
 using dotnet_wms_ef.Outbound.Models;
 using dotnet_wms_ef.Outbound.ViewModels;
 using dotnet_wms_ef.Services;
+using dotnet_wms_ef.ViewModels;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace dotnet_wms_ef.Outbound.Services
@@ -238,10 +239,10 @@ namespace dotnet_wms_ef.Outbound.Services
         {
             var o = wmsoutbound.TOutPicks.Where(x => x.Id == id).FirstOrDefault();
             var d = wmsoutbound.TOutPickDs.Where(x => x.HId == id).GroupBy(x => new { x.Barcode, x.BinCode })
-            .Select(x => new VPickDetail
+            .Select(x => new SkuBinCodeQty
             {
                 BinCode = x.Key.BinCode,
-                Barcode = x.Key.Barcode,
+                Sku = x.Key.Barcode,
                 Qty = x.Sum(x => x.Qty)
             }).ToList();
 

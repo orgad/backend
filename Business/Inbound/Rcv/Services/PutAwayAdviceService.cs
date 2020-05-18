@@ -52,7 +52,7 @@ namespace dotnet_wms_ef.Inbound.Services
                        Qty = y.Sum(x => x.Qty)
                    }).ToList();
             o.Code = wmsinbound.TInPutaways.Where(x => x.InboundId == inboundId).Select(x => x.Code).FirstOrDefault();
-            o.details = list;
+            o.DetailList = list;
             return o;
         }
     }

@@ -52,8 +52,12 @@ namespace dotnet_wms_ef.Basic.Services
         public bool UpdateTmplData(long id, string encryData)
         {
             var tmplData = wmsbasic.TTmplPrintDs.Where(x => x.Id == id).FirstOrDefault();
-            tmplData.TmplData = encryData;
-            return wmsbasic.SaveChanges() > 0;
+            if (tmplData != null)
+            {
+                tmplData.TmplData = encryData;
+                return wmsbasic.SaveChanges() > 0;
+            }
+            else return false;
         }
 
         public string[] TmplData(QueryTmpl query)

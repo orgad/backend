@@ -249,5 +249,25 @@ namespace dotnet_wms_ef.Outbound.Services
             return new VPickDataSource { Code = o.Code, DetailList = d };
         }
 
+        public VPickDataSource[] PrintDataSource(long[] ids)
+        {
+            var o = wmsoutbound.TOutPicks.Where(x => ids.Contains(x.Id)).ToList();
+            var d = wmsoutbound.TOutPickDs.Where(x => ids.Contains(x.HId)).GroupBy(x => new { x.HId, x.Barcode, x.BinCode })
+            .Select(x => new SkuBinCodeQty
+            {
+                Id = x.Key.HId,
+                BinCode = x.Key.BinCode,
+                Sku = x.Key.Barcode,
+                Qty = x.Sum(x => x.Qty)
+            }).ToList();
+
+            var list = new List<VPickDataSource>();
+            foreach (var v in o)
+            {
+               list.Add(new VPickDataSource { Code = v.Code, DetailList = d.Where(x => x.Id == v.Id).ToList() });
+            }
+            return list.ToArray();
+        }
+
     }
 }

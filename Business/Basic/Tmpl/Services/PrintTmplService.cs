@@ -30,7 +30,7 @@ namespace dotnet_wms_ef.Basic.Services
                         CustId = st.CustId,
                         BrandId = st.BrandId,
                         TypeCode = tmpl.TypeCode,
-                        SubTypeCode = tmpl.TypeCode
+                        SubTypeCode = tmpl.SubTypeCode
                     };
             return o as IQueryable<VTmpl>;
         }

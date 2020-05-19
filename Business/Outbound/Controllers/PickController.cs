@@ -12,7 +12,6 @@ namespace dotnet_wms_ef.Outbound.Controllers
     public class PickController : ApiController
     {
         PickService pickService = new PickService();
-
         RecheckService recheckService = new RecheckService();
 
         [Route("list")]
@@ -54,6 +53,14 @@ namespace dotnet_wms_ef.Outbound.Controllers
         public JsonResult Print([FromUri] long id)
         {
             var result = pickService.PrintDataSource(id);
+            return new JsonResult(result);
+        }
+
+        [Route("print")]
+        [HttpPut]
+        public JsonResult Prints([FromBody] long[] ids)
+        {
+            var result = pickService.PrintDataSource(ids);
             return new JsonResult(result);
         }
     }

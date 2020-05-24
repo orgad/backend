@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using dotnet_wms_ef.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace dotnet_wms_ef.Models
+namespace dotnet_wms_ef.Product.Models
 {
     public partial class wmsproductContext : DbContext
     {
@@ -17,6 +18,7 @@ namespace dotnet_wms_ef.Models
         public virtual DbSet<TProdCatalog> TProdCatalogs { get; set; }
         public virtual DbSet<TProdProduct> TProdProducts { get; set; }
         public virtual DbSet<TProdSku> TProdSkus { get; set; }
+        public virtual DbSet<TProdMat> TProdMats { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -36,7 +38,7 @@ namespace dotnet_wms_ef.Models
             modelBuilder.ApplyConfiguration(new TProdProductMapping());
             modelBuilder.ApplyConfiguration(new TProdSkuMapping());
             modelBuilder.ApplyConfiguration(new TProdBarcodeMapping());
-
+            modelBuilder.ApplyConfiguration(new TProdMatMapping());
             OnModelCreatingPartial(modelBuilder);
         }
 

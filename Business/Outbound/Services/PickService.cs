@@ -4,6 +4,7 @@ using System.Linq;
 using dotnet_wms_ef.Models;
 using dotnet_wms_ef.Outbound.Models;
 using dotnet_wms_ef.Outbound.ViewModels;
+using dotnet_wms_ef.Product.Services;
 using dotnet_wms_ef.Services;
 using dotnet_wms_ef.ViewModels;
 using Microsoft.EntityFrameworkCore.Storage;

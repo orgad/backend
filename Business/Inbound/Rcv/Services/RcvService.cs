@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using dotnet_wms_ef.Inbound.Models;
 using dotnet_wms_ef.Inbound.ViewModels;
-using dotnet_wms_ef.Models;
-using dotnet_wms_ef.Services;
-using dotnet_wms_ef.ViewModels;
+using dotnet_wms_ef.Product.Models;
+using dotnet_wms_ef.Product.Services;
 
 namespace dotnet_wms_ef.Inbound.Services
 {

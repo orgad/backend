@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using dotnet_wms_ef.Models;
+using dotnet_wms_ef.Product.Models;
 
-namespace dotnet_wms_ef.Services
+namespace dotnet_wms_ef.Product.Services
 {
     public class CatalogService
     {

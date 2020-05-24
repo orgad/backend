@@ -4,20 +4,20 @@ using dotnet_wms_ef.ViewModels;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
-namespace dotnet_wms_ef.Controllers
+namespace dotnet_wms_ef.Product.Controllers
 {
-    [Route("/api/prod/sku/")]
+    [Route("/api/prod/mat/")]
     [EnableCors("any")]
-    public class SkuController : ApiController
+    public class MaterialController : ApiController
     {
-        SkuService skuService = new SkuService();
+        MaterialService matService = new MaterialService();
 
         [HttpGet]
         [Route("list")]
         public JsonResult List(int page)
         {
-            var list = skuService.PageList(page);
-            var totalCount = skuService.TotalCount();
+            var list = matService.PageList(page);
+            var totalCount = matService.TotalCount();
             var response = new JsonResult(
                 new SingleResponse
                 {
@@ -29,12 +29,5 @@ namespace dotnet_wms_ef.Controllers
             return response;
         }
 
-        [Route("create")]
-        [HttpPost]
-        public JsonResult Create([FromBody]VSkuAddForm sku)
-        {
-            var result = skuService.Create(sku);
-            return new JsonResult(result);
-        }
     }
 }

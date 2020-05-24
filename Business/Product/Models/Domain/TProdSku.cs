@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace dotnet_wms_ef.Models
+namespace dotnet_wms_ef.Product.Models
 {
     public partial class TProdSku
     {

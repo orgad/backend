@@ -1,5 +1,5 @@
 using System.Web.Http;
-using dotnet_wms_ef.Services;
+using dotnet_wms_ef.Product.Services;
 using dotnet_wms_ef.ViewModels;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;

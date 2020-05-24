@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace dotnet_wms_ef.Models
+namespace dotnet_wms_ef.Product.Models
 {
     public class TProdSkuMapping:IEntityTypeConfiguration<TProdSku>
     {

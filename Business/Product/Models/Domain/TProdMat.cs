@@ -12,14 +12,14 @@ namespace dotnet_wms_ef.Product.Models
         public string CatLvl_2 { get; set; }
         public string CatLvl_3 { get; set; }
         public string Spec { get; set; }
-        public string X { get; set; }
+        public decimal X { get; set; }
         public string XUnit { get; set; }
-        public string Y { get; set; }
+        public decimal Y { get; set; }
         public string YUnit { get; set; }
-        public string Z { get; set; }
+        public decimal Z { get; set; }
         public string ZUnit { get; set; }
         public string PUom { get; set; }
-        public string PToA { get; set; }
+        public decimal PToA { get; set; }
         public string AUom { get; set; }
         public string Comment { get; set; }
         public bool IsDeleted { get; set; }

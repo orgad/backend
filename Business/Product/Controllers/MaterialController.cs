@@ -1,5 +1,6 @@
 using System.Web.Http;
 using dotnet_wms_ef.Product.Services;
+using dotnet_wms_ef.Product.ViewModels;
 using dotnet_wms_ef.ViewModels;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,14 @@ namespace dotnet_wms_ef.Product.Controllers
                 );
 
             return response;
+        }
+
+        [HttpPost]
+        [Route("create")]
+        public JsonResult Create([FromBody]VMatAddForm vMat)
+        {
+            var result = matService.Create(vMat);
+            return new JsonResult(result);
         }
 
     }

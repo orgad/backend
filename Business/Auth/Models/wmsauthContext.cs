@@ -1,7 +1,5 @@
-﻿using System;
-using dotnet_wms_ef.Models;
+﻿using dotnet_wms_ef.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace dotnet_wms_ef.Auth.Models
 {

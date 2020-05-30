@@ -45,15 +45,15 @@ namespace dotnet_wms_ef.Outbound.Services
 
             tOut.DetailList = wmsoutbound.TOutDs.Where(x => x.HId == tOut.Id).ToList();
 
-            var alotDetailList = (from detail in wmsoutbound.TOutAlotDs
-                                  join alot in wmsoutbound.TOutAlots on detail.HId equals alot.Id
-                                  where alot.OutboundId == tOut.Id
+            var allotDetailList = (from detail in wmsoutbound.TOutAllotDs
+                                  join allot in wmsoutbound.TOutAllots on detail.HId equals allot.Id
+                                  where allot.OutboundId == tOut.Id
                                   select detail)
                                  .ToList();
 
             var detaiList = tOut.DetailList;
 
-            foreach (var detail in alotDetailList)
+            foreach (var detail in allotDetailList)
             {
                 for (int i = 0; i < detail.MatchingQty; i++)
                 {

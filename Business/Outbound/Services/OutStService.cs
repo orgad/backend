@@ -32,7 +32,7 @@ namespace dotnet_wms_ef.Outbound.Services
         {
             var st = wmsoutbound.TSts.Where(x => x.Id == id).FirstOrDefault();
             var stds = wmsoutbound.TStDs.Where(x => x.HId == id).ToList();
-            var stalot = wmsoutbound.TStAllots.Where(x => x.HId == id).ToList();
+            var stallot = wmsoutbound.TStAllots.Where(x => x.HId == id).ToList();
             var stwave = wmsoutbound.TStWaves.Where(x => x.HId == id).ToList();
             var stpick = wmsoutbound.TStPicks.Where(x => x.HId == id).FirstOrDefault();
             var stdelivery = wmsoutbound.TStDelivery.Where(x => x.HId == id).FirstOrDefault();
@@ -41,7 +41,7 @@ namespace dotnet_wms_ef.Outbound.Services
             {
                 TOutSt = st,
                 TOutStDs = stds.ToArray(),
-                TOutStAlots = stalot.ToArray(),
+                TOutStAllots = stallot.ToArray(),
                 TOutStDelivery = stdelivery,
                 TOutStWaves = stwave.ToArray(),
                 TOutStPick = stpick,

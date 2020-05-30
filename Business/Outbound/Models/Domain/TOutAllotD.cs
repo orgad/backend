@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 
 namespace dotnet_wms_ef.Outbound.Models
 {
-    public partial class TOutAlotD
+    public partial class TOutAllotD
     {
         public long Id { get; set; }
         public long HId { get; set; }
@@ -25,6 +25,6 @@ namespace dotnet_wms_ef.Outbound.Models
         public DateTime? LastModifiedTime { get; set; }
         
         [IgnoreDataMember]
-        public virtual TOutAlot TOutAlot{get;set;}
+        public virtual TOutAllot TOutAllot{get;set;}
     }
 }

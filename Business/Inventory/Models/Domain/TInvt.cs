@@ -16,7 +16,7 @@ namespace dotnet_wms_ef.Models
         public string Barcode { get; set; }
         public int Qty { get; set; }
         public decimal? Weight { get; set; }
-        public int AlotQty { get; set; }
+        public int AllotQty { get; set; }
         public int LockedQty { get; set; }
         public string Other01 { get; set; }
         public string Other02 { get; set; }

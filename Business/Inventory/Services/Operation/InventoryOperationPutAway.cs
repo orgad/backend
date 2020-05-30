@@ -19,7 +19,7 @@ namespace dotnet_wms_ef.Services
             {
                 //找到收货区库存
                 var invts = wmsinventory.TInvtDs.Where(x => x.SkuId == toInvt.Key && x.BinId == bin.Item3
-                            && x.Qty - x.AlotQty - x.LockedQty > 0).ToList();
+                            && x.Qty - x.AllotQty - x.LockedQty > 0).ToList();
 
                 //开始上架: 增加目的货位的库存，减少收货区货位的库存
                 var psBysku = ps.Where(x => x.SkuId == toInvt.Key).ToArray();

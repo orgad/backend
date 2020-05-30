@@ -13,14 +13,14 @@ namespace dotnet_wms_ef.Services
         {
             //首先查询库存,然后循环扣减
             var invts = wmsinventory.TInvtDs.Where(x => x.ZoneId == vData.ZoneId && x.BinId == vData.BinId
-                && x.SkuId == vData.SkuId && x.Qty - x.AlotQty - x.LockedQty > 0).ToList();
+                && x.SkuId == vData.SkuId && x.Qty - x.AllotQty - x.LockedQty > 0).ToList();
 
             var totalQty = vData.Qty;
             foreach (var invt in invts)
             {
                 if (totalQty > 0)
                 {
-                    var canQty = invt.Qty - invt.AlotQty - invt.LockedQty;
+                    var canQty = invt.Qty - invt.AllotQty - invt.LockedQty;
                     if (canQty >= totalQty)
                     {
                         invt.LockedQty += totalQty;
@@ -43,7 +43,7 @@ namespace dotnet_wms_ef.Services
             //首先查询库存,然后循环扣减
             var invts = wmsinventory.TInvtDs
                 .Where(x => x.ZoneId == fromData.ZoneId && x.BinId == fromData.BinId
-                && x.SkuId == fromData.SkuId && x.Qty - x.AlotQty - x.LockedQty > 0 && x.LockedQty > 0)
+                && x.SkuId == fromData.SkuId && x.Qty - x.AllotQty - x.LockedQty > 0 && x.LockedQty > 0)
                 .ToList();
 
             var totalQty = fromData.Qty;

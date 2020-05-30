@@ -38,11 +38,11 @@ namespace dotnet_wms_ef.Outbound.Controllers
             return new JsonResult(r);
         }
 
-        [Route("alot")]
+        [Route("allot")]
         [HttpPut]
-        public JsonResult Alot([FromBody] long[] ids)
+        public JsonResult Allot([FromBody] long[] ids)
         {
-            var r = outboundService.Alots(ids);
+            var r = outboundService.Allots(ids);
             return new JsonResult(r);
         }
 

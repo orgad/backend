@@ -19,7 +19,7 @@ namespace dotnet_wms_ef.Models
         public string BinCode { get; set; }
         public int Qty { get; set; }
         public decimal? Weight { get; set; }
-        public int AlotQty { get; set; }
+        public int AllotQty { get; set; }
         public int LockedQty { get; set; }
         public string LotKey { get; set; }
         public string Other01 { get; set; }

@@ -10,7 +10,7 @@ namespace dotnet_wms_ef.Outbound.ViewModels
 
         public TStDelivery TOutStDelivery { get; set; }
 
-        public TStAllot[] TOutStAlots { get; set; }
+        public TStAllot[] TOutStAllots { get; set; }
 
         public TStWave[] TOutStWaves { get; set; }
 

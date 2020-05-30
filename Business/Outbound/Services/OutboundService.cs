@@ -14,7 +14,7 @@ namespace dotnet_wms_ef.Outbound.Services
 
         InventoryService inventoryService = new InventoryService();
 
-        AlotService alotService = new AlotService();
+        AllotService allotService = new AllotService();
 
         PickService pickService = new PickService();
 
@@ -136,7 +136,7 @@ namespace dotnet_wms_ef.Outbound.Services
             return outbound;
         }
 
-        public List<Tuple<bool, long, string>> Alots(long[] ids)
+        public List<Tuple<bool, long, string>> Allots(long[] ids)
         {
             var list = new List<Tuple<bool, long, string>>();
             var outbounds = wmsoutbound.TOuts.Where(x => !x.IsCancel && x.AllotStatus < 2 && ids.Contains(x.Id)).ToList();
@@ -154,27 +154,27 @@ namespace dotnet_wms_ef.Outbound.Services
             {
                 // 获取出库明细
                 if (outbound == null) throw new Exception("outboud is not exist.");
-                list.Add(this.Alot(outbound));
+                list.Add(this.Allot(outbound));
             }
             return list;
         }
-        private Tuple<bool, long, string> Alot(TOut outbound)
+        private Tuple<bool, long, string> Allot(TOut outbound)
         {
             var detailList = wmsoutbound.TOutDs.Where(x => x.HId == outbound.Id).ToArray();
 
             // 获取分配结果,更新库存记录
             // 支持二次分配, 剩余未分配数 = 期望出库数 - 已分配数
-            var alotList = inventoryService.Alot(outbound.WhId, detailList);
+            var allotList = inventoryService.Allot(outbound.WhId, detailList);
 
             // 生成分配记录
-            var r = alotService.Create(outbound.WhId, outbound.Id, outbound.Code, detailList, alotList);
-            wmsoutbound.TOutAlots.Add(r);
+            var r = allotService.Create(outbound.WhId, outbound.Id, outbound.Code, detailList, allotList);
+            wmsoutbound.TOutAllots.Add(r);
 
             //更新出库明细
             //支持二次分配,分配数量进行累加
             foreach (var detail in detailList)
             {
-                detail.MatchingQty += alotList.Where(x => x.SkuId == detail.SkuId).Sum(X => X.AlotQty);
+                detail.MatchingQty += allotList.Where(x => x.SkuId == detail.SkuId).Sum(X => X.AllotQty);
             }
 
             //更新单据状态

@@ -13,8 +13,8 @@ namespace dotnet_wms_ef.Models
                     .HasColumnName("id")
                     .HasComment("主键");
 
-                entity.Property(e => e.AlotQty)
-                    .HasColumnName("alot_qty")
+                entity.Property(e => e.AllotQty)
+                    .HasColumnName("allot_qty")
                     .HasDefaultValueSql("'0'")
                     .HasComment("分配数量");
 

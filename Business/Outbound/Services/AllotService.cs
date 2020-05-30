@@ -9,7 +9,7 @@ using dotnet_wms_ef.Outbound.ViewModels;
 
 namespace dotnet_wms_ef.Outbound.Services
 {
-    public class AlotService
+    public class AllotService
     {
         wmsoutboundContext wmsoutbound = new wmsoutboundContext();
 
@@ -18,9 +18,9 @@ namespace dotnet_wms_ef.Outbound.Services
             wmsoutbound.Database.UseTransaction(transaction.GetDbTransaction());
         }
 
-        public TOutAlot Create(int whId, long outboundId, string outboundCode, TOutD[] outds, TInvtD[] alots)
+        public TOutAllot Create(int whId, long outboundId, string outboundCode, TOutD[] outds, TInvtD[] allots)
         {
-            var alot = new TOutAlot
+            var allot = new TOutAllot
             {
                 Code = "ALT" + DateTime.Now.ToString(FormatString.DefaultFormat),
                 WhId = whId,
@@ -30,9 +30,9 @@ namespace dotnet_wms_ef.Outbound.Services
                 CreatedTime = DateTime.UtcNow,
             };
 
-            foreach (var detail in alots)
+            foreach (var detail in allots)
             {
-                var alotDetail = new TOutAlotD
+                var allotDetail = new TOutAllotD
                 {
                     Product = "",
                     SkuId = detail.SkuId,
@@ -44,18 +44,18 @@ namespace dotnet_wms_ef.Outbound.Services
                     BinId = detail.BinId,
                     BinCode = detail.BinCode,
                     Qty = detail.Qty,
-                    MatchingQty = detail.AlotQty,
+                    MatchingQty = detail.AllotQty,
                     CreatedBy = DefaultUser.UserName,
                     CreatedTime = DateTime.UtcNow
                 };
 
-                alot.DetailList.Add(alotDetail);
+                allot.DetailList.Add(allotDetail);
             }
 
-            return alot;
+            return allot;
         }
 
-        public List<TOutAlot> PageList()
+        public List<TOutAllot> PageList()
         {
             return this.Query().OrderByDescending(x => x.Id).ToList();
         }
@@ -65,18 +65,18 @@ namespace dotnet_wms_ef.Outbound.Services
             return this.Query().Count();
         }
 
-        private IQueryable<TOutAlot> Query()
+        private IQueryable<TOutAllot> Query()
         {
-            var query = wmsoutbound.TOutAlots;
+            var query = wmsoutbound.TOutAllots;
             return query;
         }
 
-        public VAlotDetails Details(long id)
+        public VAllotDetails Details(long id)
         {
-            var o = wmsoutbound.TOutAlots.Where(x => x.Id == id).FirstOrDefault();
-            var detailList = wmsoutbound.TOutAlotDs.Where(x => x.HId == id).ToArray();
+            var o = wmsoutbound.TOutAllots.Where(x => x.Id == id).FirstOrDefault();
+            var detailList = wmsoutbound.TOutAllotDs.Where(x => x.HId == id).ToArray();
 
-            return new VAlotDetails { Alot = o, DetailList = detailList };
+            return new VAllotDetails { Allot = o, DetailList = detailList };
         }
 
     }

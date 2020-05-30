@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace dotnet_wms_ef.Outbound.Models
 {
-    public class TOutAlotDMapping : IEntityTypeConfiguration<TOutAlotD>
+    public class TOutAllotDMapping : IEntityTypeConfiguration<TOutAllotD>
     {
-        public void Configure(EntityTypeBuilder<TOutAlotD> entity)
+        public void Configure(EntityTypeBuilder<TOutAllotD> entity)
         {
-            entity.ToTable("t_out_alot_d");
+            entity.ToTable("t_out_allot_d");
 
             entity.Property(e => e.Id)
                 .HasColumnName("id")
@@ -117,7 +117,7 @@ namespace dotnet_wms_ef.Outbound.Models
                 .HasColumnType("int(11)")
                 .HasComment("货区ID");
 
-            entity.HasOne(d => d.TOutAlot)
+            entity.HasOne(d => d.TOutAllot)
                   .WithMany(p => p.DetailList)
                   .HasForeignKey(d => d.HId);
         }

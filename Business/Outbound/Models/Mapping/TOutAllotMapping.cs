@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace dotnet_wms_ef.Outbound.Models
 {
-    public class TOutAlotMapping : IEntityTypeConfiguration<TOutAlot>
+    public class TOutAllotMapping : IEntityTypeConfiguration<TOutAllot>
     {
-         public void Configure(EntityTypeBuilder<TOutAlot> entity)
+         public void Configure(EntityTypeBuilder<TOutAllot> entity)
          {
-             entity.ToTable("t_out_alot");
+             entity.ToTable("t_out_allot");
 
                 entity.Property(e => e.Id)
                     .HasColumnName("id")

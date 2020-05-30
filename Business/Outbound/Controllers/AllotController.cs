@@ -6,11 +6,11 @@ using dotnet_wms_ef.Outbound.Services;
 
 namespace dotnet_wms_ef.Outbound.Controllers
 {
-    [Route("/api/out/alot/")]
+    [Route("/api/out/allot/")]
     [EnableCors("any")]
-    public class AlotController : ApiController
+    public class AllotController : ApiController
     {
-        AlotService alotService = new AlotService();
+        AllotService allotService = new AllotService();
 
         [Route("list")]
         [HttpGet]
@@ -18,8 +18,8 @@ namespace dotnet_wms_ef.Outbound.Controllers
         {
             return new JsonResult(new SingleResponse
             {
-                TotalCount = alotService.TotalCount(),
-                Data = alotService.PageList()
+                TotalCount = allotService.TotalCount(),
+                Data = allotService.PageList()
             });
         }
 
@@ -27,7 +27,7 @@ namespace dotnet_wms_ef.Outbound.Controllers
         [HttpGet]
         public JsonResult Details([FromUri]long id)
         {
-            var result = alotService.Details(id);
+            var result = allotService.Details(id);
             return new JsonResult(result);
         }
     }

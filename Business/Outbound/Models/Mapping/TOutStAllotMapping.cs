@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace dotnet_wms_ef.Outbound.Models
 {
-    public class TOutStAlotMapping : IEntityTypeConfiguration<TStAllot>
+    public class TOutStAllotMapping : IEntityTypeConfiguration<TStAllot>
     {
         public void Configure(EntityTypeBuilder<TStAllot> entity)
         {

@@ -50,7 +50,7 @@ namespace dotnet_wms_ef.Services
         {
             foreach (var invtd in invtds)
             {
-                var canQty = invtd.Qty - invtd.AlotQty - invtd.LockedQty;
+                var canQty = invtd.Qty - invtd.AllotQty - invtd.LockedQty;
 
                 if (totalQty > 0 && canQty > 0)
                 {

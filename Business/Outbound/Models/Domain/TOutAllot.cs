@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace dotnet_wms_ef.Outbound.Models
 {
-    public partial class TOutAlot
+    public partial class TOutAllot
     {
-        public TOutAlot()
+        public TOutAllot()
         {
-            this.DetailList = new HashSet<TOutAlotD>();
+            this.DetailList = new HashSet<TOutAllotD>();
         }
 
         public long Id { get; set; }
@@ -21,6 +21,6 @@ namespace dotnet_wms_ef.Outbound.Models
         public string LastModifiedBy { get; set; }
         public DateTime? LastModifiedTime { get; set; }
 
-        public virtual ICollection<TOutAlotD> DetailList { get; set; }
+        public virtual ICollection<TOutAllotD> DetailList { get; set; }
     }
 }

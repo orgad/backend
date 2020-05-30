@@ -16,8 +16,8 @@ namespace dotnet_wms_ef.Outbound.Models
 
         public virtual DbSet<TOut> TOuts { get; set; }
         public virtual DbSet<TOutAddress> TOutAddress { get; set; }
-        public virtual DbSet<TOutAlot> TOutAlots { get; set; }
-        public virtual DbSet<TOutAlotD> TOutAlotDs { get; set; }
+        public virtual DbSet<TOutAllot> TOutAllots { get; set; }
+        public virtual DbSet<TOutAllotD> TOutAllotDs { get; set; }
         public virtual DbSet<TOutCheck> TOutChecks { get; set; }
         public virtual DbSet<TOutCheckD> TOutCheckDs { get; set; }
         public virtual DbSet<TOutD> TOutDs { get; set; }
@@ -56,8 +56,8 @@ namespace dotnet_wms_ef.Outbound.Models
             modelBuilder.ApplyConfiguration(new TOutDMapping());
             modelBuilder.ApplyConfiguration(new TOutAddressMapping());
 
-            modelBuilder.ApplyConfiguration(new TOutAlotMapping());
-            modelBuilder.ApplyConfiguration(new TOutAlotDMapping());
+            modelBuilder.ApplyConfiguration(new TOutAllotMapping());
+            modelBuilder.ApplyConfiguration(new TOutAllotDMapping());
 
             modelBuilder.ApplyConfiguration(new TOutWaveMapping());
             modelBuilder.ApplyConfiguration(new TOutPickMapping());
@@ -75,7 +75,7 @@ namespace dotnet_wms_ef.Outbound.Models
             modelBuilder.ApplyConfiguration(new TOutStOptMapping());
             modelBuilder.ApplyConfiguration(new TOutStDMapping());
             modelBuilder.ApplyConfiguration(new TOutStDeliveryMapping());
-            modelBuilder.ApplyConfiguration(new TOutStAlotMapping());
+            modelBuilder.ApplyConfiguration(new TOutStAllotMapping());
             modelBuilder.ApplyConfiguration(new TOutStPickMapping());
             modelBuilder.ApplyConfiguration(new TOutStWaveMapping());
 

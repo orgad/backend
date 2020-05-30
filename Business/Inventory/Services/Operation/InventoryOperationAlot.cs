@@ -8,9 +8,9 @@ namespace dotnet_wms_ef.Services
 {
     public partial class InventoryService
     {
-        public TInvtD[] Alot(int whId, TOutD[] singleOutdetails)
+        public TInvtD[] Allot(int whId, TOutD[] singleOutdetails)
         {
-            var alotInvts = new List<TInvtD>();
+            var allotInvts = new List<TInvtD>();
             var groups = singleOutdetails.GroupBy(x => x.SkuId);
 
             //按照sku进行分组,获得分配的库存返回值
@@ -18,18 +18,18 @@ namespace dotnet_wms_ef.Services
             {
                 var singleSkuDetails = singleOutdetails.Where(x => x.SkuId == group.Key).ToList();
                 //按单个sku进行库存分配
-                var r = AlotBySku(group.Key, singleSkuDetails.ToArray());
+                var r = AllotBySku(group.Key, singleSkuDetails.ToArray());
                 if (r != null && r.Any())
-                    alotInvts.AddRange(r);
+                    allotInvts.AddRange(r);
             }
 
             wmsinventory.SaveChanges();
 
-            return alotInvts.ToArray();
+            return allotInvts.ToArray();
         }
-        private TInvtD[] AlotBySku(long skuId, TOutD[] singleSkuDetails)
+        private TInvtD[] AllotBySku(long skuId, TOutD[] singleSkuDetails)
         {
-            var alotInvts = new List<TInvtD>();
+            var allotInvts = new List<TInvtD>();
 
             //找到某一个sku 的库存记录
             var o = wmsinventory.TInvts.Where(x => x.SkuId == skuId).FirstOrDefault();
@@ -39,7 +39,7 @@ namespace dotnet_wms_ef.Services
                 throw new Exception("inventory is not exists.");
             }
 
-            var leaveInvtQty = o.Qty - o.AlotQty - o.LockedQty;
+            var leaveInvtQty = o.Qty - o.AllotQty - o.LockedQty;
 
             var totalQty = singleSkuDetails.Sum(x => x.Qty - x.MatchingQty ?? 0);
 
@@ -51,12 +51,12 @@ namespace dotnet_wms_ef.Services
             else if (leaveInvtQty >= totalQty)
             {
                 //库存够分配的情况
-                o.AlotQty += totalQty;
+                o.AllotQty += totalQty;
             }
             else
             {
                 //库存部分分配的情况
-                o.AlotQty += leaveInvtQty;
+                o.AllotQty += leaveInvtQty;
             }
 
             // 处理明细信息
@@ -64,20 +64,20 @@ namespace dotnet_wms_ef.Services
             {
                 //返回库存明细信息
                 var skuQty = detail.Qty;
-                var invtDs = wmsinventory.TInvtDs.Where(x => x.SkuId == detail.SkuId && x.Qty - x.AlotQty - x.LockedQty > 0)
+                var invtDs = wmsinventory.TInvtDs.Where(x => x.SkuId == detail.SkuId && x.Qty - x.AllotQty - x.LockedQty > 0)
                             .ToList();
                 if (invtDs.Any())
                 {
                     if (skuQty > 0)
                     {
-                        alotInvts.AddRange(AddAlotQty(skuQty, invtDs));
+                        allotInvts.AddRange(AddAllotQty(skuQty, invtDs));
                     }
                 }
             }
 
-            return alotInvts.ToArray();
+            return allotInvts.ToArray();
         }
-        private List<TInvtD> AddAlotQty(int skuQty, List<TInvtD> invtds)
+        private List<TInvtD> AddAllotQty(int skuQty, List<TInvtD> invtds)
         {
             var list = new List<TInvtD>();
 
@@ -93,27 +93,27 @@ namespace dotnet_wms_ef.Services
                     Sku = invtd.Sku,
                     Barcode = invtd.Barcode,
                     Qty = allQty,
-                    AlotQty = 0,
+                    AllotQty = 0,
                     ZoneId = invtd.ZoneId,
                     ZoneCode = invtd.ZoneCode,
                     BinId = invtd.BinId,
                     BinCode = invtd.BinCode,
                 };
 
-                var canQty = invtd.Qty - invtd.AlotQty - invtd.LockedQty;
+                var canQty = invtd.Qty - invtd.AllotQty - invtd.LockedQty;
                 if (canQty >= skuQty)
                 {
-                    invtd.AlotQty += skuQty;
-                    newInvtD.AlotQty = skuQty;
+                    invtd.AllotQty += skuQty;
+                    newInvtD.AllotQty = skuQty;
                     list.Add(newInvtD);
                     break;
                 }
                 else
                 {
                     //循环分配的情况
-                    invtd.AlotQty += canQty;
+                    invtd.AllotQty += canQty;
                     skuQty -= canQty;
-                    newInvtD.AlotQty = canQty;
+                    newInvtD.AllotQty = canQty;
                     list.Add(newInvtD);
                 }
             }

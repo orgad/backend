@@ -34,6 +34,8 @@ namespace dotnet_wms_ef.Models
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
 
+                entity.Property(e=>e.Address).HasColumnName("address");
+
                 entity.Property(e => e.CreatedBy)
                     .IsRequired()
                     .HasColumnName("created_by")

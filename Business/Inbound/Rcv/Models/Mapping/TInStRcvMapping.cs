@@ -13,6 +13,8 @@ namespace dotnet_wms_ef.Inbound.Models
                     .HasColumnName("id")
                     .HasColumnType("int(11)");
 
+                entity.Property(e=>e.ScanTypeCode).HasColumnName("scan_type_code");
+
                 entity.Property(e => e.AllowBlind)
                     .HasColumnName("allow_blind")
                     .HasColumnType("bit(1)");

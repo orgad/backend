@@ -13,6 +13,8 @@ namespace dotnet_wms_ef.Models
                     .HasColumnName("id")
                     .HasColumnType("int(11)")
                     .HasComment("编号");
+                
+                entity.Property(e=>e.TypeCode).HasColumnName("type_code");
 
                 entity.Property(e => e.Address)
                     .HasColumnName("address")

@@ -18,6 +18,8 @@ namespace dotnet_wms_ef.Outbound.Models
                 .HasColumnName("actual_at")
                 .HasColumnType("datetime")
                 .HasComment("实际出库日期");
+            
+            entity.Property(e=>e.PlaceNo).HasColumnName("place_no");
 
             entity.Property(e => e.AllotStatus)
                 .HasColumnName("allot_status")

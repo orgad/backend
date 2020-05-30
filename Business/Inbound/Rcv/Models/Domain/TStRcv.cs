@@ -6,6 +6,7 @@ namespace dotnet_wms_ef.Inbound.Models
     {
         public int Id { get; set; }
         public int HId { get; set; }
+        public string ScanTypeCode{get;set;}
         public bool AllowOut { get; set; }
         public decimal OutRate { get; set; }
         public bool AllowBlind { get; set; }

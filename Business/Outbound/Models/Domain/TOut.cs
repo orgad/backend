@@ -15,6 +15,9 @@ namespace dotnet_wms_ef.Outbound.Models
         public string BatchNo { get; set; }
         public string RefNo { get; set; }
         public int WhId { get; set; }
+        public int CustId { get; set; }
+        public int? BrandId { get; set; }
+        public string PlaceNo{get;set;}
         public long? AsnId { get; set; }
         public long DnId { get; set; }
         public string DnCode { get; set; }
@@ -23,8 +26,6 @@ namespace dotnet_wms_ef.Outbound.Models
         public string TransCode { get; set; }
         public string TypeCode { get; set; }
         public string SrcCode { get; set; }
-        public int CustId { get; set; }
-        public int? BrandId { get; set; }
         public string Store { get; set; }
         public int CartonQty { get; set; }
         public int Qty { get; set; }

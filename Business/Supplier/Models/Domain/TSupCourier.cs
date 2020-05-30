@@ -6,6 +6,7 @@ namespace dotnet_wms_ef.Models
     {
         public int Id { get; set; }
         public string Code { get; set; }
+        public string TypeCode { get; set; }
         public string Name { get; set; }
         public string NameCn { get; set; }
         public string Contact { get; set; }

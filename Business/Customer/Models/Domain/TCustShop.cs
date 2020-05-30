@@ -13,6 +13,7 @@ namespace dotnet_wms_ef.Models
         public string Contact { get; set; }
         public string Tel { get; set; }
         public string Mobile { get; set; }
+        public string Address{get;set;}
         public string CreatedBy { get; set; }
         public DateTime CreatedTime { get; set; }
         public string LastModifiedBy { get; set; }

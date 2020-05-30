@@ -6,6 +6,7 @@ namespace dotnet_wms_ef.Inbound.Models
     {
         public int Id { get; set; }
         public int HId { get; set; }
+        public string ScanTypeCode{get;set;}
         public string TypeCode { get; set; }
         public bool IsDiffRetailECom { get; set; }
         public bool IsDeleted { get; set; }

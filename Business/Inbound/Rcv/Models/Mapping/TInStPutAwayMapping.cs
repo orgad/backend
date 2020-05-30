@@ -10,6 +10,7 @@ namespace dotnet_wms_ef.Inbound.Models
             entity.ToTable("t_st_putaway");
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.HId).HasColumnName("st_id");
+            entity.Property(e => e.ScanTypeCode).HasColumnName("scan_type_code");
             entity.Property(e => e.TypeCode).HasColumnName("type_code");
             entity.Property(e => e.IsDiffRetailECom).HasColumnName("is_diff_retail_ecom");
             entity.Property(e => e.IsDeleted).HasColumnName("is_deleted");

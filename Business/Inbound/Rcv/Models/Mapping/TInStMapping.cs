@@ -26,6 +26,9 @@ namespace dotnet_wms_ef.Inbound.Models
                     .HasComment("代码 ")
                     .HasCharSet("utf8mb4")
                     .HasCollation("utf8mb4_0900_ai_ci");
+                
+                entity.Property(e=>e.TypeCode).HasColumnName("type_code");
+                entity.Property(e=>e.BizCode).HasColumnName("biz_code");
 
                 entity.Property(e => e.CreatedBy)
                     .IsRequired()

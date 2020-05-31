@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 using dotnet_wms_ef.Auth.Models;
 using dotnet_wms_ef.Auth.ViewModels;

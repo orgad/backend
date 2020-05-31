@@ -6,11 +6,12 @@ namespace dotnet_wms_ef.Auth.Models
     public partial class TPermRole
     {
         public int Id { get; set; }
-        public string CodeNo { get; set; }
+        public string Code { get; set; }
         public string NameCn { get; set; }
+        public string Comment{get;set;}
         public string CreateBy { get; set; }
-        public DateTime? CreateAt { get; set; }
-        public string UpdateBy { get; set; }
-        public DateTime? UpdateAt { get; set; }
+        public DateTime CreatedTime { get; set; }
+        public string LastModifiedBy { get; set; }
+        public DateTime? LastModifiedTime { get; set; }
     }
 }

@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using dotnet_wms_ef.Auth.Models;
@@ -10,7 +12,32 @@ namespace dotnet_wms_ef.Auth.Services
     {
         wmsauthContext wmsauth = new wmsauthContext();
         RSACSPService rSACSPService = new RSACSPService();
-        public bool Create(VUser user)
+
+        public ICollection<VUser> PagedList()
+        {
+            return wmsauth.TPermUsers
+            .Select(x=>new VUser{
+                Id = x.Id,
+                LoginName = x.LoginName,
+                TypeCode = x.TypeCode,
+                NameCn = x.NameCn,
+                NameEn = x.NameEn,
+                Email = x.Email,
+                ExpireAt = x.ExpireAt,
+                CreatedBy = x.CreatedBy,
+                CreatedTime = x.CreatedTime,
+                LastModifiedBy = x.LastModifiedBy,
+                LastModifiedTime = x.LastModifiedTime
+            })
+            .ToList();
+        }
+
+        public int Total()
+        {
+            return wmsauth.TPermUsers.Count();
+        }
+
+        public bool Create(VLogin user)
         {
             byte[] dataToEncrypt = Encoding.Default.GetBytes(user.Password);
 

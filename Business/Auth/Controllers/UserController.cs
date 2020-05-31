@@ -1,6 +1,7 @@
 using System.Web.Http;
 using dotnet_wms_ef.Auth.Services;
 using dotnet_wms_ef.Auth.ViewModels;
+using dotnet_wms_ef.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace dotnet_wms_ef.Auth.Controllers
@@ -10,8 +11,21 @@ namespace dotnet_wms_ef.Auth.Controllers
     {
         UserService userService = new UserService();
 
+        [HttpGet]
+        [Route("list")]
+        public JsonResult List()
+        {
+            var list = userService.PagedList();
+            var total = userService.Total();
+            return new JsonResult( new SingleResponse{
+               TotalCount = total,
+               Data = list
+            });
+        }
+
         [HttpPost]
-        public JsonResult Create([FromBody]VUser user)
+        [Route("create")]
+        public JsonResult Create([FromBody]VLogin user)
         {
             var result = userService.Create(user);
             return new JsonResult(result);

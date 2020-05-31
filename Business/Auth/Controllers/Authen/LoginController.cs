@@ -13,7 +13,7 @@ namespace dotnet_wms_ef.Auth.Controllers
          //用户登录,成功返回token,失败返回授权错误
          //然后使用token获取权限内容
          LoginService loginService = new LoginService();
-         public JsonResult Login([FromBody] VUser user)
+         public JsonResult Login([FromBody] VLogin user)
          {
              var result = loginService.Auth(user);
              return new JsonResult(result);

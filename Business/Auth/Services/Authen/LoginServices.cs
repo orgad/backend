@@ -16,7 +16,7 @@ namespace dotnet_wms_ef.Auth.Services
         wmsauthContext auth = new wmsauthContext();
 
         //生成Token
-        private string GenerateToken(VUser user, DateTime expires)
+        private string GenerateToken(VLogin user, DateTime expires)
         {
             var handler = new JwtSecurityTokenHandler();
 
@@ -36,7 +36,7 @@ namespace dotnet_wms_ef.Auth.Services
             return handler.WriteToken(securityToken);
         }
 
-        private bool CheckUser(VUser user)
+        private bool CheckUser(VLogin user)
         {
             var isExists = false;
             // 密文 Pwd
@@ -53,7 +53,7 @@ namespace dotnet_wms_ef.Auth.Services
             return isExists;
         }
 
-        public VToken Auth(VUser user)
+        public VToken Auth(VLogin user)
         {
             var exists = this.CheckUser(user);
             if (exists)

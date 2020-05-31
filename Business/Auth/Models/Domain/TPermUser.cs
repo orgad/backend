@@ -7,6 +7,7 @@ namespace dotnet_wms_ef.Auth.Models
     {
         public int Id { get; set; }
         public string LoginName { get; set; }
+        public string TypeCode{get;set;}
         public string Sign { get; set; }
         public string Pwd { get; set; }
         public string NameCn { get; set; }

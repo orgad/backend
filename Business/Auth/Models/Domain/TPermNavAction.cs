@@ -1,14 +1,14 @@
-﻿using System;
+using System;
 
 namespace dotnet_wms_ef.Auth.Models
 {
-    public partial class TPermNav
+    public partial class TPermNavAction
     {
         public int Id { get; set; }
         public string Code { get; set; }
-        public string NameCn { get; set; }
-        public string PCode{get;set;}
-        public string AllPath { get; set; }
+        public string Name { get; set; }
+        public int NavId { get; set; }
+        public string NavCode { get; set; }
         public string Seq { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreatedTime { get; set; }

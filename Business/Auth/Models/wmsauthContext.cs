@@ -15,6 +15,7 @@ namespace dotnet_wms_ef.Auth.Models
         }
 
         public virtual DbSet<TPermNav> TPermNavs { get; set; }
+        public virtual DbSet<TPermNavAction> TPermNavActions { get; set; }
         public virtual DbSet<TPermRole> TPermRoles { get; set; }
         public virtual DbSet<TPermUser> TPermUsers { get; set; }
 
@@ -29,6 +30,7 @@ namespace dotnet_wms_ef.Auth.Models
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfiguration(new TPermNavMapping());
+            modelBuilder.ApplyConfiguration(new TPermNavActionMapping());
             modelBuilder.ApplyConfiguration(new TPermRoleMapping());
             modelBuilder.ApplyConfiguration(new TPermUserMapping());
             OnModelCreatingPartial(modelBuilder);

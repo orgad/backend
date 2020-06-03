@@ -16,5 +16,15 @@ namespace dotnet_wms_ef.Auth.Services
         {
             return wmsauth.TPermRoles.Count();
         }
+
+        public ICollection<TPermBiz> PagedBizList()
+        {
+            return wmsauth.TPermBizs.ToList();
+        }
+
+        public int BizTotal()
+        {
+            return wmsauth.TPermBizs.Count();
+        }
     }
 }

@@ -13,11 +13,23 @@ namespace dotnet_wms_ef.Auth.Controllers
         RoleService roleService = new RoleService();
 
         [HttpGet]
-        [Route("list")]
-        public JsonResult List()
+        [Route("role-list")]
+        public JsonResult RoleList()
         {
             var list = roleService.PagedList();
             var total = roleService.Total();
+            return new JsonResult( new SingleResponse{
+               TotalCount = total,
+               Data = list
+            });
+        }
+
+        [HttpGet]
+        [Route("biz-list")]
+        public JsonResult BizList()
+        {
+            var list = roleService.PagedBizList();
+            var total = roleService.BizTotal();
             return new JsonResult( new SingleResponse{
                TotalCount = total,
                Data = list

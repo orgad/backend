@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace dotnet_wms_ef.Auth.Models
 {

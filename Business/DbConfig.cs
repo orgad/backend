@@ -1,3 +1,7 @@
+using System.Xml.Linq;
+using System.IO;
+using System;
+
 namespace dotnet_wms_ef.Models
 {
     public class DbConfig
@@ -12,7 +16,7 @@ namespace dotnet_wms_ef.Models
 
         private static string password = "8888";
 
-        private static string pre = "wms_";
+        private static string pre { get { return Pre(); } }
 
         private static string formatString = "server={0};port={1};database={2};user={3};password={4}";
 
@@ -25,7 +29,7 @@ namespace dotnet_wms_ef.Models
         {
             get { return string.Format(formatString, server, port, pre + "basic", user, password); }
         }
-        
+
         public static string InboundDb
         {
             get { return string.Format(formatString, server, port, pre + "inbound", user, password); }
@@ -64,6 +68,18 @@ namespace dotnet_wms_ef.Models
         public static string StockDb
         {
             get { return string.Format(formatString, server, port, pre + "stock", user, password); }
+        }
+
+        public static string Pre()
+        {
+            string pre = "db";
+            var fileName = AppDomain.CurrentDomain.BaseDirectory+"\\config.xml";
+            if (File.Exists(fileName))
+            {
+                XDocument xDocument =  XDocument.Load(fileName);
+                pre = xDocument.Element("root").Element("name").Value;
+            }
+            return pre+"_";
         }
     }
 }

@@ -36,13 +36,5 @@ namespace dotnet_wms_ef.Auth.Controllers
                Data = list
             });
         }
-
-        [HttpGet]
-        [Route("{id}/role-list")]
-        public JsonResult RolesByUserId([FromUri]int id)
-        {
-            var result = roleService.GetByRolesByUserId(id);
-            return new JsonResult(result);
-        }
     }
 }

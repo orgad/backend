@@ -11,10 +11,35 @@ namespace dotnet_wms_ef.Auth.Services
         wmsauthContext wmsauth = new wmsauthContext();
         public List<VNav> RoleNavList()
         {
-            var list = new List<VNav>();
-
             var items = wmsauth.TPermNavs.ToList();
+            return this.NavList(items);
+        }
 
+        public List<VNav> RoleNavList(int[] roleIds)
+        {
+            var navids = wmsauth.TPermRoleNavs
+                         .Where(x => roleIds.Contains(x.RoleId)).Select(x => x.NavId).ToList();
+            var items = wmsauth.TPermNavs
+                        .Where(x => navids.Contains(x.Id)).ToList();
+
+            return this.NavList(items);
+        }
+
+        public List<VNav> UserNavList(int[] userIds)
+        {
+            var roleIds = wmsauth.TPermUserRoles
+                         .Where(x => userIds.Contains(x.UserId)).Select(x => x.RoleId).ToList();
+            var navids = wmsauth.TPermRoleNavs
+                         .Where(x => roleIds.Contains(x.RoleId)).Select(x => x.NavId)
+                         .Distinct().ToList();
+            var items = wmsauth.TPermNavs.Where(x => navids.Contains(x.Id)).ToList();
+
+            return this.NavList(items);
+        }
+
+        private List<VNav> NavList(List<TPermNav> items)
+        {
+            var list = new List<VNav>();
             var parent = items.Where(x => string.IsNullOrEmpty(x.AllPath)).ToList();
 
             for (var i = 0; i < parent.Count; i++)

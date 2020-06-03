@@ -31,13 +31,5 @@ namespace dotnet_wms_ef.Auth.Controllers
             var result = userService.Create(user);
             return new JsonResult(result);
         }
-
-        [HttpGet]
-        [Route("{id}/user-list")]
-        public JsonResult UsersByRoleId([FromUri] int id)
-        {
-            var result = userService.GetUsersByRoleId(id);
-            return new JsonResult(result);
-        }
     }
 }

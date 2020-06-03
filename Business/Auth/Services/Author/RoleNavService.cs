@@ -20,7 +20,7 @@ namespace dotnet_wms_ef.Auth.Services
             for (var i = 0; i < parent.Count; i++)
             {
                 var nav = new VNav { Title = parent[i].NameCn };
-                nav.Children = RoleChildList(parent[i].Code,items);
+                nav.Children = RoleChildList(parent[i].Code, items);
                 list.Add(nav);
             }
             return list;
@@ -35,6 +35,26 @@ namespace dotnet_wms_ef.Auth.Services
                 list.Add(new VNavSub { Title = child.NameCn, Router = child.AllPath });
             }
             return list;
+        }
+
+        public ICollection<VNavActionDetails> GetNavsByRoleId(int roleId)
+        {
+            var list = new List<VNavActionDetails>();
+            var navIds = wmsauth.TPermRoleNavs.Where(x => x.RoleId == roleId).Select(x => x.NavId).ToList();
+
+            var navs = wmsauth.TPermNavs.Where(x => navIds.Contains(x.Id)).ToList();
+            var actions = wmsauth.TPermNavActions.Where(x => navIds.Contains(x.NavId)).ToList();
+
+            foreach (var nav in navs)
+            {
+                var v = new VNavActionDetails();
+                v.Nav = nav;
+                v.DetailList = actions.Where(x => x.NavId == nav.Id).ToList();
+                list.Add(v);
+            }
+
+            return list;
+
         }
     }
 }

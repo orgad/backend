@@ -1,3 +1,4 @@
+using System.Web.Http;
 using dotnet_wms_ef.Auth.Services;
 using dotnet_wms_ef.ViewModels;
 using Microsoft.AspNetCore.Cors;
@@ -34,6 +35,14 @@ namespace dotnet_wms_ef.Auth.Controllers
                TotalCount = total,
                Data = list
             });
+        }
+
+        [HttpGet]
+        [Route("{id}/role-list")]
+        public JsonResult RolesByUserId([FromUri]int id)
+        {
+            var result = roleService.GetByRolesByUserId(id);
+            return new JsonResult(result);
         }
     }
 }

@@ -17,8 +17,11 @@ namespace dotnet_wms_ef.Auth.Models
         public virtual DbSet<TPermNav> TPermNavs { get; set; }
         public virtual DbSet<TPermNavAction> TPermNavActions { get; set; }
         public virtual DbSet<TPermRole> TPermRoles { get; set; }
+        public virtual DbSet<TPermRoleNav> TPermRoleNavs { get; set; }
         public virtual DbSet<TPermBiz> TPermBizs { get; set; }
         public virtual DbSet<TPermUser> TPermUsers { get; set; }
+        public virtual DbSet<TPermUserRole> TPermUserRoles { get; set; }
+        public virtual DbSet<TPermUserRole> TPermUserBizs { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -34,7 +37,10 @@ namespace dotnet_wms_ef.Auth.Models
             modelBuilder.ApplyConfiguration(new TPermNavActionMapping());
             modelBuilder.ApplyConfiguration(new TPermRoleMapping());
             modelBuilder.ApplyConfiguration(new TPermBizMapping());
+            modelBuilder.ApplyConfiguration(new TPermRoleNavMapping());
             modelBuilder.ApplyConfiguration(new TPermUserMapping());
+            modelBuilder.ApplyConfiguration(new TPermUserRoleMapping());
+            modelBuilder.ApplyConfiguration(new TPermUserBizMapping());
             OnModelCreatingPartial(modelBuilder);
         }
 

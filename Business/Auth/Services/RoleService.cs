@@ -26,5 +26,12 @@ namespace dotnet_wms_ef.Auth.Services
         {
             return wmsauth.TPermBizs.Count();
         }
+
+        public ICollection<TPermRole> GetByRolesByUserId(int userId)
+        {
+            var roleIds = wmsauth.TPermUserRoles.Where(x => x.UserId == userId).Select(x => x.RoleId).ToList();
+            var vRoles = wmsauth.TPermRoles.Where(x => roleIds.Contains(x.Id));
+            return vRoles.ToList();
+        }
     }
 }

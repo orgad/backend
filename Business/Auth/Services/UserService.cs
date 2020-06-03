@@ -15,7 +15,8 @@ namespace dotnet_wms_ef.Auth.Services
         public ICollection<VUser> PagedList()
         {
             return wmsauth.TPermUsers
-            .Select(x=>new VUser{
+            .Select(x => new VUser
+            {
                 Id = x.Id,
                 LoginName = x.LoginName,
                 TypeCode = x.TypeCode,
@@ -50,6 +51,27 @@ namespace dotnet_wms_ef.Auth.Services
             wmsauth.TPermUsers.Add(tUser);
 
             return wmsauth.SaveChanges() > 0;
+        }
+
+        public ICollection<VUser> GetUsersByRoleId(int roleId)
+        {
+            var userIds = wmsauth.TPermUserRoles.Where(x => x.RoleId == roleId).Select(x => x.UserId).ToList();
+            var vusers = wmsauth.TPermUsers.Where(x => userIds.Contains(x.Id))
+                        .Select(x => new VUser
+                        {
+                            Id = x.Id,
+                            LoginName = x.LoginName,
+                            TypeCode = x.TypeCode,
+                            NameCn = x.NameCn,
+                            NameEn = x.NameEn,
+                            Email = x.Email,
+                            ExpireAt = x.ExpireAt,
+                            CreatedBy = x.CreatedBy,
+                            CreatedTime = x.CreatedTime,
+                            LastModifiedBy = x.LastModifiedBy,
+                            LastModifiedTime = x.LastModifiedTime
+                        }).ToList();
+            return vusers;
         }
     }
 }

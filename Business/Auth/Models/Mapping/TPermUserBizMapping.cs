@@ -7,7 +7,7 @@ namespace dotnet_wms_ef.Auth.Models
     {
         public void Configure(EntityTypeBuilder<TPermUserBiz> entity)
         {
-            entity.ToTable("t_perm_user_biz");
+            entity.ToTable("t_perm_user_business");
 
             entity.Property(e => e.Id)
                 .HasColumnName("id")

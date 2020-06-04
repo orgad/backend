@@ -21,7 +21,7 @@ namespace dotnet_wms_ef.Auth.Models
         public virtual DbSet<TPermBiz> TPermBizs { get; set; }
         public virtual DbSet<TPermUser> TPermUsers { get; set; }
         public virtual DbSet<TPermUserRole> TPermUserRoles { get; set; }
-        public virtual DbSet<TPermUserRole> TPermUserBizs { get; set; }
+        public virtual DbSet<TPermUserBiz> TPermUserBizs { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -12,6 +12,7 @@ namespace dotnet_wms_ef.Auth.Controllers
         RoleService roleService = new RoleService();
         RoleNavService roleNavService = new RoleNavService();
         UserRoleService userRoleService = new UserRoleService();
+        UserBizService userBizService = new UserBizService();
 
         [Route("{id}/role-nav-list")]
         public JsonResult RoleNavListByRole([FromUri] int id)
@@ -60,7 +61,7 @@ namespace dotnet_wms_ef.Auth.Controllers
         public JsonResult BizsByUserId([FromUri] int id)
         {
             //按照登录用户获取业务约束
-            var result = userService.GetUsersByRoleId(id);
+            var result = userBizService.GetBizsByUserId(id);
             return new JsonResult(result);
         }
 

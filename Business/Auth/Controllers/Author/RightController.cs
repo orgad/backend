@@ -55,7 +55,7 @@ namespace dotnet_wms_ef.Auth.Controllers
             var result = userRoleService.LoginNavList(id);
             return new JsonResult(result);
         }
-        
+
 
         [HttpGet]
         [Route("{id}/biz-list")]
@@ -77,9 +77,17 @@ namespace dotnet_wms_ef.Auth.Controllers
 
         [HttpPut]
         [Route("{id}/create-user-role")]
-        public JsonResult CreateUserRole([FromUri]int id,[FromBody] TPermRole[] roles)
+        public JsonResult CreateUserRole([FromUri] int id, [FromBody] TPermRole[] roles)
         {
-             var result = userRoleService.Create(id,roles);
+            var result = userRoleService.Create(id, roles);
+            return new JsonResult(result);
+        }
+
+        [HttpPut]
+        [Route("{id}/create-user-biz")]
+        public JsonResult CreateUserBiz([FromUri] int id, [FromBody] TPermBiz[] bizs)
+        {
+            var result = userBizService.Create(id, bizs);
             return new JsonResult(result);
         }
     }

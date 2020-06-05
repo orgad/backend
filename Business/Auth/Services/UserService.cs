@@ -78,5 +78,10 @@ namespace dotnet_wms_ef.Auth.Services
         {
             return wmsauth.TPermUsers.Where(x => x.LoginName == loginName).Select(x => x.Id).FirstOrDefault();
         }
+
+        public string getUserLoginNameById(int userId)
+        {
+            return wmsauth.TPermUsers.Where(x => x.Id == userId).Select(x => x.LoginName).FirstOrDefault();
+        }
     }
 }

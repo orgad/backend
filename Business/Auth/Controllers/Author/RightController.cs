@@ -1,4 +1,5 @@
 using System.Web.Http;
+using dotnet_wms_ef.Auth.Models;
 using dotnet_wms_ef.Auth.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -71,6 +72,14 @@ namespace dotnet_wms_ef.Auth.Controllers
         {
             //按照登录用户获取角色列表
             var result = roleService.GetByRolesByUserId(id);
+            return new JsonResult(result);
+        }
+
+        [HttpPut]
+        [Route("{id}/create-user-role")]
+        public JsonResult CreateUserRole([FromUri]int id,[FromBody] TPermRole[] roles)
+        {
+             var result = userRoleService.Create(id,roles);
             return new JsonResult(result);
         }
     }

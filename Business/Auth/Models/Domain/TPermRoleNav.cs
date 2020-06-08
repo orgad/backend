@@ -9,7 +9,7 @@ namespace dotnet_wms_ef.Auth.Models
         public string RoleCode { get; set; }
         public int NavId { get; set; }
         public string NavCode { get; set; }
-        public int ActionId { get; set; }
+        public int? ActionId { get; set; }
         public string ActionCode { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? CreatedTime { get; set; }

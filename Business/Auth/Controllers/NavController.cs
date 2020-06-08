@@ -15,14 +15,6 @@ namespace dotnet_wms_ef.Auth.Controllers
         RoleNavService roleNavService = new RoleNavService();
         NavService navService = new NavService();
 
-        [Route("role-list")]
-        public JsonResult RoleNavList()
-        {
-            //从token中获取用户信息
-            var result = roleNavService.RoleNavList();
-            return new JsonResult(result);
-        }
-
         [Route("list")]
         public JsonResult NavList(VQueryNav query)
         {
@@ -36,7 +28,14 @@ namespace dotnet_wms_ef.Auth.Controllers
         }
 
         [Route("{id}/nav-action-list")]
-        public JsonResult NavActionList([FromUri] int id)
+        public JsonResult NavActionListByModule(int id)
+        {
+            var list = navService.NavActionListByModule(id);
+            return new JsonResult(list);
+        }
+
+        [Route("{id}/details")]
+        public JsonResult Details([FromUri] int id)
         {
             var result = this.navService.Details(id);
             return new JsonResult(result);

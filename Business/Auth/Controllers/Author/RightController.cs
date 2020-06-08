@@ -1,6 +1,7 @@
 using System.Web.Http;
 using dotnet_wms_ef.Auth.Models;
 using dotnet_wms_ef.Auth.Services;
+using dotnet_wms_ef.Auth.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace dotnet_wms_ef.Auth.Controllers
@@ -15,13 +16,6 @@ namespace dotnet_wms_ef.Auth.Controllers
         UserRoleService userRoleService = new UserRoleService();
         UserBizService userBizService = new UserBizService();
 
-        [Route("{id}/role-nav-list")]
-        public JsonResult RoleNavListByRole([FromUri] int id)
-        {
-            //按照角色获取菜单
-            var result = roleNavService.RoleNavList();
-            return new JsonResult(result);
-        }
 
         [Route("{id}/nav-action-list-by-role")]
         public JsonResult NavActionListByRole([FromUri] int id)
@@ -72,6 +66,14 @@ namespace dotnet_wms_ef.Auth.Controllers
         {
             //按照登录用户获取角色列表
             var result = roleService.GetByRolesByUserId(id);
+            return new JsonResult(result);
+        }
+
+        [HttpPut]
+        [Route("{id}/create-role-nav")]
+        public JsonResult CreateRoleNav([FromUri] int id, int moduleId, [FromBody] VNavActionAdd[] navActions )
+        {
+            var result = roleNavService.Create(id, moduleId, navActions);
             return new JsonResult(result);
         }
 

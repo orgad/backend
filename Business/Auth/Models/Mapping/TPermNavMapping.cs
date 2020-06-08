@@ -17,8 +17,8 @@ namespace dotnet_wms_ef.Auth.Models
                 .HasCharSet("utf8")
                 .HasCollation("utf8_general_ci");
 
-            entity.Property(e =>e.PCode)
-                  .HasColumnName("p_code");
+            entity.Property(e =>e.PId).HasColumnName("p_id");
+            entity.Property(e =>e.PCode).HasColumnName("p_code");
 
             entity.Property(e => e.Code)
                 .IsRequired()

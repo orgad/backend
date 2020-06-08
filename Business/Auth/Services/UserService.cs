@@ -37,12 +37,12 @@ namespace dotnet_wms_ef.Auth.Services
             return wmsauth.TPermUsers.Count();
         }
 
-        public bool Create(VUser user)
+        public bool Create(VUserAdd user)
         {
             byte[] dataToEncrypt = Encoding.Default.GetBytes(user.Password);
 
             TPermUser tUser = new TPermUser();
-            tUser.LoginName = user.Username;
+            tUser.LoginName = user.UserName;
             tUser.Pwd = MD5Service.GetMd5Hash(MD5Service.MD5Hash, user.Password);
             tUser.NameCn = user.NameCn;
             tUser.NameEn = user.NameEn;

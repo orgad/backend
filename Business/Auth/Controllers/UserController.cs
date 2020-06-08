@@ -26,7 +26,7 @@ namespace dotnet_wms_ef.Auth.Controllers
 
         [HttpPost]
         [Route("create")]
-        public JsonResult Create([FromBody] VUser user)
+        public JsonResult Create([FromBody] VUserAdd user)
         {
             var result = userService.Create(user);
             return new JsonResult(result);

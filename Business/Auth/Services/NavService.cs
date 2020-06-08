@@ -62,5 +62,53 @@ namespace dotnet_wms_ef.Auth.Services
 
             return new VNavActionDetails { Nav = o, DetailList = detailList };
         }
+
+        public List<Tuple<int, string>> NavList()
+        {
+            var tuples = new List<Tuple<int, string>>();
+            var list = wmsauth.TPermNavs.ToList();
+            foreach (var item in list)
+            {
+                tuples.Add(new Tuple<int, string>(item.Id, item.Code));
+            }
+            return tuples;
+        }
+
+        public List<Tuple<int, string>> ActionList()
+        {
+            var tuples = new List<Tuple<int, string>>();
+            var list = wmsauth.TPermNavActions.ToList();
+            foreach (var item in list)
+            {
+                tuples.Add(new Tuple<int, string>(item.Id, item.Code));
+            }
+            return tuples;
+        }
+
+        public List<TPermNav> NavListByModuleId(int id)
+        {
+            var list = wmsauth.TPermNavs.Where(x => x.PId == id || x.Id == id).ToList();
+
+            return list;
+        }
+
+        public List<VNavActionDetails> NavActionListByModule(int moduleId)
+        {
+            //返回一个集合
+            var os = wmsauth.TPermNavs.Where(x => x.PId == moduleId || x.Id == moduleId).ToList();
+            var detailLists = wmsauth.TPermNavActions.ToList();
+
+            var list = new List<VNavActionDetails>();
+            foreach (var o in os)
+            {
+                var detailList = detailLists.Where(x => x.NavId == o.Id).ToList();
+                list.Add(new VNavActionDetails
+                {
+                    Nav = o,
+                    DetailList = detailList
+                });
+            }
+            return list;
+        }
     }
 }

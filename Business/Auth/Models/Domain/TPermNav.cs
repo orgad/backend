@@ -7,6 +7,7 @@ namespace dotnet_wms_ef.Auth.Models
         public int Id { get; set; }
         public string Code { get; set; }
         public string NameCn { get; set; }
+        public int PId{get;set;}
         public string PCode{get;set;}
         public string AllPath { get; set; }
         public string Seq { get; set; }

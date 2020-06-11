@@ -41,7 +41,16 @@ namespace dotnet_wms_ef.Auth.Controllers
             return new JsonResult(result);
         }
 
+        [Route("create-nav")]
+        [HttpPost]
+        public JsonResult CreateNav([FromBody] VNavAdd vNav)
+        {
+            var result = this.navService.Create(vNav);
+            return new JsonResult(result);
+        }
+
         [Route("{id}/create-action")]
+        [HttpPost]
         public JsonResult CreateAction([FromUri] int id,[FromBody] VNavActionAdd action)
         {
             var result = this.navService.CreateAction(id,action);

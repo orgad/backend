@@ -5,10 +5,12 @@ namespace dotnet_wms_ef.Auth.Models
     public partial class TPermNav
     {
         public int Id { get; set; }
+        public string ClientNo { get; set; }
         public string Code { get; set; }
         public string NameCn { get; set; }
-        public int PId{get;set;}
-        public string PCode{get;set;}
+        public string NameEn { get; set; }
+        public int PId { get; set; }
+        public string PCode { get; set; }
         public string AllPath { get; set; }
         public string Seq { get; set; }
         public string CreatedBy { get; set; }

@@ -11,14 +11,16 @@ namespace dotnet_wms_ef.Auth.Models
 
             entity.Property(e => e.Id).HasColumnName("ID");
 
+            entity.Property(e => e.ClientNo).HasColumnName("client_no");
+
             entity.Property(e => e.AllPath)
                 .HasColumnType("varchar(100)")
                 .HasColumnName("all_path")
                 .HasCharSet("utf8")
                 .HasCollation("utf8_general_ci");
 
-            entity.Property(e =>e.PId).HasColumnName("p_id");
-            entity.Property(e =>e.PCode).HasColumnName("p_code");
+            entity.Property(e => e.PId).HasColumnName("p_id");
+            entity.Property(e => e.PCode).HasColumnName("p_code");
 
             entity.Property(e => e.Code)
                 .IsRequired()
@@ -33,6 +35,8 @@ namespace dotnet_wms_ef.Auth.Models
                 .HasColumnType("varchar(100)")
                 .HasCharSet("utf8")
                 .HasCollation("utf8_general_ci");
+
+            entity.Property(e => e.NameEn).HasColumnName("name_en");
 
             entity.Property(e => e.Seq)
                 .HasColumnType("varchar(10)")

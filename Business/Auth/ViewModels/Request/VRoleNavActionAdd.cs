@@ -1,9 +1,7 @@
-using System.Collections.Generic;
-using dotnet_wms_ef.Auth.Models;
 
 namespace dotnet_wms_ef.Auth.ViewModels
 {
-    public class VNavActionAdd
+    public class VRoleNavActionAdd
     {
         public int RoleId { get; set; }
         public int NavId { get; set; }

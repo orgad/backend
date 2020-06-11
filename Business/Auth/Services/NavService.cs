@@ -110,5 +110,23 @@ namespace dotnet_wms_ef.Auth.Services
             }
             return list;
         }
+
+        public bool CreateAction(int navId, VNavActionAdd vAction)
+        {
+            TPermNavAction tAction = new TPermNavAction
+            {
+                NavId = vAction.NavId,
+                NavCode = vAction.NavCode,
+                Code = vAction.Code,
+                Name = vAction.Name,
+                Seq = vAction.Seq,
+                CreatedBy = DefaultUser.UserName,
+                CreatedTime = DateTime.UtcNow
+            };
+
+            wmsauth.TPermNavActions.Add(tAction);
+
+            return wmsauth.SaveChanges() > 0;
+        }
     }
 }

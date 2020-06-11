@@ -81,7 +81,7 @@ namespace dotnet_wms_ef.Auth.Services
             return list;
         }
 
-        public bool Create(int roleId, int moduleId, VNavActionAdd[] vNavActions)
+        public bool Create(int roleId, int moduleId, VRoleNavActionAdd[] vNavActions)
         {
             var navCodes = navService.NavList();
             var actionCodes = navService.ActionList();

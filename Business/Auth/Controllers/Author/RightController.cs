@@ -71,7 +71,7 @@ namespace dotnet_wms_ef.Auth.Controllers
 
         [HttpPut]
         [Route("{id}/create-role-nav")]
-        public JsonResult CreateRoleNav([FromUri] int id, int moduleId, [FromBody] VNavActionAdd[] navActions )
+        public JsonResult CreateRoleNav([FromUri] int id, int moduleId, [FromBody] VRoleNavActionAdd[] navActions )
         {
             var result = roleNavService.Create(id, moduleId, navActions);
             return new JsonResult(result);

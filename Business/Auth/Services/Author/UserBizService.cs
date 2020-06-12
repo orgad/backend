@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using dotnet_wms_ef.Auth.Models;
+using dotnet_wms_ef.Auth.ViewModels;
 
 namespace dotnet_wms_ef.Auth.Services
 {
@@ -26,6 +27,22 @@ namespace dotnet_wms_ef.Auth.Services
             return bizService.GetBizs(bizIds);
         }
 
+        public List<VBiz> GetBizsByLoginName2(string loginName)
+        {
+            var bizIds = wmsauth.TPermUserBizs.Where(x => x.LoginName == loginName).Select(x => x.BizId).ToArray();
+            return bizService.GetBizs(bizIds)
+            .Select(x => new VBiz
+            {
+                WhId = x.WhId,
+                WhCode = x.WhCode,
+                CustId = x.CustId,
+                CustCode = x.CustCode,
+                BrandId = x.BrandId,
+                BrandCode = x.BrandCode,
+                BizCode = x.BizCode
+            }).ToList();
+        }
+
         public bool Create(int userId, TPermBiz[] bizs)
         {
             //首先找到已经存在的bizs,比对传入bizs
@@ -36,19 +53,20 @@ namespace dotnet_wms_ef.Auth.Services
             var oldBizs = this.GetBizsByUserId(userId);
 
             //首先取交集合
-            var items = oldBizs.Where( x=>bizs.Select(x=>x.Id).Contains(x.Id)).Select(y=>y.Id).ToList();
+            var items = oldBizs.Where(x => bizs.Select(x => x.Id).Contains(x.Id)).Select(y => y.Id).ToList();
             //找到需要删除的:old-roles存在,roles不存在
-            var needDeletds = oldBizs.Where(x=>!items.Contains(x.Id)).ToList();
+            var needDeletds = oldBizs.Where(x => !items.Contains(x.Id)).ToList();
             foreach (var item in needDeletds)
             {
                 var data = datas.Where(x => x.BizId == item.Id).FirstOrDefault();
                 if (data != null)
                     wmsauth.TPermUserBizs.Remove(data);
             }
-            var needAdds = bizs.Where(x=>!items.Contains(x.Id)).ToList();
+            var needAdds = bizs.Where(x => !items.Contains(x.Id)).ToList();
             foreach (var item in needAdds)
             {
-                var data = new TPermUserBiz{
+                var data = new TPermUserBiz
+                {
                     UserId = userId,
                     LoginName = userCode,
                     BizId = item.Id,
@@ -61,6 +79,6 @@ namespace dotnet_wms_ef.Auth.Services
 
             return wmsauth.SaveChanges() > 0;
         }
-    
+
     }
 }

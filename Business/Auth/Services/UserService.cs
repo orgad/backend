@@ -79,12 +79,17 @@ namespace dotnet_wms_ef.Auth.Services
 
         public int getUserIdByLoginName(string loginName)
         {
-            return wmsauth.TPermUsers.Where(x => x.LoginName == loginName).Select(x => x.Id).FirstOrDefault();
+            return this.getUserByLoginName(loginName).Id;
         }
 
         public string getUserLoginNameById(int userId)
         {
             return wmsauth.TPermUsers.Where(x => x.Id == userId).Select(x => x.LoginName).FirstOrDefault();
+        }
+
+        public TPermUser getUserByLoginName(string loginName)
+        {
+            return wmsauth.TPermUsers.Where(x => x.LoginName == loginName).FirstOrDefault();
         }
     }
 }

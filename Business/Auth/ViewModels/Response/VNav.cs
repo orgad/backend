@@ -10,6 +10,7 @@ namespace dotnet_wms_ef.Auth.ViewModels
 
     public class VNavSub
     {
+        public int Id{get;set;}
         public string Title{get;set;}
         public string Router{get;set;}
     }

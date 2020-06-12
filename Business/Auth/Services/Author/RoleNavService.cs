@@ -55,8 +55,18 @@ namespace dotnet_wms_ef.Auth.Services
             var childs = items.Where(x => x.PCode == parentCode).ToList();
             foreach (var child in childs)
             {
-                list.Add(new VNavSub { Title = child.NameCn, Router = child.AllPath });
+                list.Add(new VNavSub { Id = child.Id, Title = child.NameCn, Router = child.AllPath });
             }
+            return list;
+        }
+
+        public ICollection<VNavActionDetails> GetNavsByRoleId(int[] roleIds){
+            var list = new List<VNavActionDetails>();
+            foreach(var roleId in roleIds)
+            {
+                list.AddRange(this.GetNavsByRoleId(roleId));
+            }
+
             return list;
         }
 
@@ -79,6 +89,53 @@ namespace dotnet_wms_ef.Auth.Services
             }
 
             return list;
+        }
+
+        public VNavActionDetails GetNavsByRoleNavId(int roleId, int navId)
+        {
+            var list = new List<VNavActionDetails>();
+
+            var roleNavs = wmsauth.TPermRoleNavs.Where(x => x.RoleId == roleId && x.NavId == navId).ToList();
+
+            var nav = wmsauth.TPermNavs.Where(x => x.Id == navId).FirstOrDefault();
+
+            var roleActionIds = roleNavs.Select(x => x.ActionId).ToList();
+
+            var actions = wmsauth.TPermNavActions
+                           .Where(x => roleActionIds.Contains(x.Id)).ToList();
+
+
+            var v = new VNavActionDetails();
+            v.Nav = nav;
+            v.DetailList = actions.Where(x => x.NavId == nav.Id).ToList();
+
+            return v;
+        }
+
+        public VNavActionDetails GetNavsByRolesNavId(string roleIds,int navId)
+        {
+            var list = new List<VNavActionDetails>();
+
+            var roles = new List<int>();
+            foreach(var roleid in roleIds.Split(',')){
+                roles.Add(Convert.ToInt32(roleid));
+            }
+
+            var roleNavs = wmsauth.TPermRoleNavs.Where(x =>roles.Contains(x.RoleId) && x.NavId == navId).ToList();
+
+            var nav = wmsauth.TPermNavs.Where(x => x.Id == navId).FirstOrDefault();
+
+            var roleActionIds = roleNavs.Select(x => x.ActionId).ToList();
+
+            var actions = wmsauth.TPermNavActions
+                           .Where(x => roleActionIds.Contains(x.Id)).ToList();
+
+
+            var v = new VNavActionDetails();
+            v.Nav = nav;
+            v.DetailList = actions.Where(x => x.NavId == nav.Id).ToList();
+
+            return v; 
         }
 
         public bool Create(int roleId, int moduleId, VRoleNavActionAdd[] vNavActions)
@@ -134,7 +191,7 @@ namespace dotnet_wms_ef.Auth.Services
             }
 
             //自动找到上级菜单,加入到数据库
-            if (vNavActions!=null && vNavActions.Any())
+            if (vNavActions != null && vNavActions.Any())
             {
                 var module = wmsauth.TPermRoleNavs.Where(x => x.NavId == moduleId && x.ActionId == null).FirstOrDefault();
                 if (module == null)

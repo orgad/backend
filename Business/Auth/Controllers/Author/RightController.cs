@@ -1,4 +1,5 @@
 using System.Web.Http;
+using System.Linq;
 using dotnet_wms_ef.Auth.Models;
 using dotnet_wms_ef.Auth.Services;
 using dotnet_wms_ef.Auth.ViewModels;
@@ -16,6 +17,23 @@ namespace dotnet_wms_ef.Auth.Controllers
         UserRoleService userRoleService = new UserRoleService();
         UserBizService userBizService = new UserBizService();
 
+        [Route("auth-list")]
+        public JsonResult AuthInfos(string loginName)
+        {
+            var r1 = userRoleService.GetUserInfo(loginName);
+            var roleIds = r1.RoleInfos.Select(x=>x.RoleId).ToArray();
+            var r2 = roleNavService.RoleNavList(roleIds);
+            var r3 = userBizService.GetBizsByLoginName2(loginName);
+
+            var result = new VAuthDetails
+            {
+                UserInfo = r1,
+                vNavs = r2,
+                vBizs = r3
+            };
+            
+            return new JsonResult(result);
+        }
 
         [Route("{id}/nav-action-list-by-role")]
         public JsonResult NavActionListByRole([FromUri] int id)
@@ -50,7 +68,6 @@ namespace dotnet_wms_ef.Auth.Controllers
             return new JsonResult(result);
         }
 
-
         [HttpGet]
         [Route("{id}/biz-list")]
         public JsonResult BizsByUserId([FromUri] int id)
@@ -69,9 +86,27 @@ namespace dotnet_wms_ef.Auth.Controllers
             return new JsonResult(result);
         }
 
+        [HttpGet]
+        [Route("{role}/{nav}/action-list")]
+        public JsonResult GetNavsByRoleNavId([FromUri] int role, [FromUri] int nav)
+        {
+            /*按照角色和菜单获取按钮列表*/
+            var result = roleNavService.GetNavsByRoleNavId(role, nav);
+            return new JsonResult(result);
+        }
+
+        [HttpGet]
+        [Route("{roles}/{nav}/actions-list")]
+        public JsonResult GetNavsByRolesNavId([FromUri] string roles, [FromUri] int nav)
+        {
+            /*按照角色和菜单获取按钮列表*/
+            var result = roleNavService.GetNavsByRolesNavId(roles, nav);
+            return new JsonResult(result);
+        }
+
         [HttpPut]
         [Route("{id}/create-role-nav")]
-        public JsonResult CreateRoleNav([FromUri] int id, int moduleId, [FromBody] VRoleNavActionAdd[] navActions )
+        public JsonResult CreateRoleNav([FromUri] int id, int moduleId, [FromBody] VRoleNavActionAdd[] navActions)
         {
             var result = roleNavService.Create(id, moduleId, navActions);
             return new JsonResult(result);
